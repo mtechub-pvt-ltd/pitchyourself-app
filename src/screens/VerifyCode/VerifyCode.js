@@ -3,12 +3,18 @@ import {
 TextInput,
     Image, View, Text, ImageBackground
 } from 'react-native';
+
+//////////////app components////////////
 import CustomButtonhere from '../../components/Button/CustomButton';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import CustomModal from '../../components/Modal/CustomModal';
+
+/////////////////app icons////////////////////
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
+/////////////app styles///////////////
 import styles from './styles';
 import Authtextstyles from '../../utills/GlobalStyles/Authtextstyles';
-import Inputstyles from '../../utills/GlobalStyles/Inputstyles';
-import Colors from '../../utills/Colors';
+
 import {
     CodeField,
     Cursor,
@@ -16,7 +22,12 @@ import {
     useClearByFocusCell,
   } from 'react-native-confirmation-code-field';
 
-const VerifyCode = ({ navigation }) => {
+const VerifyCode = ({ navigation, route }) => {
+  console.log("obj:",route.params)
+
+        //Modal States
+        const [modalVisible, setModalVisible] = useState(false);
+
 //cell number
 const CELL_COUNT = 4;
 
@@ -26,12 +37,31 @@ const [props, getCellOnLayoutHandler] = useClearByFocusCell({
   value,
   setValue,
 });
-  //textfields
+ //check OTP Code
+ const verifyno =()=>{
+  console.log("obj:",route.params.otp  ,value )
+  if(route.params.otp == value)
+  {
+    navigation.navigate('UpdatePassword',value)
+  }
+  else{
+    setModalVisible(true)
+    console.log('Wrong Code, Enter the right Code')
+    console.log("not click")
+  }
+}
+
+//code set in state
+  const getcode=()=>{
+    console.log("obj:",route.params)
+    //setValue(route.params)
+  }
 
   useEffect(() => {
 
-    //SplashScreen.hide();
-  }, []);
+    getcode()
+  
+  },[]);
   return (
 
     <ImageBackground source={require('../../assets/Authimages/BG_1.png')}
@@ -81,10 +111,22 @@ const [props, getCellOnLayoutHandler] = useClearByFocusCell({
 <CustomButtonhere
               title={'VERIFY CODE'}
               widthset={'60%'}
-              onPress={() => navigation.navigate('UpdatePassword')}
+              onPress={() => verifyno()}
+              //onPress={() => navigation.navigate('UpdatePassword')}
             />
 </View>
-
+        <CustomModal 
+                modalVisible={modalVisible}
+                CloseModal={() => setModalVisible(false)}
+                Icon={  <AntDesign
+                  name="closecircle"
+                  color={'red'}
+                  size={60}
+              />}
+              text={'Wrong Code, Enter the right Code'}
+         buttontext={'OK'}
+ onPress={()=> {setModalVisible(false)}}
+                /> 
        </ImageBackground>
 
   )

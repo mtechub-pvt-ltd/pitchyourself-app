@@ -17,14 +17,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(52, 52, 52, 0.8)',
       },
       modalView: {
-        //height: hp('40%'),
         width: wp('75%'),
-        paddingTop:wp('15%'),
-        //margin: 10,
-        //marginBottom:20,
+        paddingTop:wp(5),
         backgroundColor: "white",
-        borderRadius: 20,
-        //padding: 35,
+        borderRadius: wp(8),
         alignItems: "center",
         shadowColor: "#000",
      
@@ -38,11 +34,11 @@ const styles = StyleSheet.create({
       },
       modaltext:
       { 
-        width:wp('40%'),
-          marginTop:30,
-          fontSize:hp('2.5%'),
-          fontWeight:'bold',
-          color:'black',
+        width:wp('60%'),
+          marginTop:hp(3),
+          fontSize:hp(2),
+          fontWeight:'700',
+          color:'#1D2226',
           fontFamily: "Poppins",
           textAlign:'center'
       },
@@ -50,7 +46,7 @@ const styles = StyleSheet.create({
       ApprovedView:
       {
         height: hp('5.5%'),
-        width: wp('38%'),
+        width: wp('40%'),
          borderRadius:45,
          backgroundColor:Colors.Appthemecolor,
          alignContent:'center',

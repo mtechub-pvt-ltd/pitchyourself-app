@@ -1,20 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useRef } from 'react';
 import {
-  SafeAreaView, KeyboardAvoidingView, TextInput,
+  TextInput,
     Image, View, Text, TouchableOpacity, StatusBar, ImageBackground
 } from 'react-native';
+
+///////////////////app components///////////////
 import CustomModal from '../../components/Modal/CustomModal';
 import CustomButtonhere from '../../components/Button/CustomButton';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+
+//////////////////app pakages////////////
+import {Snackbar } from 'react-native-paper';
+
+////////////////app styles///////////////
 import styles from './styles';
 import Authtextstyles from '../../utills/GlobalStyles/Authtextstyles';
-import Logostyles from '../../utills/GlobalStyles/LogoStyles';
 import Inputstyles from '../../utills/GlobalStyles/Inputstyles';
 import Colors from '../../utills/Colors';
 
+//////////////////////////app api/////////////////////////
+import axios from 'axios';
+import { BASE_URL } from '../../utills/ApiRootUrl';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const UpdatePassword = ({ navigation }) => {
+const UpdatePassword = ({ navigation,route }) => {
+
+    /////////TextInput References///////////
+    const ref_input2 = useRef();
 
           //Modal States
           const [modalVisible, setModalVisible] = useState(false);
@@ -33,12 +44,76 @@ const UpdatePassword = ({ navigation }) => {
     });
   }
   
+ //textfields
+ const [Password, setPassword] = useState('');
+const [ConfirmPassword, setConfirmPassword] = useState('');
+const [Code] = useState(route.params);
+ //button states
+ const [loading, setloading] = useState(0);
+ const [disable, setdisable] = useState(0);
+ const [visible, setVisible] = useState(false);
+ const [snackbarValue, setsnackbarValue] = useState({value: '', color: ''});
+ const onDismissSnackBar = () => setVisible(false);
 
+//Api Calling
+const UserUpdatePassword=async() => {
+  var useremail = await AsyncStorage.getItem('forgetEmail');
+  console.log("email",useremail)
+axios({
+  method: 'PUT',
+  url: BASE_URL+'user/update-password-user',
+  data:{
+      email : useremail,
+      password: Password, 
+      // code:Code,
+  },
+})
+.then(async function (response) {
+  console.log("response", JSON.stringify(response.data))
+  //if(response.data === '')
+  setloading(0);
+  setdisable(0);
+  await AsyncStorage.removeItem('forgetEmail');
+  setModalVisible(true)
+ 
+})
+.catch(function (error) {
+  console.log("error", error)
+})
+}
+//Api form validation
+const formValidation = async () => {
+// input validation
+if (Password=='') {
+  setsnackbarValue({value: "Please Enter Password", color: 'red'});
+  setVisible('true');
 
-  useEffect(() => {
+  }
+else if (ConfirmPassword=='') {
+  setsnackbarValue({value: "Please Enter Confirm Password", color: 'red'});
+  setVisible('true');
 
-    //SplashScreen.hide();
-  }, []);
+  }
+  else if (Password!=ConfirmPassword) {
+      setsnackbarValue({value: "Please Enter Same Password", color: 'red'});
+      setVisible('true');
+  
+      }
+else{
+  setloading(1);
+  setdisable(1);
+  UserUpdatePassword()
+}
+}
+const email=async()=>{
+  var useremail = await AsyncStorage.getItem('forgetEmail');
+  console.log("email",useremail)
+}
+useEffect(() => {
+  console.log('API>>....',BASE_URL)
+  email()
+  //SplashScreen.hide();
+}, []);
   return (
 
     <ImageBackground source={require('../../assets/Authimages/BG_1.png')}
@@ -67,6 +142,11 @@ const UpdatePassword = ({ navigation }) => {
           
           <TextInput
             placeholder="Password"
+            onChangeText={setPassword}
+            returnKeyType = {"next"}
+            onSubmitEditing={() => { ref_input2.current.focus()}}
+            blurOnSubmit={false}
+            autoFocus = {true}
             placeholderTextColor={Colors.inputtextcolor}
             autoCapitalize="none"
             style={Inputstyles.input}
@@ -93,7 +173,9 @@ const UpdatePassword = ({ navigation }) => {
           <View style={Inputstyles.action}>
           
             <TextInput
+               ref={ref_input2}
               placeholder="Confirm Password"
+              onChangeText={setConfirmPassword}
               placeholderTextColor={Colors.inputtextcolor}
               autoCapitalize="none"
               style={Inputstyles.input}
@@ -123,10 +205,23 @@ const UpdatePassword = ({ navigation }) => {
 <CustomButtonhere
               title={'UPDATE'}
               widthset={'60%'}
-              onPress={() =>    setModalVisible(true)}
+              loading={loading}
+              disabled={disable}
+              onPress={() => formValidation()}
             />
 </View>
 <View>
+<Snackbar
+          duration={400}
+          visible={visible}
+          onDismiss={onDismissSnackBar}
+          style={{
+            backgroundColor: snackbarValue.color,
+            marginBottom:'20%',
+            zIndex: 999,
+          }}>
+          {snackbarValue.value}
+        </Snackbar>
 <CustomModal 
                 modalVisible={modalVisible}
                 CloseModal={() => setModalVisible(false)}

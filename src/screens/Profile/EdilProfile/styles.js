@@ -17,9 +17,38 @@ const styles = StyleSheet.create({
     paddingHorizontal:wp('5%')
   },
 
+  imagecontainer: {
+    height:wp(25),
+    width:wp(57),
+    marginBottom:hp(5),
+  marginTop:hp(4),
+  alignItems:'center',
+  justifyContent:"center",
+  },
+  imageview:{
+    height:wp(27),
+    width:wp(27),
+borderRadius:80,
+borderWidth:2,
+borderColor:"grey",
+alignItems:'center',
+justifyContent:'center'
+  },
   image: {
-    height:wp('45%'),
-    width:wp('50%'),
+    height:wp(27),
+    width:wp(27),
+borderRadius:80,
+  },
+  userimage: {
+    height:wp(8),
+    width:wp(8),
+  },
+  addimage: {
+    height:wp(10),
+    width:wp(10),
+borderRadius:50,
+position:"absolute",
+marginTop:hp(3)
   },
   forgettextview:
   {

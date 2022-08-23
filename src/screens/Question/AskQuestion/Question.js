@@ -3,10 +3,16 @@ import {
   SafeAreaView, KeyboardAvoidingView, TextInput,ScrollView,
     Image, View, Text, TouchableOpacity, StatusBar, ImageBackground
 } from 'react-native';
+
+///////////////////////app components/////////////////////
 import BadgeView from '../../../components/BadgeView/BadgeView';
 import CustomButtonhere from '../../../components/Button/CustomButton';
 import CamerBottomSheet from '../../../components/CameraBottomSheet/CameraBottomSheet';
+
+///////////app pakages/////////////////
 import ImagePicker from 'react-native-image-crop-picker';
+
+/////////////////app styles//////////////////
 import styles from './styles';
 import Authtextstyles from '../../../utills/GlobalStyles/Authtextstyles';
 import Uploadstyles from '../../../utills/GlobalStyles/Upload';

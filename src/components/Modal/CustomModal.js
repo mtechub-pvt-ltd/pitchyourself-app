@@ -1,15 +1,12 @@
 import React from 'react';
-import {View,Text,TouchableOpacity,Modal,Image} from 'react-native';
-import { Button } from 'react-native-paper';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Entypo from 'react-native-vector-icons/Entypo'
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import {View,Text,TouchableOpacity,Modal} from 'react-native';
+
+//////////////////app styles///////////////////
 import styles from './styles';
 
 const CustomModal = (props) => {
-    console.log("sheet",props)
     return(
-        <View style={styles.centeredView}>
+
         <Modal
           animationType="slide"
           transparent={true}
@@ -39,7 +36,7 @@ const CustomModal = (props) => {
             </View>
           </View>
         </Modal>
-        </View>
+
     )
 };
 
