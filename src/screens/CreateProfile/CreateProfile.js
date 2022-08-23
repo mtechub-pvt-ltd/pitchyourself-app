@@ -135,11 +135,7 @@ setModalVisible1(true)
         await AsyncStorage.setItem('UserPass',response.data.password)
         navigation.navigate('Drawerroute')
       }
-      if (response.data === "Email Already Exist") {
-        setloading(0);
-        setdisable(0);
 
-      }
     })
     .catch(function (error) {
       setModalVisible(true)

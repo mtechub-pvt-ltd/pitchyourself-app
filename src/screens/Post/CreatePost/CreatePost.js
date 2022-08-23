@@ -5,58 +5,154 @@ import {
 } from 'react-native';
 import CustomButtonhere from '../../../components/Button/CustomButton';
 import CamerBottomSheet from '../../../components/CameraBottomSheet/CameraBottomSheet';
+import CustomModal from '../../../components/Modal/CustomModal';
+
+//////////////////app pakages////////////
+import {Snackbar } from 'react-native-paper';
+
+//////////////app pakages//////////////////
 import ImagePicker from 'react-native-image-crop-picker';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Feath from 'react-native-vector-icons/Feather';
+
+/////////////////app icons////////////////////
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
+///////////////app styles////////////////
 import styles from './styles';
 import Authtextstyles from '../../../utills/GlobalStyles/Authtextstyles';
 import Uploadstyles from '../../../utills/GlobalStyles/Upload';
 import Inputstyles from '../../../utills/GlobalStyles/Inputstyles';
 import Colors from '../../../utills/Colors';
 
-
-const CreatePost = ({ navigation }) => {
-
-  //textfields
-  const refRBSheet = useRef();
-
-  const takePhotoFromCamera = () => {
-    //setModalVisible(!modalVisible);
-    ImagePicker.openCamera({
-      compressImageMaxWidth: 300,
-      compressImageMaxHeight: 300,
-      cropping: true,
-      compressImageQuality: 0.7,
-      multiple:true
-    })
-   
-    .then(image => {
-      console.log(image);
-      setImage(image.path);
-      setcameraImage(true)
-      camera(image)
-      refRBSheet.current.close()
-      //this.bs.current.snapTo(1);
-    });
-  }
-  const choosePhotoFromLibrary = async () => {
+  //////////////////////////app api/////////////////////////
+  import axios from 'axios';
+import { BASE_URL } from '../../../utills/ApiRootUrl';
+  import AsyncStorage from '@react-native-async-storage/async-storage';
   
-    ImagePicker.openPicker({
-      width: 300,
-      height: 300,
-      cropping: true,
-      compressImageQuality: 0.7
-    }).then( image => {
-      console.log(image);
 
-      setSelectimages(
-        image)
-      console.log("images:",Selectimages);
-      refRBSheet.current.close()
-      //this.bs.current.snapTo(1);
-    });
+const CreatePost = ({ navigation,route }) => {
 
-  }
+      //Modal States
+      const [modalVisible, setModalVisible] = useState(false);
+      const [modalVisible1, setModalVisible1] = useState(false);
+
+//camera and imagepicker
+const refRBSheet = useRef();
+
+const takePhotoFromCamera = () => {
+ //setModalVisible(!modalVisible);
+ ImagePicker.openCamera({
+   compressImageMaxWidth: 300,
+   compressImageMaxHeight: 300,
+   cropping: true,
+   compressImageQuality: 0.7,
+   multiple:true
+ })
+
+ .then(image => {
+   console.log(image);
+   setImage(image.path);
+   setcameraImage(true)
+   camera(image)
+   refRBSheet.current.close()
+   //this.bs.current.snapTo(1);
+ });
+}
+const choosePhotoFromLibrary = async () => {
+
+ ImagePicker.openPicker({
+   width: 300,
+   height: 300,
+   cropping: true,
+   compressImageQuality: 0.7
+ }).then( image => {
+   console.log(image);
+
+   setSelectimages(
+     image)
+   console.log("images:",Selectimages);
+   refRBSheet.current.close()
+   //this.bs.current.snapTo(1);
+ });
+
+}
+
+
+
+/////////TextInput References///////////
+const ref_input2 = useRef();
+const ref_input3 = useRef();
+const ref_input4 = useRef();
+
+
+///////////////textfields//////////////////
+const [post, setPost] = useState('');
+const [projectmember, setProjectMember] = useState('');
+const [video, setVideo] = useState('');
+const [hashtag, setHashtag] = useState('');
+
+////////////button states////////////////
+const [loading, setloading] = useState(0);
+const [disable, setdisable] = useState(0);
+const [visible, setVisible] = useState(false);
+const [snackbarValue, setsnackbarValue] = useState({ value: '', color: '' });
+const onDismissSnackBar = () => setVisible(false);
+
+//////////////////////Api Calling/////////////////
+const CreatePost = async() => {
+  var user= await AsyncStorage.getItem('Userid')
+  console.log("userid:",user)
+ axios({
+   method: 'POST',
+   url: BASE_URL + 'user/create-hub',
+   data: {
+    userId:user,
+    Title: post,
+    PostType: 'post',
+    Video: 'video',
+    creators: 'createors',
+    Hashtags: hashtag 
+   },
+ })
+   .then(async function (response) {
+     console.log("response", JSON.stringify(response.data))
+     setloading(0);
+     setdisable(0);
+setModalVisible1(true)
+navigation.navigate('PostDetail')
+
+   })
+   .catch(function (error) {
+     setModalVisible(true)
+     console.log("error", error)
+   })
+}
+
+//Api form validation
+const formValidation = async () => {
+ // input validation
+ if (post == '') {
+   setsnackbarValue({ value: "Please Enter about Post", color: 'red' });
+   setVisible('true');
+ }
+ else if (projectmember == '') {
+   setsnackbarValue({ value: "Please Enter Profession", color: 'red' });
+   setVisible('true');
+ }
+ else if (video == '') {
+   setsnackbarValue({ value: "Please Enter Bio", color: 'red' });
+   setVisible('true');
+ }
+ else if (hashtag == '') {
+   console.log("lastNmae")
+   setsnackbarValue({ value: "Please Enter Hashtag", color: 'red' });
+   setVisible('true');
+ }
+ else {
+   setloading(1);
+   setdisable(1);
+   CreatePost()
+ }
+}
 
   useEffect(() => {
 
@@ -79,6 +175,11 @@ const CreatePost = ({ navigation }) => {
           <View style={Inputstyles.action}>
             <TextInput
               placeholder="What would Like to say about Post?"
+              onChangeText={setPost}
+              returnKeyType={"next"}
+              onSubmitEditing={() => { ref_input2.current.focus() }}
+              blurOnSubmit={false}
+              autoFocus={true}
               placeholderTextColor={Colors.inputtextcolor}
               autoCapitalize="none"
               style={Inputstyles.input}
@@ -99,7 +200,10 @@ const CreatePost = ({ navigation }) => {
 </TouchableOpacity>
 <View style={Inputstyles.action}>
             <TextInput
+                 ref={ref_input2}
               placeholder="Who Work on this Project"
+              returnKeyType={"next"}
+              onSubmitEditing={() => { ref_input3.current.focus() }}
               placeholderTextColor={Colors.inputtextcolor}
               autoCapitalize="none"
               style={Inputstyles.input}
@@ -112,6 +216,7 @@ const CreatePost = ({ navigation }) => {
           <View style={Inputstyles.action}>
             <TextInput
               placeholder="Add hashtag"
+              onChangeText={setHashtag}
               placeholderTextColor={Colors.inputtextcolor}
               autoCapitalize="none"
               style={Inputstyles.input}
@@ -125,7 +230,10 @@ const CreatePost = ({ navigation }) => {
 <CustomButtonhere
               title={'COMPLETE'}
               widthset={'65%'}
-              onPress={() => navigation.navigate('PostDetail')}
+              loading={loading}
+              disabled={disable}
+              onPress={() => CreatePost() }
+              //onPress={() => navigation.navigate('PostDetail')}
             />
 </View>
    
@@ -136,7 +244,41 @@ const CreatePost = ({ navigation }) => {
               takePhotoFromCamera={takePhotoFromCamera}
               choosePhotoFromLibrary={choosePhotoFromLibrary}
             />
-  
+          <Snackbar
+          duration={400}
+          visible={visible}
+          onDismiss={onDismissSnackBar}
+          style={{
+            backgroundColor: snackbarValue.color,
+            marginBottom:'20%',
+            zIndex: 999,
+          }}>
+          {snackbarValue.value}
+        </Snackbar>
+      <CustomModal 
+                modalVisible={modalVisible}
+                CloseModal={() => setModalVisible(false)}
+                Icon={  <AntDesign
+                  name="closecircle"
+                  color={'red'}
+                  size={60}
+              />}
+              text={'SignUP Failed'}
+         buttontext={'OK'}
+ onPress={()=> {setModalVisible(false)}}
+                /> 
+                      <CustomModal 
+                modalVisible={modalVisible1}
+                CloseModal={() => setModalVisible1(false)}
+                Icon={  <AntDesign
+                  name="closecircle"
+                  color={'red'}
+                  size={60}
+              />}
+              text={'Email Already Exists'}
+         buttontext={'OK'}
+ onPress={()=> {setModalVisible1(false)}}
+                /> 
     </SafeAreaView>
 
   )
