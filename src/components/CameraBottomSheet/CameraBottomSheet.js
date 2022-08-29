@@ -1,13 +1,16 @@
 import React, { useEffect, useState,useRef } from 'react';
 import {View,Text,TouchableOpacity,Image} from 'react-native';
-import { Button } from 'react-native-paper';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Entypo from 'react-native-vector-icons/Entypo'
-import ImagePicker from 'react-native-image-crop-picker';
+
+import { Divider} from 'react-native-paper';
+
+///////////////////app pakages///////////////
 import RBSheet from "react-native-raw-bottom-sheet";
+
+////////////app styles//////////////
 import styles from './styles';
 import Inputstyles from '../../utills/GlobalStyles/Inputstyles';
-
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} 
+from 'react-native-responsive-screen';
 
 const CamerBottomSheet = (props) => {
     return(
@@ -22,17 +25,17 @@ const CamerBottomSheet = (props) => {
             backgroundColor: 'rgba(52, 52, 52, 0.5)',
           },
           draggableIcon: {
-            backgroundColor: "grey"
+            backgroundColor: "white"
           },
           container: {
-        borderTopLeftRadius:30,
-        borderTopRightRadius:30,
-            height: 300
+        borderTopLeftRadius:wp(10),
+        borderTopRightRadius:wp(10),
+        height:hp(30)
         }
         }}
       >
      <View style={{flexDirection:'row', justifyContent:"space-between",
-     marginVertical:10, marginHorizontal:15
+    marginHorizontal:wp(8),alignItems:"center"
     }}>
      <Text style={styles.maintext}>Upload From</Text>
      <TouchableOpacity    onPress={() =>  props.refRBSheet.current.close()}>
@@ -62,6 +65,10 @@ const CamerBottomSheet = (props) => {
           </View>
       </View>
       </TouchableOpacity>
+      <Divider 
+      bold={true}
+      style={{width:wp(70),marginLeft:wp(22)}}
+      />
       <TouchableOpacity  onPress={props.choosePhotoFromLibrary}>
       <View style={styles.modaltextview}>
           <View style={{ justifyContent:'space-around',margin:15}}>

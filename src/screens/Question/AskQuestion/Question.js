@@ -7,14 +7,10 @@ import {
 ///////////////////////app components/////////////////////
 import BadgeView from '../../../components/BadgeView/BadgeView';
 import CustomButtonhere from '../../../components/Button/CustomButton';
-import CamerBottomSheet from '../../../components/CameraBottomSheet/CameraBottomSheet';
 import CustomModal from '../../../components/Modal/CustomModal';
 
 //////////////////app pakages////////////
 import {Snackbar } from 'react-native-paper';
-
-//////////////app pakages//////////////////
-import ImagePicker from 'react-native-image-crop-picker';
 
 /////////////////app icons////////////////////
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -29,56 +25,26 @@ import Colors from '../../../utills/Colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
 
+////////////////////redux////////////
+import { useSelector, useDispatch } from 'react-redux';
+import { setVideoUrl } from '../../redux/actions';
+
   //////////////////////////app api/////////////////////////
   import axios from 'axios';
 import { BASE_URL } from '../../../utills/ApiRootUrl';
   import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Question = ({ navigation }) => {
+
+    /////////////redux states///////
+    const {video, links,id,thumbnails, } = useSelector(state => state.userReducer);
+    const dispatch = useDispatch();
+    console.log('video hereeee', '...............', links)
+
+
       //Modal States
       const [modalVisible, setModalVisible] = useState(false);
       const [modalVisible1, setModalVisible1] = useState(false);
-
-//camera and imagepicker
-const refRBSheet = useRef();
-
-const takePhotoFromCamera = () => {
- //setModalVisible(!modalVisible);
- ImagePicker.openCamera({
-   compressImageMaxWidth: 300,
-   compressImageMaxHeight: 300,
-   cropping: true,
-   compressImageQuality: 0.7,
-   multiple:true
- })
-
- .then(image => {
-   console.log(image);
-   setImage(image.path);
-   setcameraImage(true)
-   camera(image)
-   refRBSheet.current.close()
-   //this.bs.current.snapTo(1);
- });
-}
-const choosePhotoFromLibrary = async () => {
-
- ImagePicker.openPicker({
-   width: 300,
-   height: 300,
-   cropping: true,
-   compressImageQuality: 0.7
- }).then( image => {
-   console.log(image);
-
-   setSelectimages(
-     image)
-   console.log("images:",Selectimages);
-   refRBSheet.current.close()
-   //this.bs.current.snapTo(1);
- });
-
-}
 
 
 
@@ -91,7 +57,7 @@ const ref_input4 = useRef();
 ///////////////textfields//////////////////
 const [share, setShare] = useState('');
 const [projectmember, setProjectMember] = useState('');
-const [video, setVideo] = useState('');
+const [postabout, setpostabout] = useState('');
 const [hashtag, setHashtag] = useState('');
 
 ////////////button states////////////////
@@ -104,17 +70,19 @@ const onDismissSnackBar = () => setVisible(false);
 //////////////////////Api Calling/////////////////
 const CreateQuestion = async() => {
   var user= await AsyncStorage.getItem('Userid')
-  console.log("userid:",user)
+  console.log("userid:",user,postabout,video)
  axios({
    method: 'POST',
    url: BASE_URL + 'user/create-hub',
    data: {
-    userId:user,
+    userId:'6306071865e01ba9030410aa',
     Title: share,
-    PostType: 'post',
-    Video: 'video',
-    creators: 'createors',
-    Hashtags: hashtag 
+    PostType: 'question',
+    Video: video,
+    //creators: 'createors',
+    Hashtags: hashtag ,
+    questionReason: postabout,
+    Purpose:postabout,
    },
  })
    .then(async function (response) {
@@ -122,7 +90,7 @@ const CreateQuestion = async() => {
      setloading(0);
      setdisable(0);
 setModalVisible1(true)
-navigation.navigate('PostDetail')
+//navigation.navigate('PostDetail')
 
    })
    .catch(function (error) {
@@ -138,10 +106,10 @@ const formValidation = async () => {
    setsnackbarValue({ value: "Please Enter about Post", color: 'red' });
    setVisible('true');
  }
- else if (projectmember == '') {
-   setsnackbarValue({ value: "Please Enter Profession", color: 'red' });
-   setVisible('true');
- }
+//  else if (projectmember == '') {
+//    setsnackbarValue({ value: "Please Enter Profession", color: 'red' });
+//    setVisible('true');
+//  }
  else if (video == '') {
    setsnackbarValue({ value: "Please Enter Bio", color: 'red' });
    setVisible('true');
@@ -170,7 +138,7 @@ const formValidation = async () => {
         showsVerticalScrollIndicator={false}
         >
           <View style={styles.topview}>
-          <TouchableOpacity onPress={() => navigation.navigate('Hubs')}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
                    source={require('../../../assets/Icons/back.png')}
                    style={styles.topicon}
@@ -192,14 +160,22 @@ const formValidation = async () => {
               placeholderTextColor={Colors.inputtextcolor}
               autoCapitalize="none"
               multiline={true}
-              
               style={Multilineinputstyles.input}
             />
   
           </View>
-          <TouchableOpacity onPress={()=> refRBSheet.current.open()}>
+          <TouchableOpacity onPress={()=> navigation.navigate('CustomCamera',{navplace:'question'})}>
 <View style={Uploadstyles.mainview}>
-
+{thumbnails != '' ?
+                <View style={{}}>
+                  <Image
+                    source={{ uri: thumbnails }}
+                    style={Uploadstyles.setimages}
+                    resizeMode='cover'
+                  />
+                </View>
+                :
+                <View style={{ alignItems: 'center' }}>
      <Image
                    source={require('../../../assets/Icons/upload.png')}
                    style={Uploadstyles.uploadicon}
@@ -207,6 +183,7 @@ const formValidation = async () => {
                 />
 
 <Text style={Uploadstyles.uploadtext}>Add Short Video</Text>
+</View>}
 </View>
 </TouchableOpacity>
 <View style={{marginBottom:10}}>
@@ -214,18 +191,29 @@ const formValidation = async () => {
   
 <View style={{flexDirection:'row',justifyContent:'space-around',marginTop:10
      }}>
-  <BadgeView
+       <TouchableOpacity onPress={()=> setpostabout('Advice')}>
+       <BadgeView
              title={'Advice'}
                />
-                 <BadgeView
+       </TouchableOpacity>
+       <TouchableOpacity onPress={()=> setpostabout('Inspiration')}>
+       <BadgeView
              title={'Inspiration'}
                />
-                 <BadgeView
+       </TouchableOpacity>
+   
+                      <TouchableOpacity onPress={()=> setpostabout('Hope')}>
+                      <BadgeView
              title={'Hope'}
                />
-                 <BadgeView
+                      </TouchableOpacity>
+ 
+                      <TouchableOpacity onPress={()=> setpostabout('Motivation')}>
+                      <BadgeView
              title={'Motivation'}
                />
+                      </TouchableOpacity>
+ 
 </View>
 </View>
           <View style={{margin:10}}>
@@ -240,29 +228,19 @@ const formValidation = async () => {
               autoCapitalize="none"
               style={Inputstyles.input}
             />
-  
           </View>
         </View>
-    
-
 <View style={styles.buttonview}>
 <CustomButtonhere
               title={'COMPLETE'}
               widthset={'65%'}
               loading={loading}
               disabled={disable}
-              onPress={() => CreateQuestion() }
+              onPress={() => formValidation()}
               //onPress={() => navigation.navigate('QuestionDetail')}
             />
 </View>
-   
-<CamerBottomSheet
-              refRBSheet={refRBSheet}
-              onClose={() => refRBSheet.current.close()}
-              title={'From Gallery'}
-              takePhotoFromCamera={videoplay}
-              choosePhotoFromLibrary={pickvideo}
-            />
+
   </ScrollView>
   <Snackbar
           duration={400}
@@ -283,7 +261,7 @@ const formValidation = async () => {
                   color={'red'}
                   size={60}
               />}
-              text={'SignUP Failed'}
+              text={'Data not Submitted'}
          buttontext={'OK'}
  onPress={()=> {setModalVisible(false)}}
                 /> 
@@ -295,7 +273,7 @@ const formValidation = async () => {
                   color={'red'}
                   size={60}
               />}
-              text={'Email Already Exists'}
+              text={'Problem in Submition'}
          buttontext={'OK'}
  onPress={()=> {setModalVisible1(false)}}
                 /> 

@@ -81,6 +81,7 @@ const refRBSheet = useRef();
                 }
                 ////////////////////library image//////////////////
                 const choosePhotoFromLibrary = () => {
+     
                 ImagePicker.openPicker({
                   width: 300,
                   height: 300,
@@ -90,13 +91,54 @@ const refRBSheet = useRef();
                   refRBSheet.current.close()
                   console.log(image);
                   setImage(image.path);
+                  let newfile = { 
+                    uri:image.path,
+                    type:image.mime,
+                    name:image.path.substring(image.path.lastIndexOf('/') + 1)
+                    
+                }
+                  handleUpload(newfile)
                 });
                 }
+                const pickvideo =()=>{
+                  ImagePicker.openPicker({
+                    mediaType: "video",
+                  }).then((video) => {
+                    console.log(video);
+                      let newfile = { 
+                    uri:video.path,
+                    type:video.mime,
+                    name:video.path.substring(video.path.lastIndexOf('/') + 1)
+                    
+                }
+                  handleUpload(newfile)
+                  });
+                }
+                const handleUpload = (uploadimage)=>{
+                  console.log("image here url:",uploadimage)
+                  const data = new FormData()
+                  data.append('file',uploadimage)
+                  data.append('upload_preset','nrrfyy0m')
+                  data.append("cloud_name","mtechub")
+          
+                  fetch("https://api.cloudinary.com/v1_1/mtechub/upload",{
+                      method:"post",
+                      body:data
+                  }).then(res=>res.json()).
+                  then(data=>{
+                    console.log("data here:",data)
+                      //setPicture(data.url)
+                      //setModal(false)
+                  }).catch(err=>{
+                      alert("error while uploading")
+                  })
+             }
                 /////////////////image api calling///////////////
                 const pic =()=>{
                 console.log("data yhn hai:")
                 RNFetchBlob.fetch('POST',
-                BASE_URL + 'upload-image',
+               "https://api.cloudinary.com/v1_1/mtechub/upload",
+               // BASE_URL + 'upload-image',
                 {
                   Authorization: "Bearer access-token",
                   otherHeader: "foo",
@@ -105,13 +147,14 @@ const refRBSheet = useRef();
                 // part file from storage
                 {
                   name: 'image', filename: 'avatar-foo.jpg', type: 'image/jpg',
+                  upload_preset:'nrrfyy0m',
                   data: RNFetchBlob.wrap(image)
                 }
                 // elements without property `filename` will be sent as plain text
                 ]).then((resp) => {
                 // ...
                 console.log('Imagehere',resp.data)
-                Updateuser(resp.data)
+                //Updateuser(resp.data)
                 }).catch((err) => {
                 alert(err)
                 })
@@ -321,13 +364,7 @@ textColor:'#1669F'
    <TouchableOpacity onPress={()=> refRBSheet.current.open()}>
    <ImageBackground source={require('../../../assets/Profileimage/final.png')}
       resizeMode="cover"     style={styles.imagecontainer}>
-                             {/* <View >  
-                      <Image
-                source={require('../../../assets/Profileimage/user.png')}
-                style={styles.userimage}
-                   resizeMode='contain'
-               />
-               </View>   */}
+           
                { image != '' ?
                                                 <View style={styles.imageview}>
                                                 <Image

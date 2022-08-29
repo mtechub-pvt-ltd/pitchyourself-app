@@ -33,7 +33,7 @@ topicon:
 },
   buttonview:
   {
-marginTop:hp('55%')
+marginTop:hp('10%')
   },
 
   lasttext:

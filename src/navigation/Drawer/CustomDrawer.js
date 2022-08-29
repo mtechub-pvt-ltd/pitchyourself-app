@@ -88,8 +88,6 @@ export const DrawerContent= (props)=> {
                             label="Profile"
                             onPress={() => {props.navigation.navigate('Profile',{item:'profile'})}}
                         />
-                       
-                      
                         <DrawerItem 
                             icon={({color, size}) => (
                                 <Image
@@ -130,6 +128,7 @@ export const DrawerContent= (props)=> {
                             label="Notification"
                             onPress={() => {props.navigation.navigate('Notification')}}
                         />
+                    
                              <DrawerItem 
                                 icon={({color, size}) => (
                                   <Image

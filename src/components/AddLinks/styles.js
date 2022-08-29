@@ -42,6 +42,31 @@ alignSelf:"center",
     width:wp('6%'),
     height:wp('8%'),
 },
+card:
+{
+  borderColor:'rgba(0, 0, 0, 0.2)',
+  borderBottomWidth: 1,
+  flexDirection:'row',
+ alignContent:"center",
+ alignItems:'center',
+ width: wp('90%'),
+  alignSelf:'center',
+  justifyContent:'flex-start',
+  //borderColor:'  #C3C3C3',
+},
+cardtext:
+{
+  color:'black', marginBottom:20,marginTop:20,
+   fontFamily:'Poppins',fontSize:18,marginRight:10,
+    color:"grey",
+},
+bottomsheettext:
+{
+paddingHorizontal:wp(8),
+fontWeight:'600',
+fontSize:hp(2.5),
+color:'black'
+},
   });
   export default styles;
   

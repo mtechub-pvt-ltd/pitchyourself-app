@@ -39,8 +39,8 @@ alignSelf:"center",
   },
   uploadicon:
 {
-    width:wp('6%'),
-    height:wp('8%'),
+    width:wp(6.5),
+    height:wp(6.5),
 },
   });
   export default styles;

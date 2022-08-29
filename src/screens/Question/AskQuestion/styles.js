@@ -34,7 +34,7 @@ topicon:
 },
   buttonview:
   {
-marginTop:hp('60%'),
+marginTop:hp('10%'),
 marginBottom:hp('5%')
   },
 

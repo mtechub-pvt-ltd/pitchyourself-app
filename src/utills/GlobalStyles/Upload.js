@@ -37,6 +37,8 @@ uploadtext:
   fontSize: hp('1.8%'),
 marginTop:wp('3%')
 },
+setimages:
+{height:hp(20),width:wp(75),borderRadius:wp(5)}
 
 });
 export default Uploadstyles;

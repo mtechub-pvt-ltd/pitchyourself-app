@@ -1,17 +1,13 @@
 import React, { useEffect, useState,useRef} from 'react';
 import {
-  SafeAreaView, KeyboardAvoidingView, TextInput,
-    Image, View, Text, TouchableOpacity, StatusBar, ImageBackground
+  SafeAreaView, TextInput,
+    Image, View, Text, TouchableOpacity, 
 } from 'react-native';
 import CustomButtonhere from '../../../components/Button/CustomButton';
-import CamerBottomSheet from '../../../components/CameraBottomSheet/CameraBottomSheet';
 import CustomModal from '../../../components/Modal/CustomModal';
 
 //////////////////app pakages////////////
 import {Snackbar } from 'react-native-paper';
-
-//////////////app pakages//////////////////
-import ImagePicker from 'react-native-image-crop-picker';
 
 /////////////////app icons////////////////////
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -27,67 +23,28 @@ import Colors from '../../../utills/Colors';
   import axios from 'axios';
 import { BASE_URL } from '../../../utills/ApiRootUrl';
   import AsyncStorage from '@react-native-async-storage/async-storage';
-  
+
+  ////////////////////redux////////////
+import { useSelector, useDispatch } from 'react-redux';
+import { setthumbnails } from '../../../redux/actions';
 
 const CreatePost = ({ navigation,route }) => {
+
+      /////////////redux states///////
+      const {video, links,id,thumbnails, } = useSelector(state => state.userReducer);
+      const dispatch = useDispatch();
 
       //Modal States
       const [modalVisible, setModalVisible] = useState(false);
       const [modalVisible1, setModalVisible1] = useState(false);
 
-//camera and imagepicker
-const refRBSheet = useRef();
-
-const takePhotoFromCamera = () => {
- //setModalVisible(!modalVisible);
- ImagePicker.openCamera({
-   compressImageMaxWidth: 300,
-   compressImageMaxHeight: 300,
-   cropping: true,
-   compressImageQuality: 0.7,
-   multiple:true
- })
-
- .then(image => {
-   console.log(image);
-   setImage(image.path);
-   setcameraImage(true)
-   camera(image)
-   refRBSheet.current.close()
-   //this.bs.current.snapTo(1);
- });
-}
-const choosePhotoFromLibrary = async () => {
-
- ImagePicker.openPicker({
-   width: 300,
-   height: 300,
-   cropping: true,
-   compressImageQuality: 0.7
- }).then( image => {
-   console.log(image);
-
-   setSelectimages(
-     image)
-   console.log("images:",Selectimages);
-   refRBSheet.current.close()
-   //this.bs.current.snapTo(1);
- });
-
-}
-
-
-
 /////////TextInput References///////////
 const ref_input2 = useRef();
 const ref_input3 = useRef();
-const ref_input4 = useRef();
-
 
 ///////////////textfields//////////////////
 const [post, setPost] = useState('');
 const [projectmember, setProjectMember] = useState('');
-const [video, setVideo] = useState('');
 const [hashtag, setHashtag] = useState('');
 
 ////////////button states////////////////
@@ -108,7 +65,7 @@ const CreatePost = async() => {
     userId:user,
     Title: post,
     PostType: 'post',
-    Video: 'video',
+    Video: video,
     creators: 'createors',
     Hashtags: hashtag 
    },
@@ -117,7 +74,8 @@ const CreatePost = async() => {
      console.log("response", JSON.stringify(response.data))
      setloading(0);
      setdisable(0);
-setModalVisible1(true)
+     dispatch(setthumbnails(""))
+//setModalVisible1(true)
 navigation.navigate('PostDetail')
 
    })
@@ -135,11 +93,11 @@ const formValidation = async () => {
    setVisible('true');
  }
  else if (projectmember == '') {
-   setsnackbarValue({ value: "Please Enter Profession", color: 'red' });
+   setsnackbarValue({ value: "Please Enter Project Member", color: 'red' });
    setVisible('true');
  }
  else if (video == '') {
-   setsnackbarValue({ value: "Please Enter Bio", color: 'red' });
+   setsnackbarValue({ value: "Please Select Video", color: 'red' });
    setVisible('true');
  }
  else if (hashtag == '') {
@@ -161,7 +119,7 @@ const formValidation = async () => {
   return (
     <SafeAreaView style={styles.container}>
           <View style={styles.topview}>
-          <TouchableOpacity onPress={() => navigation.navigate('Hubs')}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
                    source={require('../../../assets/Icons/back.png')}
                    style={styles.topicon}
@@ -186,22 +144,34 @@ const formValidation = async () => {
             />
   
           </View>
-          <TouchableOpacity onPress={()=> refRBSheet.current.open()}>
+          <TouchableOpacity onPress={()=> navigation.navigate('CustomCamera',{navplace:'post'})}>
 <View style={Uploadstyles.mainview}>
-
+{thumbnails != '' ?
+                <View style={{}}>
+                  <Image
+                    source={{ uri: thumbnails }}
+                    style={Uploadstyles.setimages}
+                    resizeMode='cover'
+                  />
+                </View>
+                :
+                <View style={{ alignItems: 'center' }}>
      <Image
                    source={require('../../../assets/Icons/upload.png')}
                    style={Uploadstyles.uploadicon}
                     resizeMode='contain'
                 />
-    
-<Text style={Uploadstyles.uploadtext}>Upload Video</Text>
+                <Text style={Uploadstyles.uploadtext}>Upload Video</Text>
+    </View>
+}
+
 </View>
 </TouchableOpacity>
 <View style={Inputstyles.action}>
             <TextInput
                  ref={ref_input2}
               placeholder="Who Work on this Project"
+              onChangeText={setProjectMember}
               returnKeyType={"next"}
               onSubmitEditing={() => { ref_input3.current.focus() }}
               placeholderTextColor={Colors.inputtextcolor}
@@ -215,6 +185,7 @@ const formValidation = async () => {
           </View>
           <View style={Inputstyles.action}>
             <TextInput
+                ref={ref_input3}
               placeholder="Add hashtag"
               onChangeText={setHashtag}
               placeholderTextColor={Colors.inputtextcolor}
@@ -232,18 +203,12 @@ const formValidation = async () => {
               widthset={'65%'}
               loading={loading}
               disabled={disable}
-              onPress={() => CreatePost() }
+              onPress={() => formValidation() }
               //onPress={() => navigation.navigate('PostDetail')}
             />
 </View>
    
-<CamerBottomSheet
-              refRBSheet={refRBSheet}
-              onClose={() => refRBSheet.current.close()}
-              title={'From Gallery'}
-              takePhotoFromCamera={takePhotoFromCamera}
-              choosePhotoFromLibrary={choosePhotoFromLibrary}
-            />
+
           <Snackbar
           duration={400}
           visible={visible}
@@ -255,7 +220,7 @@ const formValidation = async () => {
           }}>
           {snackbarValue.value}
         </Snackbar>
-      <CustomModal 
+        <CustomModal 
                 modalVisible={modalVisible}
                 CloseModal={() => setModalVisible(false)}
                 Icon={  <AntDesign
@@ -263,7 +228,7 @@ const formValidation = async () => {
                   color={'red'}
                   size={60}
               />}
-              text={'SignUP Failed'}
+              text={'Data not Submitted'}
          buttontext={'OK'}
  onPress={()=> {setModalVisible(false)}}
                 /> 
@@ -275,7 +240,7 @@ const formValidation = async () => {
                   color={'red'}
                   size={60}
               />}
-              text={'Email Already Exists'}
+              text={'Problem in Submition'}
          buttontext={'OK'}
  onPress={()=> {setModalVisible1(false)}}
                 /> 

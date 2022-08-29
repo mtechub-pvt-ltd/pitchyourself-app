@@ -12,19 +12,32 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 //////////////////app pakages////////////
 import {Snackbar } from 'react-native-paper';
 
+////////////////////redux////////////
+import { useSelector, useDispatch } from 'react-redux';
+import { setID } from '../../redux/actions';
+
 ///////////////app  styles/////////////
 import styles from './styles';
 import Authtextstyles from '../../utills/GlobalStyles/Authtextstyles';
 import Logostyles from '../../utills/GlobalStyles/LogoStyles';
 import Inputstyles from '../../utills/GlobalStyles/Inputstyles';
 import Colors from '../../utills/Colors';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp }
+  from 'react-native-responsive-screen';
 
-
+  //////////////////////////app api/////////////////////////
+import axios from 'axios';
+import { BASE_URL } from '../../utills/ApiRootUrl';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUp = ({ navigation }) => {
 
+    /////////////redux states///////
+    const dispatch = useDispatch();
+
        //Modal States
        const [modalVisible, setModalVisible] = useState(false);
+       const [modalVisible1, setModalVisible1] = useState(false);
 
 //password eye function and states
 const [data, setData] = React.useState({
@@ -88,9 +101,51 @@ const formValidation = async () => {
     }
 
   else{
-    navigation.navigate('CreateProfile',{Password,Email})
+    setloading(1);
+    setdisable(1);
+    Signupuser()
+
   }
 }
+  //////////////////////Api Calling/////////////////
+  const Signupuser = () => {
+    console.log("obj:")
+    axios({
+      method: 'POST',
+      url: BASE_URL + 'user/signup-user',
+      data: {
+         password: Password,
+        email: Email,
+      },
+    })
+      .then(async function (response) {
+        console.log("response", JSON.stringify(response.data))
+        if (response.data === "Email Already Exist") {
+          setloading(0);
+          setdisable(0);
+          setModalVisible1(true)
+          console.log("Email Already Exist,Enter other email")
+        }
+        else {
+          setloading(0);
+          setdisable(0);
+          dispatch(setID(response.data._id))
+          navigation.navigate('CreateProfile',{id:response.data._id})
+          // await AsyncStorage.setItem('Userid', response.data._id);
+          // await AsyncStorage.setItem('Userdata', response.data.name);
+          // await AsyncStorage.setItem('UserEmail', response.data.email);
+          // await AsyncStorage.setItem('UserPass', response.data.password)
+          //navigation.navigate('Drawerroute')
+        }
+
+      })
+      .catch(function (error) {
+        setloading(0);
+        setdisable(0);
+        setModalVisible(true)
+        console.log("error", error)
+      })
+  }
 
   useEffect(() => {
 
@@ -98,10 +153,11 @@ const formValidation = async () => {
   }, []);
   return (
 
-    <ScrollView
-    showsVerticalScrollIndicator={false}
-    showsHorizontalScrollIndicator={false}
-  >
+  //   <ScrollView
+  //   showsVerticalScrollIndicator={false}
+  //   showsHorizontalScrollIndicator={false}
+  //   style={{backgroundColor:'white'}}
+  // >
     <ImageBackground source={require('../../assets/Authimages/BG.png')}
       resizeMode="cover" style={styles.container}>
    <View style={Logostyles.logoview}>
@@ -193,9 +249,13 @@ const formValidation = async () => {
         <Text style={styles.lasttext1}> Login now!</Text>
         </TouchableOpacity>
       </View>
-      <View style={{marginTop:"15%",alignItems:'center'}}>
+      <View style={styles.lasttextvieworange}>
       <Text style={styles.lasttext2}>By signing up,
-       you are agree with our Terms & Conditions</Text>
+       you are agree</Text>
+       <View style={styles.lasttextview1}>
+       <Text style={styles.lasttext2}> with our </Text>
+       <Text style={styles.lasttext3}>Terms & Conditions</Text>
+      </View>
       </View>
       <Snackbar
           duration={400}
@@ -208,6 +268,18 @@ const formValidation = async () => {
           }}>
           {snackbarValue.value}
         </Snackbar>
+        <CustomModal 
+                modalVisible={modalVisible1}
+                CloseModal={() => setModalVisible1(false)}
+                Icon={  <AntDesign
+                  name="closecircle"
+                  color={'red'}
+                  size={60}
+              />}
+              text={'Email Already Exist,Enter other email'}
+         buttontext={'OK'}
+ onPress={()=> {setModalVisible1(false)}}
+                /> 
       <CustomModal 
                 modalVisible={modalVisible}
                 CloseModal={() => setModalVisible(false)}
@@ -222,7 +294,7 @@ const formValidation = async () => {
                 /> 
               
        </ImageBackground>
-</ScrollView>
+// </ScrollView>
   )
 };
 

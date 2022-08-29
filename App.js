@@ -4,6 +4,9 @@ import { View} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+//////////redux////////////
+import { Provider } from 'react-redux';
+import { Store } from './src/redux/store';
 
 //Screens
 import AuthNav from './src/navigation/Auth/AuthNav';
@@ -31,11 +34,14 @@ import ChangeAddress from './src/screens/ChangeAddress/ChangeAddress';
 import Groups from './src/screens/Chat/Groups/Groups';
 import EditVideo from './src/screens/Video/EditVideo/EditVideo';
 import EditProfile from './src/screens/Profile/EdilProfile/EditProfile';
+import CustomCamera from './src/screens/Camera/Camera';
+import CameraVideo from './src/screens/CameraVideo/CamerVideo';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
+    <Provider store={Store}>
     <NavigationContainer>
       <Stack.Navigator>
 
@@ -44,6 +50,14 @@ function App() {
         headerShown: false,
         }} />
               <Stack.Screen name="Drawerroute" component={Drawerroute}
+        options={{
+        headerShown: false,
+        }} />
+              <Stack.Screen name="CustomCamera" component={CustomCamera}
+        options={{
+        headerShown: false,
+        }} />
+      <Stack.Screen name="CameraVideo" component={CameraVideo}
         options={{
         headerShown: false,
         }} />
@@ -126,7 +140,7 @@ function App() {
         options={{
         headerShown: false,
         }} />
-                  <Stack.Screen name="Groups" component={Groups}
+        <Stack.Screen name="Groups" component={Groups}
         options={{
         headerShown: false,
         }} />
@@ -134,16 +148,18 @@ function App() {
         options={{
         headerShown: false,
         }} />
-              <Stack.Screen name="EditVideo" component={EditVideo}
+        <Stack.Screen name="EditVideo" component={EditVideo}
         options={{
         headerShown: false,
         }} />
-                      <Stack.Screen name="EditProfile" component={EditProfile}
+         <Stack.Screen name="EditProfile" component={EditProfile}
         options={{
         headerShown: false,
         }} />
+
       </Stack.Navigator>
     </NavigationContainer>
+    </Provider>
   );
 }
 

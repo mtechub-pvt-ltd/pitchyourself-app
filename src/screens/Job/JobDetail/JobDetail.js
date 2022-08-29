@@ -30,7 +30,7 @@ console.log('items here:',route.params)
         >
           <View style={styles.topview}>
               <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center"}}>
-          <TouchableOpacity onPress={() => navigation.navigate('Question')}>
+              <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
                    source={require('../../../assets/Icons/back.png')}
                    style={{width:50,height:20}}

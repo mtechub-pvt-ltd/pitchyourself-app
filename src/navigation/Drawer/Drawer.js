@@ -13,6 +13,7 @@ import ChatList from '../../screens/Chat/ChatList/ChatList';
 import Profile from '../../screens/Profile/MyProfile/MyProfile';
 import Jobs from '../../screens/Job/JobsCategories/Jobs';
 
+
 const Drawer = createDrawerNavigator();
 
 export default function Drawerroute() {
@@ -59,6 +60,7 @@ export default function Drawerroute() {
           headerShown: false,
           }}
       name="Jobs" component={Jobs}/>
+
     </Drawer.Navigator>
     
         

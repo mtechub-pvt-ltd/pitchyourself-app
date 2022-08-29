@@ -156,7 +156,7 @@ const getData = async () => {
 
 }
 useEffect(() => {
-  getData();
+  //getData();
 
 }, []);
   return (

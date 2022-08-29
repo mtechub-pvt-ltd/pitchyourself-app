@@ -13,12 +13,12 @@ const Logostyles = StyleSheet.create({
 
   logoview:
   { 
-      marginTop:wp('10%'),
+      marginTop:hp(8),
        justifyContent: 'flex-end',
        alignItems:'center'
 },
 logo: {
-  height:wp('30%'),
+  height:hp(12),
   width:wp('30%'),
 },
 underlogotextview:
