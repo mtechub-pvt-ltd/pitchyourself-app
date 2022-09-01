@@ -32,7 +32,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp }
 
 ////////////////////redux////////////
 import { useSelector, useDispatch } from 'react-redux';
-import { setVideoUrl } from '../../../redux/actions';
+import {setthumbnails } from '../../../redux/actions';
 
 const Project = ({ navigation }) => {
 
@@ -78,6 +78,7 @@ const CreateProject = async() => {
     Video: video,
     Workedusers: projectmember,
     HashtagHub: hashtag,
+    Hashtags: hashtag ,
     projectDescription: projectdesc,
    },
  })
@@ -85,8 +86,8 @@ const CreateProject = async() => {
      console.log("response", JSON.stringify(response.data))
      setloading(0);
      setdisable(0);
-//setModalVisible1(true)
-navigation.navigate('ProjectDetail')
+     dispatch(setthumbnails(''))
+navigation.navigate('ProjectDetail',{id:response.data._id})
 
    })
    .catch(function (error) {

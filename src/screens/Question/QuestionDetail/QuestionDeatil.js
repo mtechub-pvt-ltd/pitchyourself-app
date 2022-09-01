@@ -1,131 +1,84 @@
 import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
-    Image, View, Text, TouchableOpacity, 
 } from 'react-native';
-import BadgeView from '../../../components/BadgeView/BadgeView';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Feath from 'react-native-vector-icons/Feather';
-import styles from './styles';
-import Authtextstyles from '../../../utills/GlobalStyles/Authtextstyles';
-import Colors from '../../../utills/Colors';
 
+//////////////////app components/////////////////////
+import CustomHeader from '../../../components/CustomHeader/CustomHeader';
+import CustomPostCard from '../../../components/PostCard/CustomPostCard';
 
-const QuestionDetail = ({ navigation }) => {
+//////////////////////app styles/////////////////
+import cardcontainerstyles from '../../../utills/GlobalStyles/cardcontainerstyles'
 
-  //textfields
-const[star,setstar]=useState(false)
-//make toggleview
+//////////////////////////app api/////////////////////////
+import axios from 'axios';
+import { BASE_URL } from '../../../utills/ApiRootUrl';
 
-const toggleview=()=>
-{
-  if(star=== false)
-  {
-    setstar(true)
+const QuestionDetail = ({ navigation, route }) => {
+
+  ///////////////textfields//////////////////
+  const [username, setusername] = useState('');
+  const [userimage, setUserImage] = useState('');
+  const [postedtime, setPostedTime] = useState('');
+  const [posttype, setPostType] = useState('');
+  const [videothumbnailimage, setVideoThumbnailImage] = useState('');
+  const [hashtags, setHastags] = useState([]);
+  const [postdesc, setPostDesc] = useState('');
+  const [Video, setVideo] = useState('');
+  const [reason, setReason] = useState('')
+  const [savedBy, setSavedBy] = useState([])
+  const [hubpostid, setHubPostId] = useState([])
+
+  ///////get api for onboarding data//////////
+  const GetQuestionDetail = async () => {
+    axios({
+      method: 'GET',
+      url: BASE_URL + "user/get-hub?_id=" + route.params.id,
+    })
+      .then(function (response) {
+        // console.log("response", JSON.stringify(response.data))
+        /////////////setuserprofile data//////////
+        setusername(response.data.userName)
+        setUserImage(response.data.userImage)
+        setPostedTime(response.data.TimePosted)
+        setPostType(response.data.PostType)
+        setHastags(response.data.Hashtags)
+        setPostDesc(response.data.Title)
+        setVideo(response.data.Video)
+        setSavedBy(response.data.SavedBy)
+        //setVideoThumbnailImage(response.data.image)
+        setReason(response.data.questionReason)
+        setHubPostId(response.data._id)
+      })
+      .catch(function (error) {
+        console.log("error", error)
+      })
   }
-  else{
-    setstar(false)
-  }
-}
-
   useEffect(() => {
-
-    //SplashScreen.hide();
+    GetQuestionDetail()
   }, []);
+
   return (
 
-    <SafeAreaView style={styles.container}>
-          <View style={styles.topview}>
-          <TouchableOpacity onPress={() => navigation.navigate('Question')}>
-          <Image
-                   source={require('../../../assets/Icons/back.png')}
-                   style={{width:50,height:20}}
-                    resizeMode='contain'
-                />
-          </TouchableOpacity>
-     
-          <Text style={Authtextstyles.maintext}>Question Detail</Text>
-          <Image
-                   source={require('../../../assets/Homeimages/search.png')}
-                   style={{width:50,height:20}}
-                    resizeMode='contain'
-                />
-          </View>
-      <View style={styles.inputview}>
-<View style={styles.postcard}>
-<View style={styles.mainusercontainer}>
-    <View style={{flexDirection:"row",justifyContent:'space-around',alignItems:'center'}}>
-<View style={{}}>
-                <Image
-                 source={require('../../../assets/Homeimages/user.png')}
-                 style={styles.userimage}
-                    resizeMode='contain'
-                />
-                </View>
-                <View>
-                <Text style={styles.usermaintext}>Lorem ipsum</Text>
-                <Text style={styles.usertime}>01 : 00 pm</Text>
-                </View>
-                </View>
-             
-                <View style={{flexDirection:"row"}}>
-                <BadgeView 
-                    title='JOB'
-                    />
-    
-                </View>
-                                                <View   style={[styles.iconview,{marginLeft:30}]}>
-                                            <Image
-                                          source={require('../../../assets/Homeimages/orangestart.png')}
-                                          style={{width:80,height:20}}
-                                              resizeMode='contain'
-                                          />
-                                          </View>
-                                       
-                             
-                 </View>
-                 <View style={{marginLeft:30,marginBottom:10}}>
-                 <Text style={styles.postdesc}>Question :</Text>
-                 <Text style={styles.postdesc}>Lorem ipsum dolor sit amet,
-                  consetetur</Text>
-                 </View>
-              
-                 <View style={styles.postpiccontainer}>
-      
-                <Image
-                 source={require('../../../assets/Homeimages/postpic.png')}
-                 style={styles.postpic}
-                    resizeMode='contain'
-                />
-                </View>
-            
-                 <View style={{flexDirection:'row',marginLeft:20,
-                 marginRight:20,
-                 justifyContent:'space-between'}}>
-                 <BadgeView 
-                    title='Advice'
-                    />
-                 <BadgeView 
-                    title='Advice'
-                    />
-                      <BadgeView 
-                    title='Advice'
-                    />
-                      <BadgeView 
-                    title='Advice'
-                    />
-              
-                 </View>
-                <View style={{marginLeft:30,marginTop:10}}>
-                <Text style={styles.recomend}>
-                    #tag #video #tag #video #tag #video 
-                #tag #video #tag #video #tag #video #tag #video #tag #video #tag 
-                #video #tag #video #tag #video #tag #video #tag #video
-                 #tag #video #tag #video #tag #video #tag #video #tag #video #tag #video #tag #video</Text>
-                </View>
-        
-        </View>
-        </View>
+    <SafeAreaView style={cardcontainerstyles.container}>
+      <CustomHeader
+        screentitle={'Question Detail'}
+        navigation={() => navigation.goBack()}
+      />
+
+      <CustomPostCard
+        cardtype={'Question'}
+        username={username}
+        userimage={userimage}
+        postedtime={postedtime}
+        posttype={posttype}
+        postdesc={postdesc}
+        reason={reason}
+        hashtags={hashtags}
+        savedBy={savedBy[0]}
+        hubpostid={hubpostid}
+      />
+
     </SafeAreaView>
 
   )

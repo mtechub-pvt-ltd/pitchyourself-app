@@ -4,8 +4,6 @@ import {
   Dimensions
 } from 'react-native';
 import Colors from '../../utills/Colors';
-const Width = Dimensions.get("screen").width;
-const Height = Dimensions.get("screen").height;
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
 
@@ -17,7 +15,7 @@ const Authtextstyles = StyleSheet.create({
       marginTop: wp('2%'),
       marginLeft:wp('10%')
     },
-    maintext:
+    maintext1:
     {
       color: 'white',
       fontWeight: 'bold',

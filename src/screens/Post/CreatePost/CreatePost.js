@@ -1,6 +1,6 @@
 import React, { useEffect, useState,useRef} from 'react';
 import {
-  SafeAreaView, TextInput,
+  SafeAreaView, TextInput,ScrollView,
     Image, View, Text, TouchableOpacity, 
 } from 'react-native';
 import CustomButtonhere from '../../../components/Button/CustomButton';
@@ -75,8 +75,7 @@ const CreatePost = async() => {
      setloading(0);
      setdisable(0);
      dispatch(setthumbnails(""))
-//setModalVisible1(true)
-navigation.navigate('PostDetail')
+navigation.navigate('PostDetail',{id:response.data._id})
 
    })
    .catch(function (error) {
@@ -118,6 +117,10 @@ const formValidation = async () => {
   }, []);
   return (
     <SafeAreaView style={styles.container}>
+          <ScrollView
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        >
           <View style={styles.topview}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
@@ -244,6 +247,8 @@ const formValidation = async () => {
          buttontext={'OK'}
  onPress={()=> {setModalVisible1(false)}}
                 /> 
+    
+    </ScrollView>
     </SafeAreaView>
 
   )

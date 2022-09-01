@@ -5,29 +5,27 @@ import {
     Drawer,
     Avatar,
     Title,
-    Caption,
-    TouchableRipple,
-    Text,
-    Switch
 } from 'react-native-paper';
 import {
     DrawerContentScrollView,
     DrawerItem
 } from '@react-navigation/drawer';
 import Colors from '../../utills/Colors';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Iconicons from 'react-native-vector-icons/Ionicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+
+/////////////////app pakages//////////////////
+import { useIsFocused } from '@react-navigation/native';
+
 import { TouchableOpacity } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} 
 from 'react-native-responsive-screen';
 
+  //////////////////////////app api/////////////////////////
+  import axios from 'axios';
+  import { BASE_URL } from '../../utills/ApiRootUrl';
+  import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 export const DrawerContent= (props)=> {
-    const paperTheme = useTheme();
-
-    const [isSwitchOn, setIsSwitchOn] = React.useState(false);
-
-    const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
     const logout=async()=>
     {
@@ -37,23 +35,65 @@ export const DrawerContent= (props)=> {
       await AsyncStorage.removeItem('UserPass');
       props.navigation.navigate('Login')
     }
+
+
+////////////isfocused//////////
+const isfocussed = useIsFocused()
+
+  ///////////////textfields//////////////////
+  const [userid, setuserid] =useState();
+  const [Username, setusername] = useState('');
+  const [Email,  setEmail] = useState('');
+  const[image,setImage]=useState()
+  
+//////////////////api function////////////
+  const GetProfileData= async() => {
+    var user= await AsyncStorage.getItem('Userid')
+    console.log("userid:",user)
+   
+    axios({
+      method: 'GET',
+      url:BASE_URL+"user/get-user?_id="+user
+    })
+    .then(function (response) {
+      console.log("response", JSON.stringify(response.data))
+   /////////////setuserprofile data//////////
+   setusername(response.data.name)
+   setEmail(response.data.email)
+   setImage(response.data.image)
+   setuserid(response.data._id)
+    })
+    .catch(function (error) {
+      console.log("error", error)
+    })
+    }
+      useEffect(() => {
+     
+        if (isfocussed) {
+          GetProfileData()
+        }
+  
+    },[isfocussed]);
+
     return(
         <View style={{flex:1}}>
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
                         <View style={{marginTop: 25,alignSelf:'center'}}>
-                          <TouchableOpacity onPress={()=>props.navigation.navigate('Profile',{item:'profile'})}>
+                          <TouchableOpacity onPress={()=>props.navigation.navigate('Profile',{item:'profile',id:userid})}>
                        
                         <Avatar.Image 
-                               source={require('../../assets/Homeimages/user.png')}
+                               //source={require('../../assets/Homeimages/user.png')}
+                               source={{uri: image}}
+                               style={{backgroundColor:'grey'}}
                                 size={100}
                             />
                                  
                           </TouchableOpacity>
                         </View>
                         <View style={{alignSelf:'center' }}>
-                                <Title style={styles.title}>Lorem ipsum</Title>
+                                <Title style={styles.title}>{Username}</Title>
                             </View>
                     </View>
 
@@ -86,7 +126,7 @@ export const DrawerContent= (props)=> {
                               />
                             )}
                             label="Profile"
-                            onPress={() => {props.navigation.navigate('Profile',{item:'profile'})}}
+                            onPress={() => {props.navigation.navigate('Profile',{item:'profile',id:userid})}}
                         />
                         <DrawerItem 
                             icon={({color, size}) => (

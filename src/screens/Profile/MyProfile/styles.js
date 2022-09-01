@@ -44,8 +44,9 @@ mainusercontainer:
 },
 userimage:
 {
-    width:wp('35%'),
-    height:wp('42%'),
+    width:wp(28),
+    height:wp(28),
+    borderRadius:wp(18)
 },
 lastimage:
 {
@@ -59,7 +60,13 @@ largeimage:
 },
 usermaintext:
 {
-    fontSize:hp('2%'),
+    fontSize:hp(2),
+    fontWeight:'bold',
+    color:'black'
+},
+posttext:
+{
+    fontSize:hp(3),
     fontWeight:'bold',
     color:'black'
 },
@@ -111,13 +118,13 @@ recomend:
 },
 iconview:
 {
-  width:40,
-  height:40,
+  width:wp(11),
+  height:hp(5),
   backgroundColor:'rgba(101, 113, 144, 0.16)',
-borderRadius:20,
+borderRadius:wp(10),
 alignItems:'center',
 justifyContent:'center',
-margin:5
+margin:wp(1)
 }
 });
 export default styles;

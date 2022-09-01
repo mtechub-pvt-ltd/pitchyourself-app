@@ -86,7 +86,7 @@ const toggleview=()=>
                           <View style={styles.mainusercontainer}>
                               <View style={{flexDirection:"row",justifyContent:'space-around',alignItems:'center'}}>
                           <View style={{}}>
-                            <TouchableOpacity onPress={()=>navigation.navigate('Profile',{item:'home'})}>
+                            <TouchableOpacity onPress={()=>navigation.navigate('Profile',{item:'home',id:'630e02140b16dccc7d1f976a'})}>
                             <Image
                                            source={require('../../assets/Homeimages/user.png')}
                                            style={styles.userimage}

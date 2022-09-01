@@ -1,105 +1,79 @@
 import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
-    Image, View, Text, TouchableOpacity, 
 } from 'react-native';
-import Customvideo from '../../../components/VideoComponent/CustomVideo';
-import BadgeView from '../../../components/BadgeView/BadgeView';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Feath from 'react-native-vector-icons/Feather';
-import styles from './styles';
-import Authtextstyles from '../../../utills/GlobalStyles/Authtextstyles';
-import Colors from '../../../utills/Colors';
 
+//////////////////app components////////////////
+import CustomPostCard from '../../../components/PostCard/CustomPostCard';
+import CustomHeader from '../../../components/CustomHeader/CustomHeader';
 
+/////////////////app styles///////////////////
+import cardcontainerstyles from '../../../utills/GlobalStyles/cardcontainerstyles';
 
-const PostDetail = ({ navigation }) => {
+//////////////////////////app api/////////////////////////
+import axios from 'axios';
+import { BASE_URL } from '../../../utills/ApiRootUrl';
 
-  //textfields
-  const [modalVisible, setModalVisible] = useState(false);
+const PostDetail = ({ navigation, route }) => {
 
+  ///////////////textfields//////////////////
+  const [username, setusername] = useState('');
+  const [userimage, setUserImage] = useState('');
+  const [postedtime, setPostedTime] = useState('');
+  const [posttype, setPostType] = useState('');
+  const [videothumbnailimage, setVideoThumbnailImage] = useState('');
+  const [hashtags, setHastags] = useState([]);
+  const [postdesc, setPostDesc] = useState('');
+  const [Video, setVideo] = useState('');
+  const [aboutpost, setAboutPost] = useState('');
+
+  ///////get api for onboarding data//////////
+  const GetPostDetail = async () => {
+    axios({
+      method: 'GET',
+      url: BASE_URL + "user/get-hub?_id=" + route.params.id,
+    })
+      .then(function (response) {
+        console.log("response", JSON.stringify(response.data))
+        /////////////setuserprofile data//////////
+        setusername(response.data.userName)
+        setUserImage(response.data.userImage)
+        setPostedTime(response.data.TimePosted)
+        setPostType(response.data.PostType)
+        setHastags(response.data.Hashtags)
+        setPostDesc(response.data.Title)
+        setVideo(response.data.Video)
+        setAboutPost(response.data.profileStatus)
+        //setVideoThumbnailImage(response.data.image)
+      })
+      .catch(function (error) {
+        console.log("error", error)
+      })
+  }
   useEffect(() => {
-
-    //SplashScreen.hide();
+    GetPostDetail()
   }, []);
+
+
   return (
 
-    <SafeAreaView style={styles.container}>
-          <View style={styles.topview}>
-          <TouchableOpacity onPress={() => navigation.navigate('CreatePost')}>
-          <Image
-                     source={require('../../../assets/Icons/back.png')}
-                   style={{width:50,height:20}}
-                    resizeMode='contain'
-                />
-          </TouchableOpacity>
-     
-          <Text style={Authtextstyles.maintext}>Post Detail</Text>
-          <Image
-                   source={require('../../../assets/Homeimages/search.png')}
-                   style={{width:50,height:20}}
-                    resizeMode='contain'
-                />
-          </View>
-      <View style={styles.inputview}>
-<View style={styles.postcard}>
-<View style={styles.mainusercontainer}>
-    <View style={{flexDirection:"row",justifyContent:'space-around',alignItems:'center'}}>
-<View style={{}}>
-                <Image
-                 source={require('../../../assets/Homeimages/user.png')}
-                 style={styles.userimage}
-                    resizeMode='contain'
-                />
-                </View>
-                <View>
-                <Text style={styles.usermaintext}>Lorem ipsum</Text>
-                <Text style={styles.usertime}>01 : 00 pm</Text>
-                </View>
-                </View>
-             
-                <View style={{flexDirection:"row"}}>
-                <BadgeView 
-                    title='Post'
-                    />
-                <Image
-                source={require('../../../assets/Homeimages/star.png')}
-                style={styles.iconimages}
-                    resizeMode='contain'
-                />
-                </View>
-                 </View>
-                 <View style={{marginLeft:30,marginBottom:10}}>
-                 <Text style={styles.postdesc}>Post</Text>
-                 <Text style={styles.postdesc}>Lorem ipsum dolor sit amet,
-                  consetetur</Text>
-                 </View>
-              
-                 <View style={styles.postpiccontainer}>
-                 <Customvideo
-       // viewhide={()=>toggleview()}
-       repeatvideos={()=> setModalVisible(true)}
-      //samplevideo={{uri: videoadd}}
-        //samplevideo={require('../../components/VideoComponent/sample.mp4')}
+    <SafeAreaView style={cardcontainerstyles.container}>
+            <CustomHeader
+        screentitle={'Post'}
+        navigation={()=> navigation.goBack()}
       />
-                {/* <Image
-                 source={require('../../../assets/Homeimages/postpic.png')}
-                 style={styles.postpic}
-                    resizeMode='contain'
-                /> */}
-                </View>
-         
-                <View style={{marginLeft:30,marginTop:10}}>
-                <Text style={styles.recomend}>
-                    #tag #video #tag #video #tag #video 
-                #tag #video #tag #video #tag #video #tag #video #tag #video #tag 
-                #video #tag #video #tag #video #tag #video #tag #video
-                 #tag #video #tag #video #tag #video #tag #video #tag #video #tag #video #tag #video</Text>
-                </View>
-             
 
-        </View>
-        </View>
+      <CustomPostCard
+        cardtype={'Post'}
+        username={username}
+        userimage={userimage}
+        postedtime={postedtime}
+        posttype={posttype}
+        postdesc={postdesc}
+        aboutpost={aboutpost}
+        hashtags={hashtags}
+      />
+
     </SafeAreaView>
 
   )

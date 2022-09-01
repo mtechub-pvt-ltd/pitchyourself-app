@@ -11,12 +11,9 @@ const Inputstyles = StyleSheet.create({
     inputview:
     {
       width: wp(85),
-      //height:wp(50),
       alignSelf: 'center',
       alignContent:"center",
       marginTop:wp(0),
-      //backgroundColor:'red',
-      //marginBottom:hp(8)
     },
     input:
 {
@@ -27,12 +24,38 @@ const Inputstyles = StyleSheet.create({
        fontWeight:'500',
       borderRadius: 40,   
     },
+    numberinput:
+    {
+          backgroundColor: Colors.Appthemecolor,
+           width: wp(25),
+           color: 'rgba(26, 26, 26, 0.56)',
+           fontWeight:'500',
+          borderTopLeftRadius: 40,   
+          borderBottomLeftRadius: 40,   
+          borderWidth:1,
+          borderColor:Colors.Appthemecolor,
+          paddingLeft:wp(5)
+        },
+        numberinputaction: {
+          flexDirection: 'row',
+          marginTop: 10,
+          borderWidth:1,
+          borderColor: 'rgba(26, 26, 26, 0.25)',
+          backgroundColor: 'white',
+          width: wp(80),
+          height: wp(13),
+          alignSelf: 'center',
+          marginBottom: wp(2),
+          borderRadius: 40,
+       
+          paddingRight: wp(4),
+          alignItems: 'center'
+        },
     action: {
       flexDirection: 'row',
       marginTop: 10,
       borderWidth:1,
       borderColor: 'rgba(26, 26, 26, 0.25)',
-      //paddingBottom: 5,
       backgroundColor: 'white',
       width: wp(80),
       height: wp(13),

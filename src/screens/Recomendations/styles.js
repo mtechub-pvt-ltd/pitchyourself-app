@@ -28,8 +28,15 @@ postcard:
 
 userimage:
 {
-    width:wp('15%'),
-    height:wp('9%'),
+    width:wp(11),
+    height:wp(11),
+    borderRadius:wp(10)
+    //smarginRight:wp()
+},
+sendimage:
+{
+    width:wp(10),
+    height:wp(10),
 },
 likeimage:
 {
@@ -43,20 +50,20 @@ likeimage:
 
 recomend:
 {
-    fontSize:hp('1.3%'),
-    fontWeight:'600',
-    color:'#444D6E'
+    fontSize:hp(1.5),
+    fontWeight:'400',
+    color:'#444D6E',
+    width:wp(60)
 },
 card:
 {
  borderColor:'#BDC4CC26',
   borderBottomWidth: 1,
   flexDirection:'row',
- alignContent:"center",
  alignItems:'center',
-  alignSelf:'center',
   justifyContent:'space-between',
-  marginBottom:wp('5%')
+  marginBottom:wp('5%'),
+
 },
 });
 export default styles;

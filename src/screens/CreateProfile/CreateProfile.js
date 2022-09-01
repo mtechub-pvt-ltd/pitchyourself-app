@@ -234,6 +234,7 @@ const CreateProfile = ({ navigation, route }) => {
   ///////////////textfields//////////////////
   const [name, setName] = useState('');
   const [profession, setProfession] = useState('');
+  const [phoneno, setPhoneNo] = useState('');
   const [bio, setBio] = useState('');
   const [hashtag, setHashtag] = useState('');
 
@@ -260,7 +261,7 @@ const CreateProfile = ({ navigation, route }) => {
         uploadDocument:document,
         ProfileHashtag:hashtag,
         profileVideo:video,
-        phoneNumber:'3135059778',
+        phoneNumber:phoneno,
         //sociallinks:links
       },
     })
@@ -416,13 +417,32 @@ const CreateProfile = ({ navigation, route }) => {
               style={Inputstyles.input}
             />
           </View>
+          <View style={Inputstyles.numberinputaction}>
+          <TextInput
+              placeholder="Pak +92"
+              onChangeText={setProfession}
+        editable={false}
+              placeholderTextColor={'white'}
+              style={[Inputstyles.numberinput]}
+            />
+            <TextInput
+              ref={ref_input2}
+              placeholder="00000000000"
+              onChangeText={setPhoneNo}
+              returnKeyType={"next"}
+              onSubmitEditing={() => { ref_input3.current.focus()}}
+              placeholderTextColor={Colors.inputtextcolor}
+
+              style={[Inputstyles.input,{width:wp(50),  paddingLeft:wp(5)}]}
+            />
+          </View>
           <View style={Inputstyles.action}>
             <TextInput
               ref={ref_input3}
               placeholder="Add Bio"
               onChangeText={setBio}
               returnKeyType={"next"}
-              onSubmitEditing={() => { ref_input4.current.focus() }}
+              onSubmitEditing={() => { ref_input4.current.focus()}}
               placeholderTextColor={Colors.inputtextcolor}
               style={Inputstyles.input}
             />
@@ -463,7 +483,7 @@ const CreateProfile = ({ navigation, route }) => {
                     <TouchableOpacity onPress={() => refuploadRBSheet.current.open()}>
                     <View style={Uploadstyles.mainview}>
                     {docimage === ""?
-                    <View>
+           <View style={{ alignItems: 'center' }}>  
                       <Image
                         source={require('../../assets/Icons/upload.png')}
                         style={Uploadstyles.uploadicon}

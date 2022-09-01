@@ -26,7 +26,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp }
 
 ////////////////////redux////////////
 import { useSelector, useDispatch } from 'react-redux';
-import { setVideoUrl } from '../../redux/actions';
+import { setthumbnails } from '../../../redux/actions';
 
 //////////////////////////app api/////////////////////////
 import axios from 'axios';
@@ -94,8 +94,8 @@ const[predata]=useState(route.params)
         console.log("response", JSON.stringify(response.data))
         setloading(0);
         setdisable(0);
-        setModalVisible1(true)
-        navigation.navigate('PostDetail')
+        dispatch(setthumbnails(""))            
+        navigation.navigate('JobDetail',{id:response.data._id})
 
       })
       .catch(function (error) {
@@ -161,10 +161,10 @@ const[predata]=useState(route.params)
       let day = d.getDate().toString().padStart(2, "0");
       console.log(year + '-' + month + '-' + day);
       console.log(typeof (year + '-' + month + '-' + day))
-      setshowyearwise(year + "-" + month + "-" + day)
+      //setshowyearwise(year + "-" + month + "-" + day)
       setstartdate(day + "-" + month + "-" + year).toISOString()
       // setbirthdaydaywise(day + "-" + month + "-" + year).toISOString()
-      //console('date ha yhn',showyearwise)
+      console('start date ha yhn',startdate)
     }
 
   }
@@ -181,9 +181,9 @@ const[predata]=useState(route.params)
       console.log(year + '-' + month + '-' + day);
       console.log(typeof (year + '-' + month + '-' + day))
       //setshowyearwise(year + "-" + month + "-" + day)
-      setbirthdaydaywise(day + "-" + month + "-" + year).toISOString()
+      //setbirthdaydaywise(day + "-" + month + "-" + year).toISOString()
       setenddate(day + "-" + month + "-" + year).toISOString()
-      //console('date ha yhn',showyearwise)
+      console('end date ha yhn',enddate)
     }
 
   }

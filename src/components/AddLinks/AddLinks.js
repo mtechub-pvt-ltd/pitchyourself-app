@@ -1,7 +1,8 @@
 import React, { useEffect, useState,useRef } from 'react';
 import {View,Text,TouchableOpacity,Image,FlatList} from 'react-native';
 
-import { Divider} from 'react-native-paper';
+//////////////////app components///////////
+import AddLinksView from '../AddLinksView/AddLinksView';
 
 ///////////////////app pakages///////////////
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -9,6 +10,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 ////////////app styles//////////////
 import styles from './styles';
 import Inputstyles from '../../utills/GlobalStyles/Inputstyles';
+import Authtextstyles from '../../utills/GlobalStyles/Authtextstyles';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} 
 from 'react-native-responsive-screen';
 
@@ -27,8 +29,12 @@ const AddLinks = (props) => {
     const { links} = useSelector(state => state.userReducer);
     const dispatch = useDispatch();
 
+   //////////////link dropdown////////////////
+   const reflinkddRBSheet = useRef();
+
   //////////dropdownlink data/////////////
   const [dddata, setdddata] = useState()
+  const [ddpickvalue, setddpickvalue] = useState()
 
   ///////////////link function///////////////
     const GetLinks =async () => {
@@ -89,15 +95,17 @@ const AddLinks = (props) => {
           renderItem={({ item, index, separators }) => (
             <TouchableOpacity
             onPress={() =>
-              {setddpicvalue1(item.type),
-                 refddRBSheet1.current.close()}}
+              {setddpickvalue(item.icon),
+                //props.refRBSheet.current.close(),
+                reflinkddRBSheet.current.open()
+              }}
              >
             <View style={styles.card}>
-            <Image
+            {/* <Image
                  source={{uri:BASE_URL+item.icon}}
                     style={Inputstyles.inputicons}
                     resizeMode='contain'
-                />
+                /> */}
                 <Text style={styles.cardtext}>
                   {item.Name}
                 </Text>
@@ -107,6 +115,13 @@ const AddLinks = (props) => {
           keyExtractor={item => item._id}
         
         />
+                  <AddLinksView
+              refRBSheet={reflinkddRBSheet}
+              onClose={() => {reflinkddRBSheet.current.close(),props.refRBSheet.current.close()}}
+              onCloseReviewBTM={()=> props.refRBSheet.current.close()}
+              icon={ddpickvalue}
+              title={'Review Added'}
+            />
         </RBSheet>
     )
 };

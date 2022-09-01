@@ -1,73 +1,217 @@
 import React, { useEffect, useState } from 'react';
 import {
-  SafeAreaView, KeyboardAvoidingView, TextInput,FlatList,ScrollView,
-    Image, View, Text, TouchableOpacity, StatusBar, ImageBackground
+  SafeAreaView, ScrollView,
+  Image, View, Text, TouchableOpacity,
 } from 'react-native';
-import CustomButtonhere from '../../../components/Button/CustomButton';
-import { Divider,FAB } from 'react-native-paper';
+
+/////////////////app pakages//////////////////
+import { useIsFocused } from '@react-navigation/native';
+
+/////////////////app styles////////////////////
 import styles from './styles';
 import Authtextstyles from '../../../utills/GlobalStyles/Authtextstyles';
-import Logostyles from '../../../utills/GlobalStyles/LogoStyles';
 import Inputstyles from '../../../utills/GlobalStyles/Inputstyles';
 import Colors from '../../../utills/Colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
 
+//////////////////////////app api/////////////////////////
+import axios from 'axios';
+import { BASE_URL } from '../../../utills/ApiRootUrl';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNFetchBlob from 'rn-fetch-blob'
 
-const Profile = ({ navigation,route }) => {
-console.log('params:',route.params)
-  //textfields
+////////////////////redux////////////
+import { useSelector, useDispatch } from 'react-redux';
+import { setthumbnails } from '../../../redux/actions';
 
+const Profile = ({ navigation, route }) => {
+  console.log('params:', route.params)
 
+  /////////////previous data///////////
+  const [predata] = useState(route.params.item)
+
+  ////////////isfocused//////////
+  const isfocussed = useIsFocused()
+
+  /////////////redux states///////
+  const { video, links, id, thumbnails, } = useSelector(state => state.userReducer);
+  const dispatch = useDispatch();
+
+  ///////////////textfields//////////////////
+  const [Username, setusername] = useState('');
+  const [Password, setPassword] = useState('');
+  const [Email, setEmail] = useState('');
+  const [image, setImage] = useState('');
+  const [Totalposts, settotalposts] = useState('');
+  const [Profession, setProfession] = useState('');
+  const [Bio, setBio] = useState('');
+  const [ProfileStatus, setProfileStatus] = useState('');
+  const [Document, setDocument] = useState('')
+  const [Profilelike, setProfilelikes] = useState('')
+
+  ///////get api for onboarding data//////////
+  const GetProfileData = async () => {
+    axios({
+      method: 'GET',
+      url: BASE_URL + "user/get-user?_id=" + route.params.id,
+    })
+      .then(function (response) {
+        console.log("response", JSON.stringify(response.data))
+        /////////////setuserprofile data//////////
+        setusername(response.data.name)
+        setPassword(response.data.password)
+        setEmail(response.data.email)
+        settotalposts(response.data.userTotalPosts)
+        setProfession(response.data.profession)
+        setBio(response.data.bio)
+        setProfileStatus(response.data.profileStatus)
+        setImage(response.data.image)
+        setDocument(response.data.uploadDocument)
+        setProfilelikes(response.data.LikesUsersId[0].LikedById)
+      })
+      .catch(function (error) {
+        console.log("error", error)
+      })
+  }
+const[likeuserid,setlikeuserid]=useState()
+  const getuserid=async()=>{
+   var user= await AsyncStorage.getItem('Userid')
+    console.log("userid:",user)   
+    setlikeuserid(user)
+  }
   useEffect(() => {
 
-    //SplashScreen.hide();
-  }, []);
+    if (isfocussed) {
+      getuserid()
+      GetProfileData()
+    }
+console.log("user here after set:",likeuserid)
+  }, [isfocussed, route.params.id]);
+
+  ////////////////////add likes//////////////
+  const Addlikes=async() => {
+    var user= await AsyncStorage.getItem('Userid')
+    console.log("userid:",user)
+    console.log('here......',route.params.id)
+    axios({
+      method: 'POST',
+      url: BASE_URL+'user/add-profile-like',
+      data:{
+        userId:route.params.id,
+        LikedById: user,
+      },
+    })
+    .then(async function (response) {
+      console.log("response", JSON.stringify(response.data))  
+      GetProfileData()
+    })
+    .catch(function (error) {
+      if(error)
+    {    
+      console.log('Issue in Appoinments Acceptence')
+      }
+  
+      console.log("error", error)
+    })
+  }
+    ////////////////////add likes//////////////
+    const AddUnlike=async() => {
+      var user= await AsyncStorage.getItem('Userid')
+      console.log("userid:",user)
+      console.log('here......',route.params.id)
+      axios({
+        method: 'POST',
+        url: BASE_URL+'user/unlike-profile-user?_id='+user,
+      })
+      .then(async function (response) {
+        console.log("response unlike user", JSON.stringify(response.data))  
+        GetProfileData()
+      })
+      .catch(function (error) {
+        if(error)
+      {    
+        console.log('Issue in Appoinments Acceptence')
+        }
+    
+        console.log("error", error)
+      })
+    }
   return (
 
     <SafeAreaView style={styles.container}>
-        <ScrollView 
+      <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        >
-          <View style={{flexDirection:'row',justifyContent:'space-between',
-          alignItems:'center',marginTop:20
-        //backgroundColor:'red'
+      >
+        <View style={{
+          flexDirection: 'row', justifyContent: 'space-between',
+          alignItems: 'center', marginTop: 20
+          //backgroundColor:'red'
         }}>
-      
-            <View style={{flexDirection:'row',justifyContent:'space-around',alignItems:'center'}}>
-            <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-            <Image
-                   source={require('../../../assets/Homeimages/menu.png')}
-                   style={Inputstyles.inputicons}
-                    resizeMode='contain'
-                />
-                 </TouchableOpacity>
-                 <View style={{marginLeft:"12%"}}>
-                 <Text style={Authtextstyles.maintext}>My Profile</Text>
-                 </View>
-  
 
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+            <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+              <Image
+                source={require('../../../assets/Homeimages/menu.png')}
+                style={Inputstyles.inputicons}
+                resizeMode='contain'
+              />
+            </TouchableOpacity>
+            <View style={{ marginLeft: "12%" }}>
+              {route.params.item === 'profile' ?
+                <Text style={Authtextstyles.maintext}>My Profile</Text>
+                :
+                <Text style={Authtextstyles.maintext}> Profile</Text>
+              }
             </View>
-         
-     <View style={{marginHorizontal:wp('0%'),flexDirection:'row'}}>
-     <TouchableOpacity onPress={() => console.log('here')}>
-          <Image
+
+
+          </View>
+
+          <View style={{ marginHorizontal: wp('0%'), flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => console.log('here')}>
+              {/* <Image
                    source={require('../../../assets/Profile/heart.png')}
                    style={[styles.topicon,{height:wp('7%')}]}
                     resizeMode='contain'
+                /> */}
+
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => console.log('here')}>
+              {route.params.item === 'profile' ?
+                <Image
+                  source={require('../../../assets/Profile/send.png')}
+                  style={[styles.topicon, { width: wp('10%') }]}
+                  resizeMode='contain'
                 />
-                
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => console.log('here')}>
-          <Image
-                 source={require('../../../assets/Profile/send.png')}
-                 style={[styles.topicon,{width:wp('10%')}]}
-                    resizeMode='contain'
+                :
+             <View>
+               {Profilelike != likeuserid ?   
+                    <TouchableOpacity onPress={()=> Addlikes()}>
+                    <Image
+                  source={require('../../../assets/Profile/fillheart.png')}
+                  style={[styles.topicon, { height: wp('7%') }]}
+                  resizeMode='contain'
                 />
-                
-                </TouchableOpacity>
-     {route.params.item === 'profile'?    
+                                </TouchableOpacity>
+              :
+              <TouchableOpacity onPress={()=> AddUnlike()}>
+              <Image
+              source={require('../../../assets/Profile/heart.png')}
+              style={[styles.topicon, { height: wp('7%') }]}
+              resizeMode='contain'
+            />
+            </TouchableOpacity>
+              }
+             </View>
+   
+ 
+
+              }
+
+            </TouchableOpacity>
+            {/* {route.params.item === 'profile'?    
        <TouchableOpacity onPress={() => console.log('here')}>
           <Image
                    source={require('../../../assets/Profile/add.png')}
@@ -76,190 +220,251 @@ console.log('params:',route.params)
                 />
                 
                 </TouchableOpacity>:
-                null}
-    
-     </View>
-     
+                null} */}
+
           </View>
-          <View style={{flexDirection:"row",justifyContent:'space-around',
-          alignItems:'center'}}>
-                          <View style={{}}>
-                                          <Image
-                                           source={require('../../../assets/Profile/mainuser.png')}
-                                           style={styles.userimage}
-                                              resizeMode='contain'
-                                          />
-                                          </View>
-                                          <View>
-                                          <Text style={styles.usermaintext}>David Bruno</Text>
-                                          <Text style={styles.usertime}>Lorem ipsum</Text>
-                                          <Text style={[styles.usertime,{width:wp('50%')}]}>Rhoncus ipsum eget tempus. 
-                                          Praesent fermentum sa  rhoncus.</Text>
-                                          </View>
-                                          </View>
-                                          <View style={{flexDirection:"row",
-                                          justifyContent:'flex-start',
-                                          alignItems:'center',marginHorizontal:wp('0%')}}>
-                         {route.params.item === 'profile'?   
-                          <CustomButtonhere
-              title={'Edit Profile'}
-              widthset={'38%'}
-              onPress={() => navigation.navigate('EditProfile')}
+
+        </View>
+        <View style={{
+          flexDirection: "row", justifyContent: 'space-around',
+          alignItems: 'center',
+          marginTop: hp(2)
+        }}>
+          <View style={{
+            borderColor: Colors.Appthemecolor, borderWidth: 3, borderRadius: wp(18),
+            height: hp(14), width: wp(29), alignItems: 'center', justifyContent: "center"
+          }}>
+            <Image
+              //source={{ uri: image }}
+              style={styles.userimage}
+              resizeMode='contain'
             />
+          </View>
+          <View>
+            <Text style={styles.usermaintext}>{Username}</Text>
+            <Text style={styles.usertime}>{Profession}</Text>
+            <Text style={[styles.usertime, { width: wp('50%') }]}>{Bio}</Text>
+          </View>
+        </View>
+        <View style={{
+          flexDirection: "row",
+          justifyContent: 'flex-start',
+          marginLeft: wp(4),
+          alignItems: 'center',
+          marginTop: hp(1)
+        }}>
+          {route.params.item === 'profile' ?
+            <TouchableOpacity
+              style={{
+                width: wp(30), height: hp(4.5),
+                borderRadius: wp(5),
+                alignItems: 'center',
+                justifyContent: 'center',
+
+                backgroundColor: Colors.Appthemecolor
+              }}
+            >
+              <Text style={{ color: 'white' }}>Edit Profile</Text>
+            </TouchableOpacity>
+            // <CustomButtonhere
+            //   title={'Edit Profile'}  
+            //   widthset={'38%'}
+            //   onPress={() => navigation.navigate('EditProfile')}
+            // />
             :
             null}
- 
-                                          <Text style={[styles.usermaintext,{marginLeft:wp('5%')}]}>109</Text>
-                                          <Text style={[styles.usertime,{marginLeft:wp('5%'),color:Colors.Appthemecolor,
-                                        fontWeight:'400'}]}>Posts</Text>
-                             
-                                          </View>
-                                             <TouchableOpacity onPress={()=>navigation.navigate('EditVideo')}>
-                                            
-                                          <View style={styles.postpiccontainer}>
-                                
-                                <Image
-                                 source={require('../../../assets/Profile/video.png')}
-                                 style={styles.postpic}
-                                    resizeMode='contain'
-                                />
-                                </View>
-                                </TouchableOpacity>  
-                                <View style={{flexDirection:'row',justifyContent:"space-between"}}>
-                                          <View style={{flexDirection:"row",justifyContent:"space-around",
-                                          paddingHorizontal:0,width:100,marginBottom:10,
-                                          //backgroundColor:'yellow'
-                                          }}>
-                             <View   style={[styles.iconview,{marginLeft:30}]}>
-                            <Image
-                                                source={require('../../../assets/socialicons/thumbsup.png')}
-                                                style={{width:50,height:20}}
-                                              resizeMode='contain'
-                                          />
-                               </View>
-                               <View   style={[styles.iconview,{marginLeft:25}]}>
-                            <Image
-                                                source={require('../../../assets/Profile/filedownload.png')}
-                                                style={{width:80,height:20}}
-                                              resizeMode='contain'
-                                          />
-                               </View>
-                                                   </View>
-                                                   <View style={{flexDirection:"row",justifyContent:'space-between',
-                                         marginRight:20
-                                          //backgroundColor:'yellow'
-                                          }}>
-                             <View   style={styles.iconview}>
-                            <Image
-                                                source={require('../../../assets/socialicons/facebook.png')}
-                                                style={{width:80,height:20}}
-                                              resizeMode='contain'
-                                          />
-                               </View>
-                                        
-                               <View   style={styles.iconview}>
-                            <Image
-                                                source={require('../../../assets/socialicons/linkedin.png')}
-                                                style={{width:80,height:20}}
-                                              resizeMode='contain'
-                                          />
-                               </View>
-                               <View   style={styles.iconview}>
-                            <Image
-                                                source={require('../../../assets/socialicons/instagram.png')}
-                                                style={{width:80,height:20}}
-                                              resizeMode='contain'
-                                          />
-                               </View>
-                               <View   style={styles.iconview}>
-                            <Image
-                                                source={require('../../../assets/socialicons/share.png')}
-                                                style={{width:80,height:20}}
-                                              resizeMode='contain'
-                                          />
-                               </View>
-                                          </View>
-                                          </View>
-<View>
-    <View style={{flexDirection:'row',justifyContent:"space-between"}}>
-        <View>
-    <Image
-                                           source={require('../../../assets/Profile/user4.png')}
-                                           style={styles.lastimage}
-                                              resizeMode='contain'
-                                          />
-                                                         <Text style={[styles.usertime,{marginLeft:wp('2%'),
-                                                         color:'white',
-                                        fontWeight:'500',position:'absolute',alignSelf:"flex-end",
-                                        paddingBottom:wp('5%')}]}>Rhoncus ipsum 
-                                        </Text>
-                                        </View>
-                                        <View>
-                                                 <Image
-                                           source={require('../../../assets/Profile/user3.png')}
-                                           style={styles.lastimage}
-                                              resizeMode='contain'
-                                          />
-                                                        <Text style={[styles.usertime,{marginLeft:wp('2%'),
-                                                         color:'white',
-                                        fontWeight:'500',position:'absolute',alignSelf:"flex-end",
-                                        paddingBottom:wp('5%')}]}>Rhoncus ipsum 
-                                        </Text>
-                                        </View>
-                                                 <Image
-                                           source={require('../../../assets/Profile/user2.png')}
-                                           style={styles.lastimage}
-                                              resizeMode='contain'
-                                          />
-                                                       <Text style={[styles.usertime,{marginLeft:wp('2%'),
-                                                         color:'white',
-                                        fontWeight:'500',position:'absolute',alignSelf:"flex-end",
-                                        paddingBottom:wp('5%')}]}>Rhoncus ipsum 
-                                        </Text>
-    </View>
-    <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-    <View style={{}}>
-        <View>
 
-    <Image
-                                           source={require('../../../assets/Profile/user5.png')}
-                                           style={styles.lastimage}
-                                              resizeMode='contain'
-                                          />
-                                                                  <Text style={[styles.usertime,{marginLeft:wp('2%'),
-                                                         color:'white',
-                                        fontWeight:'500',position:'absolute',alignSelf:"flex-end",
-                                        paddingBottom:wp('5%')}]}>Rhoncus ipsum 
-                                        </Text>
-                                                      
+          <Text style={[styles.posttext,
+          { marginLeft: predata != 'profile' ? wp(8) : wp(36) }]}>{Totalposts}</Text>
+          <Text style={[styles.usertime, {
+            marginLeft: wp('5%'),
+            color: Colors.Appthemecolor,
+            fontWeight: '400'
+          }]}>Posts</Text>
+
+        </View>
+        <TouchableOpacity onPress={() => navigation.navigate('EditVideo')}>
+
+          <View style={styles.postpiccontainer}>
+
+            <Image
+              source={require('../../../assets/Profile/video.png')}
+              style={styles.postpic}
+              resizeMode='contain'
+            />
+          </View>
+        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+          <View style={{
+            flexDirection: "row", justifyContent: 'space-between',
+            paddingHorizontal: 0, width: 100, marginBottom: 10,
+            //backgroundColor:'yellow'
+          }}>
+            <View style={[styles.iconview, { marginLeft: wp(2) }]}>
+              {route.params.item === 'profile' ?
+                <TouchableOpacity onPress={() => navigation.navigate('Recomendations')}>
+                  <Image
+                    source={require('../../../assets/socialicons/recomend.png')}
+                    style={{ width: 50, height: 20 }}
+                    resizeMode='contain'
+                  />
+                </TouchableOpacity>
+                :
+                <Image
+                  source={require('../../../assets/socialicons/chat.png')}
+                  style={{ width: 50, height: 20 }}
+                  resizeMode='contain'
+                />
+              }
+            </View>
+            <View style={[styles.iconview]}>
+              <Image
+                source={require('../../../assets/socialicons/download.png')}
+                style={{ width: 80, height: 20 }}
+                resizeMode='contain'
+              />
+            </View>
+            {route.params.item === 'profile' ?
+              <View></View>
+              :
+              <View style={[styles.iconview]}>
+                <Image
+                  source={require('../../../assets/socialicons/report.png')}
+                  style={{ width: 80, height: 20 }}
+                  resizeMode='contain'
+                />
+              </View>
+            }
+
+          </View>
+          <View style={{
+            flexDirection: "row", justifyContent: 'space-between',
+            marginRight: wp(1)
+            //backgroundColor:'yellow'
+          }}>
+            <View style={styles.iconview}>
+              <Image
+                source={require('../../../assets/socialicons/facebook.png')}
+                style={{ width: 80, height: 20 }}
+                resizeMode='contain'
+              />
+            </View>
+
+            <View style={styles.iconview}>
+              <Image
+                source={require('../../../assets/socialicons/linkedin.png')}
+                style={{ width: 80, height: 20 }}
+                resizeMode='contain'
+              />
+            </View>
+            <View style={styles.iconview}>
+              <Image
+                source={require('../../../assets/socialicons/instagram.png')}
+                style={{ width: 80, height: 20 }}
+                resizeMode='contain'
+              />
+            </View>
+            <View style={styles.iconview}>
+              <Image
+                source={require('../../../assets/socialicons/share.png')}
+                style={{ width: 80, height: 20 }}
+                resizeMode='contain'
+              />
+            </View>
+          </View>
         </View>
         <View>
-                                                 <Image
-                                           source={require('../../../assets/Profile/user6.png')}
-                                           style={styles.lastimage}
-                                              resizeMode='contain'
-                                          />
-                                                                  <Text style={[styles.usertime,{marginLeft:wp('2%'),
-                                                         color:'white',
-                                        fontWeight:'500',position:'absolute',alignSelf:"flex-end",
-                                        paddingBottom:wp('5%')}]}>Rhoncus ipsum 
-                                        </Text>
-                      
-                                        </View>
-    </View>
-    <Image
-                                           source={require('../../../assets/Profile/user1.png')}
-                                           style={styles.largeimage}
-                                              resizeMode='contain'
-                                          />
-                                                                  <Text style={[styles.usertime,{marginLeft:wp('2%'),
-                                                         color:'white',
-                                        fontWeight:'500',position:'absolute',alignSelf:"flex-end",
-                                        paddingBottom:wp('5%')}]}>Rhoncus ipsum 
-                                        </Text>
-    </View>
-    </View>
-    </ScrollView>
+          <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+            <View>
+              <Image
+                source={require('../../../assets/Profile/user4.png')}
+                style={styles.lastimage}
+                resizeMode='contain'
+              />
+              <Text style={[styles.usertime, {
+                marginLeft: wp('2%'),
+                color: 'white',
+                fontWeight: '500', position: 'absolute', alignSelf: "flex-end",
+                paddingBottom: wp('5%')
+              }]}>Rhoncus ipsum
+              </Text>
+            </View>
+            <View>
+              <Image
+                source={require('../../../assets/Profile/user3.png')}
+                style={styles.lastimage}
+                resizeMode='contain'
+              />
+              <Text style={[styles.usertime, {
+                marginLeft: wp('2%'),
+                color: 'white',
+                fontWeight: '500', position: 'absolute', alignSelf: "flex-end",
+                paddingBottom: wp('5%')
+              }]}>Rhoncus ipsum
+              </Text>
+            </View>
+            <Image
+              source={require('../../../assets/Profile/user2.png')}
+              style={styles.lastimage}
+              resizeMode='contain'
+            />
+            <Text style={[styles.usertime, {
+              marginLeft: wp('2%'),
+              color: 'white',
+              fontWeight: '500', position: 'absolute', alignSelf: "flex-end",
+              paddingBottom: wp('5%')
+            }]}>Rhoncus ipsum
+            </Text>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{}}>
+              <View>
+
+                <Image
+                  source={require('../../../assets/Profile/user5.png')}
+                  style={styles.lastimage}
+                  resizeMode='contain'
+                />
+                <Text style={[styles.usertime, {
+                  marginLeft: wp('2%'),
+                  color: 'white',
+                  fontWeight: '500', position: 'absolute', alignSelf: "flex-end",
+                  paddingBottom: wp('5%')
+                }]}>Rhoncus ipsum
+                </Text>
+
+              </View>
+              <View>
+                <Image
+                  source={require('../../../assets/Profile/user6.png')}
+                  style={styles.lastimage}
+                  resizeMode='contain'
+                />
+                <Text style={[styles.usertime, {
+                  marginLeft: wp('2%'),
+                  color: 'white',
+                  fontWeight: '500', position: 'absolute', alignSelf: "flex-end",
+                  paddingBottom: wp('5%')
+                }]}>Rhoncus ipsum
+                </Text>
+
+              </View>
+            </View>
+            <Image
+              source={require('../../../assets/Profile/user1.png')}
+              style={styles.largeimage}
+              resizeMode='contain'
+            />
+            <Text style={[styles.usertime, {
+              marginLeft: wp('2%'),
+              color: 'white',
+              fontWeight: '500', position: 'absolute', alignSelf: "flex-end",
+              paddingBottom: wp('5%')
+            }]}>Rhoncus ipsum
+            </Text>
+          </View>
+        </View>
+      </ScrollView>
     </SafeAreaView>
 
   )

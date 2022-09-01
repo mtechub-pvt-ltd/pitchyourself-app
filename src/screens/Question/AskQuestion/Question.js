@@ -27,12 +27,13 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp }
 
 ////////////////////redux////////////
 import { useSelector, useDispatch } from 'react-redux';
-import { setVideoUrl } from '../../redux/actions';
+import { setthumbnails } from '../../../redux/actions';
 
   //////////////////////////app api/////////////////////////
   import axios from 'axios';
 import { BASE_URL } from '../../../utills/ApiRootUrl';
   import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Question = ({ navigation }) => {
 
@@ -75,7 +76,7 @@ const CreateQuestion = async() => {
    method: 'POST',
    url: BASE_URL + 'user/create-hub',
    data: {
-    userId:'6306071865e01ba9030410aa',
+    userId:user,
     Title: share,
     PostType: 'question',
     Video: video,
@@ -89,8 +90,10 @@ const CreateQuestion = async() => {
      console.log("response", JSON.stringify(response.data))
      setloading(0);
      setdisable(0);
-setModalVisible1(true)
-//navigation.navigate('PostDetail')
+     dispatch(setthumbnails(''))
+//setModalVisible1(true)
+navigation.navigate('QuestionDetail',{id:response.data._id})
+
 
    })
    .catch(function (error) {
@@ -106,10 +109,6 @@ const formValidation = async () => {
    setsnackbarValue({ value: "Please Enter about Post", color: 'red' });
    setVisible('true');
  }
-//  else if (projectmember == '') {
-//    setsnackbarValue({ value: "Please Enter Profession", color: 'red' });
-//    setVisible('true');
-//  }
  else if (video == '') {
    setsnackbarValue({ value: "Please Enter Bio", color: 'red' });
    setVisible('true');

@@ -1,130 +1,141 @@
 import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
-    Image, View, Text, TouchableOpacity, 
 } from 'react-native';
-import BadgeView from '../../../components/BadgeView/BadgeView';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Feath from 'react-native-vector-icons/Feather';
-import styles from './styles';
-import Authtextstyles from '../../../utills/GlobalStyles/Authtextstyles';
-import Colors from '../../../utills/Colors';
+
+//////////////////app components
+import CustomHeader from '../../../components/CustomHeader/CustomHeader';
+import CustomPostCard from '../../../components/PostCard/CustomPostCard';
+
+///////////////////////app styles///////////////
+import cardcontainerstyles from '../../../utills/GlobalStyles/cardcontainerstyles';
 
 
-const ProjectDetail = ({ navigation }) => {
+  //////////////////////////app api/////////////////////////
+  import axios from 'axios';
+import { BASE_URL } from '../../../utills/ApiRootUrl';
+  import AsyncStorage from '@react-native-async-storage/async-storage';
 
-  //textfields
+const ProjectDetail = ({ navigation,route }) => {
 
+  ///////////////textfields//////////////////
+  const [username, setusername] = useState('');
+  const [userimage, setUserImage] = useState('');
+  const [postedtime, setPostedTime] = useState('');
+  const [posttype, setPostType] = useState('');
+  const [videothumbnailimage, setVideoThumbnailImage] = useState('');
+  const [hashtags, setHastags] = useState([]);
+  const [postdesc, setPostDesc] = useState('');
+  const [Video, setVideo] = useState('');
+  const [projectMembers, setProjectMembers] = useState('');
+  const [projectTitle, setprojectTitle] = useState('')
+  const [Profilelike, setProfilelikes] = useState('')
 
+  ///////get api for onboarding data//////////
+  const GetProjectDetail = async () => {
+    axios({
+      method: 'GET',
+      url: BASE_URL + "user/get-hub?_id=" + route.params.id,
+    })
+      .then(function (response) {
+        console.log("response", JSON.stringify(response.data))
+        /////////////setuserprofile data//////////
+        setusername(response.data.userName)
+        setUserImage(response.data.userImage)
+        setPostedTime(response.data.TimePosted)
+        setPostType(response.data.PostType)
+        setHastags(response.data.Hashtags)
+        setPostDesc(response.data.projectDescription)
+        setVideo(response.data.Video)
+        setProjectMembers(response.data.Workedusers)
+        //setVideoThumbnailImage(response.data.image)
+        setprojectTitle(response.data.Title)
+        setProfilelikes(response.data)
+      })
+      .catch(function (error) {
+        console.log("error", error)
+      })
+  }
   useEffect(() => {
-
-    //SplashScreen.hide();
+    GetProjectDetail()
+    getuserid()
   }, []);
+
+////////////////savepost STATES////////////
+const[saveuserid,setSaveuserid]=useState()
+  const getuserid=async()=>{
+   var user= await AsyncStorage.getItem('Userid')
+    console.log("userid:",user)   
+    setSaveuserid(user)
+  }
+  ////////////////////SAVE POST//////////////
+  const SavePost=async() => {
+    var user= await AsyncStorage.getItem('Userid')
+    console.log("userid:",user)
+    console.log('here......',route.params.id)
+    axios({
+      method: 'POST',
+      url: BASE_URL+'user/add-saved-item',
+      data:{
+        userId:user,
+        hubId: route.params.id,
+      },
+    })
+    .then(async function (response) {
+      console.log("response", JSON.stringify(response.data))  
+      GetProfileData()
+    })
+    .catch(function (error) {
+      if(error)
+    {    
+       console.log('Issue in Appoinments Acceptence')
+      }
+  
+      console.log("error", error)
+    })
+  }
+    ////////////////////UNSAVE POST//////////////
+    const UnSavePost=async() => {
+      var user= await AsyncStorage.getItem('Userid')
+      console.log("userid:",user)
+      console.log('here......',route.params.id)
+      axios({
+        method: 'DELETE',
+        url: BASE_URL+'user/unsave-hub?_id='+user,
+      })
+      .then(async function (response) {
+        console.log("response unlike user", JSON.stringify(response.data))  
+        GetProfileData()
+      })
+      .catch(function (error) {
+        if(error)
+      {    
+         console.log('Issue in Appoinments Acceptence')
+        }
+    
+        console.log("error", error)
+      })
+    }
   return (
 
-    <SafeAreaView style={styles.container}>
-          <View style={styles.topview}>
-          <TouchableOpacity onPress={() => navigation.navigate('Project')}>
-          <Image
-                     source={require('../../../assets/Icons/back.png')}
-                   style={{width:50,height:20}}
-                    resizeMode='contain'
-                />
-          </TouchableOpacity>
-     
-          <Text style={Authtextstyles.maintext}>Project Detail</Text>
-          <Image
-                   source={require('../../../assets/Homeimages/search.png')}
-                   style={{width:50,height:20}}
-                    resizeMode='contain'
-                />
-          </View>
-      <View style={styles.inputview}>
-<View style={styles.postcard}>
-<View style={styles.mainusercontainer}>
-    <View style={{flexDirection:"row",justifyContent:'space-around',alignItems:'center'}}>
-<View style={{}}>
-                <Image
-                 source={require('../../../assets/Homeimages/user.png')}
-                 style={styles.userimage}
-                    resizeMode='contain'
-                />
-                </View>
-                <View>
-                <Text style={styles.usermaintext}>Lorem ipsum</Text>
-                <Text style={styles.usertime}>01 : 00 pm</Text>
-                </View>
-                </View>
-             
-                <View style={{flexDirection:"row"}}>
-                <BadgeView 
-                    title='Project'
-                    />
-                <Image
-                source={require('../../../assets/Homeimages/star.png')}
-                style={styles.iconimages}
-                    resizeMode='contain'
-                />
-                </View>
-                 </View>
-                 <View style={{marginLeft:30,marginBottom:10}}>
-                 <Text style={styles.postdesc}>Project :</Text>
-                 <Text style={styles.postdesc}>Lorem ipsum dolor sit amet,
-                  consetetur</Text>
-                 </View>
-              
-                 <View style={styles.postpiccontainer}>
-      
-                <Image
-                 source={require('../../../assets/Homeimages/postpic.png')}
-                 style={styles.postpic}
-                    resizeMode='contain'
-                />
-                </View>
-                <View style={{marginLeft:30,marginBottom:10}}>
-                 <Text style={styles.postdesc}>Title Here</Text>
-                 </View>
-                 <View style={{marginLeft:30,marginBottom:10}}>
-                 <Text style={[styles.postdesc,{color:Colors.Appthemecolor}]}>The Team</Text>
-                 </View>
-                 <View style={{flexDirection:'row',marginLeft:30}}>
-                 <Image
-                 source={require('../../../assets/Homeimages/user.png')}
-                 style={styles.userimage}
-                    resizeMode='contain'
-                />
-                   <Image
-                 source={require('../../../assets/Homeimages/user.png')}
-                 style={styles.userimage}
-                    resizeMode='contain'
-                />
-                   <Image
-                 source={require('../../../assets/Homeimages/user.png')}
-                 style={styles.userimage}
-                    resizeMode='contain'
-                />
-                   <Image
-                 source={require('../../../assets/Homeimages/user.png')}
-                 style={styles.userimage}
-                    resizeMode='contain'
-                />
-                   <Image
-                 source={require('../../../assets/Homeimages/user.png')}
-                 style={styles.userimage}
-                    resizeMode='contain'
-                />
-                 </View>
-                <View style={{marginLeft:30,marginTop:10}}>
-                <Text style={styles.recomend}>
-                    #tag #video #tag #video #tag #video 
-                #tag #video #tag #video #tag #video #tag #video #tag #video #tag 
-                #video #tag #video #tag #video #tag #video #tag #video
-                 #tag #video #tag #video #tag #video #tag #video #tag #video #tag #video #tag #video</Text>
-                </View>
-             
+    <SafeAreaView style={cardcontainerstyles.container}>
+                            <CustomHeader
+        screentitle={'Project Detail'}
+        navigation={()=> navigation.goBack()}
+      />
+          
+            <CustomPostCard
+          cardtype={'Project'}
+          username={username}
+          userimage={userimage}
+          postedtime={postedtime}
+          posttype={posttype}
+          postdesc={postdesc}
+         projectTitle={projectTitle}
+         projectMembers={projectMembers}
+         hashtags={hashtags}
+          />
 
-        </View>
-        </View>
     </SafeAreaView>
 
   )

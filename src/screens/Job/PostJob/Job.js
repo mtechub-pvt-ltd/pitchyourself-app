@@ -1,14 +1,14 @@
-import React, { useEffect, useState,useRef} from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
-  SafeAreaView,TextInput,ScrollView,
-    Image, View, Text, TouchableOpacity
+  SafeAreaView, TextInput, ScrollView,
+  Image, View, Text, TouchableOpacity
 } from 'react-native';
 
 ////////////////app components////////////////
 import CustomButtonhere from '../../../components/Button/CustomButton';
 
 //////////////////app pakages////////////
-import {Snackbar } from 'react-native-paper';
+import { Snackbar } from 'react-native-paper';
 
 ////////////////////app styles///////////////////
 import styles from './styles';
@@ -22,57 +22,55 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp }
 
 ////////////////////redux////////////
 import { useSelector, useDispatch } from 'react-redux';
-import {setthumbnails} from '../../../redux/actions';
+import { setthumbnails } from '../../../redux/actions';
 
 const Job = ({ navigation }) => {
 
-      /////////////redux states///////
-      const {video, links,id,thumbnails, } = useSelector(state => state.userReducer);
-      const dispatch = useDispatch();
+  /////////////redux states///////
+  const { video, links, id, thumbnails, } = useSelector(state => state.userReducer);
+  const dispatch = useDispatch();
 
 
-/////////TextInput References///////////
-const ref_input2 = useRef();
-const ref_input3 = useRef();
+  /////////TextInput References///////////
+  const ref_input2 = useRef();
+  const ref_input3 = useRef();
 
-///////////////textfields//////////////////
-const [companyname, setCompanyName] = useState('');
-const [jobTitle, setJobTitle] = useState('');
-const [jobdesc, setJobDesc] = useState('');
+  ///////////////textfields//////////////////
+  const [companyname, setCompanyName] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
+  const [jobdesc, setJobDesc] = useState('');
 
-////////////button states////////////////
-const [loading, setloading] = useState(0);
-const [disable, setdisable] = useState(0);
-const [visible, setVisible] = useState(false);
-const [snackbarValue, setsnackbarValue] = useState({ value: '', color: '' });
-const onDismissSnackBar = () => setVisible(false);
+  ////////////button states////////////////
+  const [loading, setloading] = useState(0);
+  const [disable, setdisable] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const [snackbarValue, setsnackbarValue] = useState({ value: '', color: '' });
+  const onDismissSnackBar = () => setVisible(false);
 
-
-
-//Api form validation
-const formValidation = async () => {
- // input validation
- if (companyname == '') {
-   setsnackbarValue({ value: "Please Enter Company Name", color: 'red' });
-   setVisible('true');
- }
- else if (jobTitle == '') {
-   setsnackbarValue({ value: "Please Enter Job Title", color: 'red' });
-   setVisible('true');
- }
- else if (jobdesc == '') {
-   setsnackbarValue({ value: "Please Select Job Description", color: 'red' });
-   setVisible('true');
- }
- else if (video == '') {
-  setsnackbarValue({ value: "Please Select Video", color: 'red' });
-  setVisible('true');
-}
- else {
-  dispatch(setthumbnails(""))
-navigation.navigate('PostJob',{companyname,jobTitle,jobdesc,video})
- }
-}
+  //Api form validation
+  const formValidation = async () => {
+    // input validation
+    if (companyname == '') {
+      setsnackbarValue({ value: "Please Enter Company Name", color: 'red' });
+      setVisible('true');
+    }
+    else if (jobTitle == '') {
+      setsnackbarValue({ value: "Please Enter Job Title", color: 'red' });
+      setVisible('true');
+    }
+    else if (jobdesc == '') {
+      setsnackbarValue({ value: "Please Select Job Description", color: 'red' });
+      setVisible('true');
+    }
+    else if (video == '') {
+      setsnackbarValue({ value: "Please Select Video", color: 'red' });
+      setVisible('true');
+    }
+    else {
+      dispatch(setthumbnails(""))
+      navigation.navigate('PostJob', { companyname, jobTitle, jobdesc, video })
+    }
+  }
 
   useEffect(() => {
 
@@ -80,23 +78,23 @@ navigation.navigate('PostJob',{companyname,jobTitle,jobdesc,video})
   }, []);
   return (
     <SafeAreaView style={styles.container}>
-            <ScrollView
+      <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.topview}>
+      >
+        <View style={styles.topview}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-                   source={require('../../../assets/Icons/back.png')}
-                   style={styles.topicon}
-                    resizeMode='contain'
-                />
+            <Image
+              source={require('../../../assets/Icons/back.png')}
+              style={styles.topicon}
+              resizeMode='contain'
+            />
           </TouchableOpacity>
-     
+
           <Text style={Authtextstyles.maintext}>Post a Job</Text>
-          </View>
-          <View style={[Inputstyles.inputview,{marginTop:'6%'}]}>
-      
+        </View>
+        <View style={[Inputstyles.inputview, { marginTop: '6%' }]}>
+
           <View style={Inputstyles.action}>
             <TextInput
               placeholder="Company Name"
@@ -109,7 +107,7 @@ navigation.navigate('PostJob',{companyname,jobTitle,jobdesc,video})
               autoCapitalize="none"
               style={Inputstyles.input}
             />
-  
+
           </View>
           <View style={Inputstyles.action}>
             <TextInput
@@ -122,23 +120,23 @@ navigation.navigate('PostJob',{companyname,jobTitle,jobdesc,video})
               autoCapitalize="none"
               style={Inputstyles.input}
             />
-  
+
           </View>
-          <View style={[Multilineinputstyles.action,{height:wp('38%'),marginTop:wp('3%')}]}>
+          <View style={[Multilineinputstyles.action, { height: wp('38%'), marginTop: wp('3%') }]}>
             <TextInput
-                  ref={ref_input3}
+              ref={ref_input3}
               placeholder="Job Description"
               onChangeText={setJobDesc}
               placeholderTextColor={Colors.inputtextcolor}
               autoCapitalize="none"
               multiline={true}
-              
+
               style={Multilineinputstyles.input}
             />
           </View>
-          <TouchableOpacity onPress={()=> navigation.navigate('CustomCamera',{navplace:'job'})}>
-<View style={Uploadstyles.mainview}>
-{thumbnails != '' ?
+          <TouchableOpacity onPress={() => navigation.navigate('CustomCamera', { navplace: 'job' })}>
+            <View style={Uploadstyles.mainview}>
+              {thumbnails != '' ?
                 <View style={{}}>
                   <Image
                     source={{ uri: thumbnails }}
@@ -148,42 +146,42 @@ navigation.navigate('PostJob',{companyname,jobTitle,jobdesc,video})
                 </View>
                 :
                 <View style={{ alignItems: 'center' }}>
-     <Image
-                   source={require('../../../assets/Icons/upload.png')}
-                   style={Uploadstyles.uploadicon}
+                  <Image
+                    source={require('../../../assets/Icons/upload.png')}
+                    style={Uploadstyles.uploadicon}
                     resizeMode='contain'
-                />
-<Text style={Uploadstyles.uploadtext}>Add Short Video</Text>
+                  />
+                  <Text style={Uploadstyles.uploadtext}>Add Short Video</Text>
                 </View>
-}
+              }
 
-</View>
-</TouchableOpacity>
+            </View>
+          </TouchableOpacity>
         </View>
-    
 
-<View style={styles.buttonview}>
-<CustomButtonhere
-              title={'CONTINUE'}
-              widthset={'65%'}
-              loading={loading}
-              disabled={disable}
-              onPress={() => formValidation() }
-            />
-</View>
-   
-<Snackbar
+
+        <View style={styles.buttonview}>
+          <CustomButtonhere
+            title={'CONTINUE'}
+            widthset={'65%'}
+            loading={loading}
+            disabled={disable}
+            onPress={() => formValidation()}
+          />
+        </View>
+
+        <Snackbar
           duration={400}
           visible={visible}
           onDismiss={onDismissSnackBar}
           style={{
             backgroundColor: snackbarValue.color,
-            marginBottom:'20%',
+            marginBottom: '20%',
             zIndex: 999,
           }}>
           {snackbarValue.value}
         </Snackbar>
-  </ScrollView>
+      </ScrollView>
     </SafeAreaView>
 
   )
