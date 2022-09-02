@@ -77,8 +77,9 @@ const CreateProject = async() => {
     PostType: 'project',
     Video: video,
     Workedusers: projectmember,
-    HashtagHub: hashtag,
     Hashtags: hashtag ,
+    HashtagHub: hashtag,
+    thumbnail: thumbnails,
     projectDescription: projectdesc,
    },
  })

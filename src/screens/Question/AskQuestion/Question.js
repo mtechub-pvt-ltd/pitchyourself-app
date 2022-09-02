@@ -82,6 +82,8 @@ const CreateQuestion = async() => {
     Video: video,
     //creators: 'createors',
     Hashtags: hashtag ,
+    HashtagHub: hashtag,
+    thumbnail: thumbnails,
     questionReason: postabout,
     Purpose:postabout,
    },
@@ -125,10 +127,8 @@ const formValidation = async () => {
  }
 }
 
-
   useEffect(() => {
 
-    //SplashScreen.hide();
   }, []);
   return (
     <SafeAreaView style={styles.container}>

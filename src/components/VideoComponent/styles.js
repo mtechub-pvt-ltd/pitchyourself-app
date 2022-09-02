@@ -8,11 +8,11 @@ import {
 
 const style = StyleSheet.create({
     container: {
-        flex: 1,
+  //      flex: 1,
 
-        // backgroundColor: 'rgba(0,0,0,0.9)',
-        // justifyContent: 'center',
-        // paddingBottom: responsiveHeight(10),
+  //       backgroundColor: 'rgba(0,0,0,0.9)',
+  // justifyContent: 'center',
+  //       paddingBottom: responsiveHeight(10),
       },
       overlay: {
         ...StyleSheet.absoluteFillObject,
@@ -45,8 +45,8 @@ const style = StyleSheet.create({
       },
       video: {
 
-        width:width/1.2,
-        height: width * 0.5,
+        width:width/1.05,
+        height: width * 0.6,
         backgroundColor: 'rgba(0,0,0,0.2)',
         shadowColor: '#000',
         shadowOffset: {

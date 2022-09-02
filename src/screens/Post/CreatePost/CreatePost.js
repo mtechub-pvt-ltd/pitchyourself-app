@@ -67,7 +67,9 @@ const CreatePost = async() => {
     PostType: 'post',
     Video: video,
     creators: 'createors',
-    Hashtags: hashtag 
+    Hashtags: hashtag,
+    HashtagHub: hashtag,
+    thumbnail: thumbnails
    },
  })
    .then(async function (response) {

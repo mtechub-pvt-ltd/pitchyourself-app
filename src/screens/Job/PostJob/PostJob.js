@@ -78,7 +78,6 @@ const[predata]=useState(route.params)
         Title: predata.jobTitle,
         PostType: 'job',
         Video:predata.video,
-        HashtagHub: hashtag,
         jobCompanyName: predata.companyname,
         jobDescription: predata.jobdesc,
         joblocation: location,
@@ -87,7 +86,9 @@ const[predata]=useState(route.params)
         jobLat: enddate,
         jobLong: 'longitute',
         jobLat:'lat',
-        Tag:reach
+        Tag:reach,
+        HashtagHub: hashtag,
+        thumbnail: thumbnails
       },
     })
       .then(async function (response) {

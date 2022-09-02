@@ -36,6 +36,7 @@ import EditVideo from './src/screens/Video/EditVideo/EditVideo';
 import EditProfile from './src/screens/Profile/EdilProfile/EditProfile';
 import CustomCamera from './src/screens/Camera/Camera';
 import CameraVideo from './src/screens/CameraVideo/CamerVideo';
+import VideoPlayer from './src/screens/VideoPlayer/VideoPlayer';
 
 const Stack = createNativeStackNavigator();
 
@@ -58,6 +59,10 @@ function App() {
         headerShown: false,
         }} />
       <Stack.Screen name="CameraVideo" component={CameraVideo}
+        options={{
+        headerShown: false,
+        }} />
+              <Stack.Screen name="VideoPlayer" component={VideoPlayer}
         options={{
         headerShown: false,
         }} />

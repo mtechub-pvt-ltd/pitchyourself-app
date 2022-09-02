@@ -46,7 +46,7 @@ const QuestionDetail = ({ navigation, route }) => {
         setPostDesc(response.data.Title)
         setVideo(response.data.Video)
         setSavedBy(response.data.SavedBy)
-        //setVideoThumbnailImage(response.data.image)
+        setVideoThumbnailImage(response.data.thumbnail)
         setReason(response.data.questionReason)
         setHubPostId(response.data._id)
       })
@@ -64,10 +64,11 @@ const QuestionDetail = ({ navigation, route }) => {
       <CustomHeader
         screentitle={'Question Detail'}
         navigation={() => navigation.goBack()}
-      />
+      /> 
 
       <CustomPostCard
         cardtype={'Question'}
+        usertype={'activeuser'}
         username={username}
         userimage={userimage}
         postedtime={postedtime}
@@ -77,6 +78,9 @@ const QuestionDetail = ({ navigation, route }) => {
         hashtags={hashtags}
         savedBy={savedBy[0]}
         hubpostid={hubpostid}
+        postvideo={Video}
+        onvideoclick={()=>{navigation.navigate('VideoPlayer',{playvideo:Video})}}
+        postthumbnail={videothumbnailimage}
       />
 
     </SafeAreaView>

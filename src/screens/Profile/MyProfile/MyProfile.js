@@ -4,6 +4,9 @@ import {
   Image, View, Text, TouchableOpacity,
 } from 'react-native';
 
+//////////////////app components////////////////
+import Randomlist from '../../../components/RandomList/Randomlist';
+
 /////////////////app pakages//////////////////
 import { useIsFocused } from '@react-navigation/native';
 
@@ -272,7 +275,8 @@ console.log("user here after set:",likeuserid)
             //   onPress={() => navigation.navigate('EditProfile')}
             // />
             :
-            null}
+          <View></View>
+          }
 
           <Text style={[styles.posttext,
           { marginLeft: predata != 'profile' ? wp(8) : wp(36) }]}>{Totalposts}</Text>
@@ -374,95 +378,8 @@ console.log("user here after set:",likeuserid)
           </View>
         </View>
         <View>
-          <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-            <View>
-              <Image
-                source={require('../../../assets/Profile/user4.png')}
-                style={styles.lastimage}
-                resizeMode='contain'
-              />
-              <Text style={[styles.usertime, {
-                marginLeft: wp('2%'),
-                color: 'white',
-                fontWeight: '500', position: 'absolute', alignSelf: "flex-end",
-                paddingBottom: wp('5%')
-              }]}>Rhoncus ipsum
-              </Text>
-            </View>
-            <View>
-              <Image
-                source={require('../../../assets/Profile/user3.png')}
-                style={styles.lastimage}
-                resizeMode='contain'
-              />
-              <Text style={[styles.usertime, {
-                marginLeft: wp('2%'),
-                color: 'white',
-                fontWeight: '500', position: 'absolute', alignSelf: "flex-end",
-                paddingBottom: wp('5%')
-              }]}>Rhoncus ipsum
-              </Text>
-            </View>
-            <Image
-              source={require('../../../assets/Profile/user2.png')}
-              style={styles.lastimage}
-              resizeMode='contain'
-            />
-            <Text style={[styles.usertime, {
-              marginLeft: wp('2%'),
-              color: 'white',
-              fontWeight: '500', position: 'absolute', alignSelf: "flex-end",
-              paddingBottom: wp('5%')
-            }]}>Rhoncus ipsum
-            </Text>
-          </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <View style={{}}>
-              <View>
+          <Randomlist/>
 
-                <Image
-                  source={require('../../../assets/Profile/user5.png')}
-                  style={styles.lastimage}
-                  resizeMode='contain'
-                />
-                <Text style={[styles.usertime, {
-                  marginLeft: wp('2%'),
-                  color: 'white',
-                  fontWeight: '500', position: 'absolute', alignSelf: "flex-end",
-                  paddingBottom: wp('5%')
-                }]}>Rhoncus ipsum
-                </Text>
-
-              </View>
-              <View>
-                <Image
-                  source={require('../../../assets/Profile/user6.png')}
-                  style={styles.lastimage}
-                  resizeMode='contain'
-                />
-                <Text style={[styles.usertime, {
-                  marginLeft: wp('2%'),
-                  color: 'white',
-                  fontWeight: '500', position: 'absolute', alignSelf: "flex-end",
-                  paddingBottom: wp('5%')
-                }]}>Rhoncus ipsum
-                </Text>
-
-              </View>
-            </View>
-            <Image
-              source={require('../../../assets/Profile/user1.png')}
-              style={styles.largeimage}
-              resizeMode='contain'
-            />
-            <Text style={[styles.usertime, {
-              marginLeft: wp('2%'),
-              color: 'white',
-              fontWeight: '500', position: 'absolute', alignSelf: "flex-end",
-              paddingBottom: wp('5%')
-            }]}>Rhoncus ipsum
-            </Text>
-          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

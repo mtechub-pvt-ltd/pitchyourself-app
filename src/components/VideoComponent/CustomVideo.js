@@ -9,7 +9,8 @@ import {
   TouchableOpacity
 } from 'react-native';
 import Video from 'react-native-video'; /// alreadyimported this
-import Icon from 'react-native-vector-icons/FontAwesome5'; // and this
+import Icon1 from 'react-native-vector-icons/FontAwesome5'; // and this
+import Icon from 'react-native-vector-icons/Ionicons'; // and this
 import Orientation from 'react-native-orientation-locker';
 import {
   responsiveFontSize,
@@ -116,7 +117,7 @@ setoverlay(true);
   };
 
   const videofullscreen = () => {
-    //props.viewvideo
+    props.viewvideo
     if (fullscreen) {
 
       Orientation.lockToPortrait();
@@ -147,7 +148,7 @@ setoverlay(true);
   
 
     return (
-      <View style={style.container}>
+      // <View style={style.container}>
         <View style={fullscreen ? 
           style.fullscreenVideolandscpae :
            style.video}>
@@ -156,13 +157,13 @@ setoverlay(true);
             fullscreen={fullscreen}
             paused={paused} // this will manage the pause and play
             ref={ref => (video = ref)}
-            source={samplevideo}
+            source={props.samplevideo}
             style={{...StyleSheet.absoluteFill}}
             resizeMode="cover"
             onLoad={load}
             onProgress={progress}
             onEnd={onEnd}
-            //repeat={true}
+            repeat={true}
             //repeat={true}
             // onVideoEnd={this.onEndVideo}
           />
@@ -171,7 +172,7 @@ setoverlay(true);
             {overlay ? (
               <View style={{...style.overlaySet, backgroundColor: '#0006'}}>
                 <Icon
-                  name="backward"
+                  name="play-skip-back"
                   style={style.icon}
                   onPress={backward}
                 />
@@ -181,7 +182,7 @@ setoverlay(true);
                   onPress={() =>setpaused(!paused)}
                 />
                 <Icon
-                  name="forward"
+                  name="play-skip-forward"
                   style={style.icon}
                   onPress={forward}
                 />
@@ -198,7 +199,7 @@ setoverlay(true);
                       <TouchableNativeFeedback onPress={props.viewhide}>
                       <Icon
                         onPress={videofullscreen}
-                        name={fullscreen ? 'compress' : 'expand'}
+                        name={fullscreen ? 'contract' : 'expand'}
                         style={{fontSize: responsiveFontSize(2.5)}}
                       />
                       </TouchableNativeFeedback>
@@ -228,7 +229,7 @@ setoverlay(true);
             )}
           </View>
         </View>
-      </View>
+    //  </View>
     );
 
 }

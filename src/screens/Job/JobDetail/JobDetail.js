@@ -78,12 +78,16 @@ console.log('items here:',route.params)
 
 <CustomPostCard
         cardtype={'Job'}
+        usertype={'activeuser'}
         username={username}
         userimage={userimage}
         postedtime={postedtime}
         posttype={posttype}
         postdesc={postdesc}
         hashtags={hashtags}
+        postvideo={Video}
+        onvideoclick={()=>{navigation.navigate('VideoPlayer',{playvideo:Video})}}
+        postthumbnail={videothumbnailimage}
       />
     
         </ScrollView>

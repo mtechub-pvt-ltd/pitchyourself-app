@@ -23,11 +23,17 @@ const CustomHeader = (props) => {
         </TouchableOpacity>
 
         <Text style={styles.maintext}>{props.screentitle}</Text>
-        <Image
-          source={require('../../assets/Homeimages/search.png')}
-          style={styles.searchicon}
-          resizeMode='contain'
-        />
+{props.navtype === 'home'?
+
+<Image
+source={require('../../assets/Homeimages/search.png')}
+style={styles.searchicon}
+resizeMode='contain'
+/>
+: 
+<View></View>
+}
+
       </View>
     )
 };
