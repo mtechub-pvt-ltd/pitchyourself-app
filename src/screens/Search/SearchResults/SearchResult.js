@@ -5,24 +5,26 @@ import {
 } from 'react-native';
 
 //////////////////////app components////////////
-import CustomPostCard from '../../components/PostCard/CustomPostCard';
-import BadgeView from '../../components/BadgeView/BadgeView';
+import CustomPostCard from '../../../components/PostCard/CustomPostCard';
+import BadgeView from '../../../components/BadgeView/BadgeView';
 
 //////////////app styles////////////////
 import styles from './styles';
-import Authtextstyles from '../../utills/GlobalStyles/Authtextstyles';
-import Inputstyles from '../../utills/GlobalStyles/Inputstyles';
-import Colors from '../../utills/Colors';
+import Authtextstyles from '../../../utills/GlobalStyles/Authtextstyles';
+import Inputstyles from '../../../utills/GlobalStyles/Inputstyles';
+import Colors from '../../../utills/Colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
   
     //////////////////////////app api/////////////////////////
     import axios from 'axios';
-    import { BASE_URL } from '../../utills/ApiRootUrl';
+    import { BASE_URL } from '../../../utills/ApiRootUrl';
       import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const Home = ({ navigation }) => {
+const SearchResults = ({ navigation,route }) => {
+
+console.log("search data from previous screen:",route.params)
 
   const[star,setstar]=useState(false)
   //make toggleview
@@ -145,7 +147,7 @@ const[data,setdata]=useState('')
                                                         item.SavedBy.find(item => item === saveuserid) === saveuserid ?
                 <TouchableOpacity onPress={() => UnSavePost()}>
                   <Image
-                    source={require('../../assets/Homeimages/orangestart.png')}
+                    source={require('../../../assets/Homeimages/orangestart.png')}
                     style={{ width: wp(5), height: hp(5) }}
                     resizeMode='contain'
                   />
@@ -153,7 +155,7 @@ const[data,setdata]=useState('')
                 :
                 <TouchableOpacity onPress={() => SavePost()}>
                   <Image
-                    source={require('../../assets/Homeimages/whitestar.png')}
+                    source={require('../../../assets/Homeimages/whitestar.png')}
                     style={{ width: wp(5), height: hp(5) }}
                     resizeMode='contain'
                   />
@@ -185,14 +187,14 @@ const[data,setdata]=useState('')
                 }}>
    <View   style={[styles.iconview,{marginLeft:30}]}>
   <Image
-                      source={require('../../assets/socialicons/thumbsup.png')}
+                      source={require('../../../assets/socialicons/thumbsup.png')}
                       style={{width:50,height:20}}
                     resizeMode='contain'
                 />
      </View>
      <View   style={[styles.iconview,{marginLeft:25}]}>
   <Image
-                      source={require('../../assets/socialicons/chated.png')}
+                      source={require('../../../assets/socialicons/chated.png')}
                       style={{width:80,height:20}}
                     resizeMode='contain'
                 />
@@ -212,7 +214,7 @@ const[data,setdata]=useState('')
       /> */}
    <View   style={styles.iconview}>
   <Image
-                      source={require('../../assets/socialicons/facebook.png')}
+                      source={require('../../../assets/socialicons/facebook.png')}
                       style={{width:80,height:20}}
                     resizeMode='contain'
                 />
@@ -220,21 +222,21 @@ const[data,setdata]=useState('')
               
      <View   style={styles.iconview}>
   <Image
-                      source={require('../../assets/socialicons/linkedin.png')}
+                      source={require('../../../assets/socialicons/linkedin.png')}
                       style={{width:80,height:20}}
                     resizeMode='contain'
                 />
      </View>
      <View   style={styles.iconview}>
   <Image
-                      source={require('../../assets/socialicons/instagram.png')}
+                      source={require('../../../assets/socialicons/instagram.png')}
                       style={{width:80,height:20}}
                     resizeMode='contain'
                 />
      </View>
      <View   style={styles.iconview}>
   <Image
-                      source={require('../../assets/socialicons/share.png')}
+                      source={require('../../../assets/socialicons/share.png')}
                       style={{width:80,height:20}}
                     resizeMode='contain'
                 />
@@ -277,7 +279,7 @@ const[data,setdata]=useState('')
             <View style={{flexDirection:'row',justifyContent:'space-around',alignItems:'center'}}>
             <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
             <Image
-                   source={require('../../assets/Homeimages/menu.png')}
+                   source={require('../../../assets/Homeimages/menu.png')}
                    style={Inputstyles.inputicons}
                     resizeMode='contain'
                 />
@@ -291,7 +293,7 @@ const[data,setdata]=useState('')
      
           <TouchableOpacity onPress={() => navigation.navigate('Search')}>
           <Image
-                   source={require('../../assets/Homeimages/search.png')}
+                   source={require('../../../assets/Homeimages/search.png')}
                    style={{width:50,height:20}}
                     resizeMode='contain'
                 />
@@ -316,7 +318,7 @@ const[data,setdata]=useState('')
         //backgroundColor:'red',
       position:"absolute"}}>
         <Image
-                      source={require('../../assets/Homeimages/add.png')}
+                      source={require('../../../assets/Homeimages/add.png')}
                       style={{width:80,height:20}}
                     resizeMode='contain'
                 />
@@ -328,4 +330,4 @@ const[data,setdata]=useState('')
   )
 };
 
-export default Home;
+export default SearchResults;

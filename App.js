@@ -37,6 +37,7 @@ import EditProfile from './src/screens/Profile/EdilProfile/EditProfile';
 import CustomCamera from './src/screens/Camera/Camera';
 import CameraVideo from './src/screens/CameraVideo/CamerVideo';
 import VideoPlayer from './src/screens/VideoPlayer/VideoPlayer';
+import SearchResults from './src/screens/Search/SearchResults/SearchResult';
 
 const Stack = createNativeStackNavigator();
 
@@ -158,6 +159,10 @@ function App() {
         headerShown: false,
         }} />
          <Stack.Screen name="EditProfile" component={EditProfile}
+        options={{
+        headerShown: false,
+        }} />
+       <Stack.Screen name="SearchResults" component={SearchResults}
         options={{
         headerShown: false,
         }} />

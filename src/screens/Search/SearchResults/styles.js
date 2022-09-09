@@ -3,7 +3,7 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
-import Colors from '../../utills/Colors';
+import Colors from '../../../utills/Colors';
 const Width = Dimensions.get("screen").width;
 const Height = Dimensions.get("screen").height;
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }

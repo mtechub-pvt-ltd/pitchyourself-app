@@ -48,7 +48,7 @@ userimage:
     height:wp(28),
     borderRadius:wp(18)
 },
-lastimage:
+lastimage1:
 {
     width:wp('30%'),
     height:wp('35%'),
@@ -91,12 +91,19 @@ postpiccontainer:
 {
    alignSelf:"center",
     alignItems:"center",
+    width:wp(90),
+    height:hp(30),
+    marginTop:hp(1),
+    borderRadius:wp(3),
+    justifyContent:"center"
 
 },
 postpic:
 {
-    width:wp('90%'),
-    height:wp('60%'),
+    width:wp(90),
+    height:hp(25),
+    alignItems:'center',
+    justifyContent:"center"
 },
 icon:
 {
@@ -125,6 +132,39 @@ borderRadius:wp(10),
 alignItems:'center',
 justifyContent:'center',
 margin:wp(1)
-}
+},
+userpostimagetext:
+{
+    fontSize:hp('1.5%'),
+    fontWeight:'bold',
+    color:'#BABDC9',
+    marginLeft: wp(1),
+    paddingLeft: wp(1),
+    color: 'white',
+    fontWeight: '500', position: 'absolute', alignSelf: "flex-end",
+    paddingBottom: wp(2),bottom:0,left:0,
+    backgroundColor:'rgba(101, 113, 144, 0.5)',
+    width:wp(28),
+    borderBottomLeftRadius:wp(1.9),
+    borderBottomRightRadius:wp(1.9),
+    marginBottom:hp(0.5)
+},
+lastimage:
+{
+    width:wp(30),
+    height:wp(31),
+    borderRadius:wp(3),
+    borderWidth:0.2,
+    borderColor:'grey',
+    borderRadius:wp(3)
+},
+imageview:
+{
+    width:wp(30),
+    height:wp(32),
+    borderWidth:0.5,
+    borderColor:'grey',
+    borderRadius:wp(3)
+},
 });
 export default styles;

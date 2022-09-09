@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  SafeAreaView, ScrollView,
+  SafeAreaView, ScrollView, FlatList, ImageBackground,
   Image, View, Text, TouchableOpacity,
 } from 'react-native';
 
@@ -28,6 +28,29 @@ import RNFetchBlob from 'rn-fetch-blob'
 import { useSelector, useDispatch } from 'react-redux';
 import { setthumbnails } from '../../../redux/actions';
 
+const DATA = [
+  {
+    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+    title: 'First Item',
+  },
+  {
+    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+    title: 'Second Item',
+  },
+  {
+    id: '58694a0f-3da1-471f-bd96-145571e29d72',
+    title: 'Third Item',
+  },
+  {
+    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+    title: 'Second Item',
+  },
+  {
+    id: '58694a0f-3da1-471f-bd96-145571e29d72',
+    title: 'Third Item',
+  },
+];
+
 const Profile = ({ navigation, route }) => {
   console.log('params:', route.params)
 
@@ -51,6 +74,10 @@ const Profile = ({ navigation, route }) => {
   const [Bio, setBio] = useState('');
   const [ProfileStatus, setProfileStatus] = useState('');
   const [Document, setDocument] = useState('')
+  const [Userposts, setUserPost] = useState()
+  const [ProfileVideo, setProfileVideo] = useState()
+  const [ProfileVideoThumbnail, setProfileVideoThumbnail] = useState()
+  const [ProfileSociallinks, setProfileSocialLinks] = useState()
   const [Profilelike, setProfilelikes] = useState('')
 
   ///////get api for onboarding data//////////
@@ -71,16 +98,20 @@ const Profile = ({ navigation, route }) => {
         setProfileStatus(response.data.profileStatus)
         setImage(response.data.image)
         setDocument(response.data.uploadDocument)
-        setProfilelikes(response.data.LikesUsersId[0].LikedById)
+        setProfileVideo(response.data.profileVideoId[0].link)
+        setProfileVideoThumbnail(response.data.profileVideoId[0].thumbnail)
+        setProfileSocialLinks(response.data.UserProfileLinkId)
+        //setProfilelikes(response.data.LikesUsersId[0].LikedById)
+        setUserPost(response.data.userPosts)
       })
       .catch(function (error) {
         console.log("error", error)
       })
   }
-const[likeuserid,setlikeuserid]=useState()
-  const getuserid=async()=>{
-   var user= await AsyncStorage.getItem('Userid')
-    console.log("userid:",user)   
+  const [likeuserid, setlikeuserid] = useState()
+  const getuserid = async () => {
+    var user = await AsyncStorage.getItem('Userid')
+    console.log("userid:", user)
     setlikeuserid(user)
   }
   useEffect(() => {
@@ -89,57 +120,87 @@ const[likeuserid,setlikeuserid]=useState()
       getuserid()
       GetProfileData()
     }
-console.log("user here after set:",likeuserid)
+    console.log("user here after set:", likeuserid)
   }, [isfocussed, route.params.id]);
 
   ////////////////////add likes//////////////
-  const Addlikes=async() => {
-    var user= await AsyncStorage.getItem('Userid')
-    console.log("userid:",user)
-    console.log('here......',route.params.id)
+  const Addlikes = async () => {
+    var user = await AsyncStorage.getItem('Userid')
+    console.log("userid:", user)
+    console.log('here......', route.params.id)
     axios({
       method: 'POST',
-      url: BASE_URL+'user/add-profile-like',
-      data:{
-        userId:route.params.id,
+      url: BASE_URL + 'user/add-profile-like',
+      data: {
+        userId: route.params.id,
         LikedById: user,
       },
     })
-    .then(async function (response) {
-      console.log("response", JSON.stringify(response.data))  
-      GetProfileData()
-    })
-    .catch(function (error) {
-      if(error)
-    {    
-      console.log('Issue in Appoinments Acceptence')
-      }
-  
-      console.log("error", error)
-    })
-  }
-    ////////////////////add likes//////////////
-    const AddUnlike=async() => {
-      var user= await AsyncStorage.getItem('Userid')
-      console.log("userid:",user)
-      console.log('here......',route.params.id)
-      axios({
-        method: 'POST',
-        url: BASE_URL+'user/unlike-profile-user?_id='+user,
-      })
       .then(async function (response) {
-        console.log("response unlike user", JSON.stringify(response.data))  
+        console.log("response", JSON.stringify(response.data))
         GetProfileData()
       })
       .catch(function (error) {
-        if(error)
-      {    
-        console.log('Issue in Appoinments Acceptence')
+        if (error) {
+          console.log('Issue in Appoinments Acceptence')
         }
-    
+
         console.log("error", error)
       })
-    }
+  }
+  ////////////////////add likes//////////////
+  const AddUnlike = async () => {
+    var user = await AsyncStorage.getItem('Userid')
+    console.log("userid:", user)
+    console.log('here......', route.params.id)
+    axios({
+      method: 'POST',
+      url: BASE_URL + 'user/unlike-profile-user?_id=' + user,
+    })
+      .then(async function (response) {
+        console.log("response unlike user", JSON.stringify(response.data))
+        GetProfileData()
+      })
+      .catch(function (error) {
+        if (error) {
+          console.log('Issue in Appoinments Acceptence')
+        }
+
+        console.log("error", error)
+      })
+  }
+
+  /////////////////////flatlist render item////////////
+  const renderItem = ({ item }) => (
+
+    <View>
+
+      <View style={{ margin: wp(1), marginHorizontal: wp(1.3) }}>
+        <View  >
+          <Image
+            source={{ uri: item.thumbnail }}
+            style={styles.lastimage}
+            resizeMode='contain'
+          />
+        </View>
+
+        <Text style={styles.userpostimagetext}>
+          {item.Title}
+        </Text>
+      </View>
+
+    </View>
+  );
+  const sociallinksrenderItem = ({ item }) => (
+    <View style={styles.iconview}>
+      <Image
+        //source={require('../../../assets/socialicons/facebook.png')}
+        source={{ uri: BASE_URL + item.icon }}
+        style={{ width: 80, height: 20 }}
+        resizeMode='contain'
+      />
+    </View>
+  );
   return (
 
     <SafeAreaView style={styles.container}>
@@ -189,27 +250,27 @@ console.log("user here after set:",likeuserid)
                   resizeMode='contain'
                 />
                 :
-             <View>
-               {Profilelike != likeuserid ?   
-                    <TouchableOpacity onPress={()=> Addlikes()}>
-                    <Image
-                  source={require('../../../assets/Profile/fillheart.png')}
-                  style={[styles.topicon, { height: wp('7%') }]}
-                  resizeMode='contain'
-                />
-                                </TouchableOpacity>
-              :
-              <TouchableOpacity onPress={()=> AddUnlike()}>
-              <Image
-              source={require('../../../assets/Profile/heart.png')}
-              style={[styles.topicon, { height: wp('7%') }]}
-              resizeMode='contain'
-            />
-            </TouchableOpacity>
-              }
-             </View>
-   
- 
+                <View>
+                  {Profilelike != likeuserid ?
+                    <TouchableOpacity onPress={() => Addlikes()}>
+                      <Image
+                        source={require('../../../assets/Profile/fillheart.png')}
+                        style={[styles.topicon, { height: wp('7%') }]}
+                        resizeMode='contain'
+                      />
+                    </TouchableOpacity>
+                    :
+                    <TouchableOpacity onPress={() => AddUnlike()}>
+                      <Image
+                        source={require('../../../assets/Profile/heart.png')}
+                        style={[styles.topicon, { height: wp('7%') }]}
+                        resizeMode='contain'
+                      />
+                    </TouchableOpacity>
+                  }
+                </View>
+
+
 
               }
 
@@ -238,7 +299,7 @@ console.log("user here after set:",likeuserid)
             height: hp(14), width: wp(29), alignItems: 'center', justifyContent: "center"
           }}>
             <Image
-              //source={{ uri: image }}
+              source={{ uri: image }}
               style={styles.userimage}
               resizeMode='contain'
             />
@@ -263,9 +324,9 @@ console.log("user here after set:",likeuserid)
                 borderRadius: wp(5),
                 alignItems: 'center',
                 justifyContent: 'center',
-
-                backgroundColor: Colors.Appthemecolor
+                backgroundColor: Colors.Appthemecolor,
               }}
+              onPress={() => navigation.navigate('CreateProfile', { navplace: 'MyProfile' })}
             >
               <Text style={{ color: 'white' }}>Edit Profile</Text>
             </TouchableOpacity>
@@ -275,7 +336,7 @@ console.log("user here after set:",likeuserid)
             //   onPress={() => navigation.navigate('EditProfile')}
             // />
             :
-          <View></View>
+            <View></View>
           }
 
           <Text style={[styles.posttext,
@@ -287,16 +348,22 @@ console.log("user here after set:",likeuserid)
           }]}>Posts</Text>
 
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('EditVideo')}>
-
-          <View style={styles.postpiccontainer}>
-
+        <TouchableOpacity
+          style={styles.postpiccontainer}
+          onPress={() => { navigation.navigate('VideoPlayer', { playvideo: ProfileVideo }) }}>
+          <ImageBackground
+            source={{ uri: ProfileVideoThumbnail }}
+            style={styles.postpic}
+            imageStyle={{ borderRadius: wp(3) }}
+            resizeMode='cover'
+          >
             <Image
-              source={require('../../../assets/Profile/video.png')}
-              style={styles.postpic}
-              resizeMode='contain'
+              source={require('../../../assets/Video/playvideo.png')}
+              style={{ width: wp(13), height: hp(6) }}
+              resizeMode='cover'
             />
-          </View>
+          </ImageBackground>
+
         </TouchableOpacity>
         <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
           <View style={{
@@ -346,28 +413,14 @@ console.log("user here after set:",likeuserid)
             marginRight: wp(1)
             //backgroundColor:'yellow'
           }}>
-            <View style={styles.iconview}>
-              <Image
-                source={require('../../../assets/socialicons/facebook.png')}
-                style={{ width: 80, height: 20 }}
-                resizeMode='contain'
-              />
-            </View>
-
-            <View style={styles.iconview}>
-              <Image
-                source={require('../../../assets/socialicons/linkedin.png')}
-                style={{ width: 80, height: 20 }}
-                resizeMode='contain'
-              />
-            </View>
-            <View style={styles.iconview}>
-              <Image
-                source={require('../../../assets/socialicons/instagram.png')}
-                style={{ width: 80, height: 20 }}
-                resizeMode='contain'
-              />
-            </View>
+            <FlatList
+              data={ProfileSociallinks}
+              horizontal={true}
+              renderItem={sociallinksrenderItem}
+              keyExtractor={(item, index) => index.toString()}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
+            />
             <View style={styles.iconview}>
               <Image
                 source={require('../../../assets/socialicons/share.png')}
@@ -378,7 +431,14 @@ console.log("user here after set:",likeuserid)
           </View>
         </View>
         <View>
-          <Randomlist/>
+          <FlatList
+            data={Userposts}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            numColumns={3}
+          />
 
         </View>
       </ScrollView>
