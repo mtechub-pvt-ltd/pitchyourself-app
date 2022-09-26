@@ -91,13 +91,17 @@ const LoginUser=async() => {
     console.log("response", JSON.stringify(response.data))
     setloading(0);
     setdisable(0);
-    if(response.data.email === Email)
+    if(response.data.profileCompletedStatus === "Completed")
           {
            await AsyncStorage.setItem('Userid',response.data._id);
             // await AsyncStorage.setItem('Userdata',response.data.username);
             await AsyncStorage.setItem('UserEmail',response.data.email);
             await AsyncStorage.setItem('UserPass',response.data.password)
             navigation.navigate('Drawerroute')
+          }
+          else
+          {
+            navigation.navigate('CreateProfile',response.data._id)
           }
   })
   .catch(function (error) {

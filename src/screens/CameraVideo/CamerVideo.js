@@ -56,6 +56,10 @@ const CameraVideo = ({ navigation, route }) => {
       console.log("here:")
       navigation.navigate('Job')
     }
+    else if (predata.place.navplace === "uploadprofilevideo") {
+      console.log("here:")
+      navigation.navigate('UploadVideo')
+    }
   }
 
   ///////////picker state/////////

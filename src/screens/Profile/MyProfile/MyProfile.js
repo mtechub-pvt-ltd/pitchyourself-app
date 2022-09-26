@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView, ScrollView, FlatList, ImageBackground,
-  Image, View, Text, TouchableOpacity,
+  Image, View, Text, TouchableOpacity,PermissionsAndroid
 } from 'react-native';
 
 //////////////////app components////////////////
-import Randomlist from '../../../components/RandomList/Randomlist';
+import DocumentModal from '../../../components/DocumentModal/DocumentModal';
 
 /////////////////app pakages//////////////////
 import { useIsFocused } from '@react-navigation/native';
+
+////////////////app icons//////////////////
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 /////////////////app styles////////////////////
 import styles from './styles';
@@ -28,31 +31,30 @@ import RNFetchBlob from 'rn-fetch-blob'
 import { useSelector, useDispatch } from 'react-redux';
 import { setthumbnails } from '../../../redux/actions';
 
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-  },
-];
+import {
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
+
+
 
 const Profile = ({ navigation, route }) => {
+
   console.log('params:', route.params)
+
+          //Modal States
+          const [modalVisible, setModalVisible] = useState(false);
+
+    //url states
+    const [URL, setURL] = React.useState('');
+
+    //Doenload video state
+   const[fileUrl,setfileUrl]=useState()
+ 
+    //button states
+  const [loading, setloading] = useState(0);
+  const [disable, setdisable] = useState(0);
+
 
   /////////////previous data///////////
   const [predata] = useState(route.params.item)
@@ -79,6 +81,7 @@ const Profile = ({ navigation, route }) => {
   const [ProfileVideoThumbnail, setProfileVideoThumbnail] = useState()
   const [ProfileSociallinks, setProfileSocialLinks] = useState()
   const [Profilelike, setProfilelikes] = useState('')
+  const [DownloadStatus, setDownloadStatus] = useState('')
 
   ///////get api for onboarding data//////////
   const GetProfileData = async () => {
@@ -97,7 +100,8 @@ const Profile = ({ navigation, route }) => {
         setBio(response.data.bio)
         setProfileStatus(response.data.profileStatus)
         setImage(response.data.image)
-        setDocument(response.data.uploadDocument)
+        setDocument(response.data.profileVideoId[0].pdf)
+        setDownloadStatus(response.data.profileVideoId[0].Downloadable)
         setProfileVideo(response.data.profileVideoId[0].link)
         setProfileVideoThumbnail(response.data.profileVideoId[0].thumbnail)
         setProfileSocialLinks(response.data.UserProfileLinkId)
@@ -170,27 +174,124 @@ const Profile = ({ navigation, route }) => {
       })
   }
 
+  const checkPermission = async (props) => {
+    console.log("download props here",props)
+    // Function to check the platform
+    // If Platform is Android then check for permissions.
+    if (Platform.OS === 'ios') {
+      downloadFile(props);
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'Storage Permission Required',
+            message:
+              'Application needs access to your storage to download File',
+          }
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          // Start downloading
+          {fileUrl !== ''?downloadFile(props):null}
+          
+          console.log('Storage Permission Granted.');
+        } else {
+          // If permission denied then show alert
+          Alert.alert('Error','Storage Permission Not Granted');
+        }
+      } catch (err) {
+        // To handle permission related exception
+        console.log("++++"+err);
+      }
+    }
+  };
+  
+  // download file uses here for video download
+  const downloadFile = (props) => {
+    //setloading(1)
+    //setdisable(1)
+    // Get today's date to add the time suffix in filename
+    let date = new Date();
+    // File URL which we want to download
+    let FILE_URL = props;  
+    console.log('fileurl',FILE_URL)  
+    // Function to get extention of the file url
+    let file_ext = getFileExtention(FILE_URL);
+   
+    file_ext = '.' + file_ext[0];
+   
+    // config: To get response by passing the downloading related options
+    // fs: Root directory path to download
+    const { config, fs } = RNFetchBlob;
+    let RootDir = fs.dirs.PictureDir;
+    let options = {
+      fileCache: true,
+      addAndroidDownloads: {
+        path:
+          RootDir+
+          '/file_' + 
+          Math.floor(date.getTime() + date.getSeconds() / 2) +
+          file_ext,
+        description: 'downloading file...',
+        notification: true,
+        // useDownloadManager works with Android only
+        useDownloadManager: true,   
+      
+      },
+      
+    };
+    
+    config(options)
+      .fetch('GET', FILE_URL)
+      .then(res => {
+        // Alert after successful downloading
+        console.log('res -> ', JSON.stringify(res));
+        Alert.alert(' Downloaded Successfully.');
+        setloading(0)
+        setdisable(0)
+     
+      })
+      .catch((err) => {
+        //Alert.alert('Download Failed', err.message);
+        //setsnackbarValue({value: 'Download Failed', color: 'red'});
+        //setVisible(true);
+        //setloading(0)
+        //setdisable(0)
+      });
+  };
+  
+  // set the file extension all the function
+  // checkpermission+downloadfile+ get fileExtension related to each other
+  const getFileExtention = fileUrl => {
+    // To get the file extension
+    return /[.]/.exec(fileUrl) ?
+             /[^.]+$/.exec(fileUrl) : undefined;
+  };
+
   /////////////////////flatlist render item////////////
   const renderItem = ({ item }) => (
+  <View>
+    <TouchableOpacity onPress={()=> {}
+      //checkPermission(item)
+    }
+      >
+<View style={{ margin: wp(1), marginHorizontal: wp(1.3) }}>
+  <View  >
+    <Image
+      source={{ uri: item.thumbnail }}
+      style={styles.lastimage}
+      resizeMode='contain'
+    />
+  </View>
 
-    <View>
+  <Text style={styles.userpostimagetext}>
+    {item.Titles}
+  </Text>
+</View>
+</TouchableOpacity>
+</View>
+)
 
-      <View style={{ margin: wp(1), marginHorizontal: wp(1.3) }}>
-        <View  >
-          <Image
-            source={{ uri: item.thumbnail }}
-            style={styles.lastimage}
-            resizeMode='contain'
-          />
-        </View>
-
-        <Text style={styles.userpostimagetext}>
-          {item.Title}
-        </Text>
-      </View>
-
-    </View>
-  );
   const sociallinksrenderItem = ({ item }) => (
     <View style={styles.iconview}>
       <Image
@@ -350,7 +451,10 @@ const Profile = ({ navigation, route }) => {
         </View>
         <TouchableOpacity
           style={styles.postpiccontainer}
-          onPress={() => { navigation.navigate('VideoPlayer', { playvideo: ProfileVideo }) }}>
+          onPress={() => { 
+            checkPermission('https://res.cloudinary.com/mtechub/raw/upload/v1663832933/ll2fh34dwmfnystmvmaa.pdf')
+            //navigation.navigate('VideoPlayer', { playvideo: ProfileVideo }) 
+            }}>
           <ImageBackground
             source={{ uri: ProfileVideoThumbnail }}
             style={styles.postpic}
@@ -362,9 +466,18 @@ const Profile = ({ navigation, route }) => {
               style={{ width: wp(13), height: hp(6) }}
               resizeMode='cover'
             />
+            {DownloadStatus ?
+                        <View style={{top:0,bottom:0}}>
+                        <Icon name="file-download" color={'white'} size={32} />
+                        </View>
+                        
+          :null
+          }
+
           </ImageBackground>
 
         </TouchableOpacity>
+
         <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
           <View style={{
             flexDirection: "row", justifyContent: 'space-between',
@@ -388,6 +501,7 @@ const Profile = ({ navigation, route }) => {
                 />
               }
             </View>
+            <TouchableOpacity onPress={()=> setModalVisible(true)}>
             <View style={[styles.iconview]}>
               <Image
                 source={require('../../../assets/socialicons/download.png')}
@@ -395,6 +509,8 @@ const Profile = ({ navigation, route }) => {
                 resizeMode='contain'
               />
             </View>
+            </TouchableOpacity>
+       
             {route.params.item === 'profile' ?
               <View></View>
               :
@@ -431,6 +547,8 @@ const Profile = ({ navigation, route }) => {
           </View>
         </View>
         <View>
+ 
+
           <FlatList
             data={Userposts}
             renderItem={renderItem}
@@ -440,7 +558,16 @@ const Profile = ({ navigation, route }) => {
             numColumns={3}
           />
 
+
         </View>
+        <DocumentModal 
+                modalVisible={modalVisible}
+                CloseModal={() => setModalVisible(false)}
+Docarray={Document}
+              text={'Download Document'}
+          buttontext={'Done'}
+ onPress={()=> {setModalVisible(false)}}
+                /> 
       </ScrollView>
     </SafeAreaView>
 

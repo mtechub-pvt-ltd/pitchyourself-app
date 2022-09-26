@@ -38,6 +38,8 @@ import CustomCamera from './src/screens/Camera/Camera';
 import CameraVideo from './src/screens/CameraVideo/CamerVideo';
 import VideoPlayer from './src/screens/VideoPlayer/VideoPlayer';
 import SearchResults from './src/screens/Search/SearchResults/SearchResult';
+import UploadVideo from './src/screens/Video/UploadVideo/UploadVideo';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -166,7 +168,10 @@ function App() {
         options={{
         headerShown: false,
         }} />
-
+       <Stack.Screen name="UploadVideo" component={UploadVideo}
+        options={{
+        headerShown: false,
+        }} />
       </Stack.Navigator>
     </NavigationContainer>
     </Provider>

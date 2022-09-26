@@ -11,11 +11,12 @@ import CustomModal from '../../components/Modal/CustomModal';
 import UploadBottomSheet from '../../components/UploadDocument/UploadDocument';
 
 //////////////////app pakages////////////
-import { Snackbar,Checkbox } from 'react-native-paper';
+import { Snackbar } from 'react-native-paper';
 import DocumentPicker from 'react-native-document-picker';
 
 //////////////app pakages//////////////////
 import ImagePicker from 'react-native-image-crop-picker';
+import CountryPicker from 'react-native-country-picker-modal'
 
 /////////////////app icons////////////////////
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -33,7 +34,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp }
 
 ////////////////////redux////////////
 import { useSelector, useDispatch } from 'react-redux';
-import { setVideoUrl } from '../../redux/actions';
+import { setID } from '../../redux/actions';
 
 //////////////////////////app api/////////////////////////
 import axios from 'axios';
@@ -41,11 +42,15 @@ import { BASE_URL } from '../../utills/ApiRootUrl';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CreateProfile = ({ navigation, route }) => {
+console.log("here data:",route.params)
+  
+///////////country picker states/////////////
+const [CountryPickerView, setCountryPickerView] = useState(false);
+const [countryCode, setCountryCode] = useState('92');
+const [countryname, setCountryName] = useState('Pak');
+const [Phoneno, setPhoneno] = useState('92');
+const [number, setnumber] = useState();
 
-  ////////////checkbox///////////
-  const [checked, setChecked] = React.useState(true);
-  const [docimagechecked, setDocimageChecked] = React.useState(true);
-  const [linkschecked, setLinksChecked] = React.useState(true);
 
   /////////////redux states///////
   const { video, links,id,thumbnails } = useSelector(state => state.userReducer);
@@ -227,6 +232,7 @@ const CreateProfile = ({ navigation, route }) => {
   const ref_input2 = useRef();
   const ref_input3 = useRef();
   const ref_input4 = useRef();
+  const ref_input5 = useRef();
 
   ////////////////previous data//////////////
   const [predata] = useState(route.params)
@@ -253,20 +259,21 @@ const CreateProfile = ({ navigation, route }) => {
       method: 'PUT',
       url: BASE_URL + 'user/update-user',
       data: {
-        _id:id,
+        _id:Userid,
         name: name,
         image:image,
         profession: profession,
         bio: bio,
-        uploadDocument:document,
+        //uploadDocument:document,
         ProfileHashtag:hashtag,
-        profileVideo:video,
         phoneNumber:phoneno,
+        // profileVideo:video,
+   
         //sociallinks:links
       },
     })
       .then(async function (response) {
-        console.log("response", JSON.stringify(response.data))
+        console.log("response here in create profile", JSON.stringify(response.data))
         if (response.data === "Email Already Exist") {
           setloading(0);
           setdisable(0);
@@ -276,16 +283,20 @@ const CreateProfile = ({ navigation, route }) => {
         else {
           setloading(0);
           setdisable(0);
-          await AsyncStorage.setItem('Userid', response.data._id);
-          await AsyncStorage.setItem('Userdata', response.data.name);
-          await AsyncStorage.setItem('UserEmail', response.data.email);
-          await AsyncStorage.setItem('UserPass', response.data.password)
-          navigation.navigate('Drawerroute')
+dispatch(setID(response.data._id))
+        await AsyncStorage.setItem('Userid', response.data._id);
+        await AsyncStorage.setItem('Userdata', response.data.name);
+        await AsyncStorage.setItem('UserEmail', response.data.email);
+         await AsyncStorage.setItem('UserPass', response.data.password);
+      await AsyncStorage.setItem('UserProfileStatus',response.data.profileStatus)
+          navigation.navigate('UploadVideo',{userid:response.data._id,navtype:'CreateProfile'})
         }
 
       })
       .catch(function (error) {
         setModalVisible(true)
+        setloading(0);
+        setdisable(0);
         console.log("error", error)
       })
   }
@@ -316,9 +327,63 @@ const CreateProfile = ({ navigation, route }) => {
       CreateUserProfile()
     }
   }
+
+    ///////////////textfields//////////////////
+    const [Userid, setuserId] = useState(id);
+    const [Username, setusername] = useState('');
+    const [Password, setPassword] = useState('');
+    const [Email, setEmail] = useState('');
+    // const [image, setImage] = useState('');
+    // const [Totalposts, settotalposts] = useState('');
+    // const [Profession, setProfession] = useState('');
+    // const [Bio, setBio] = useState('');
+    const [ProfileStatus, setProfileStatus] = useState('');
+    const [Document, setDocument] = useState('')
+    const [Profilelike, setProfilelikes] = useState('')
+  
+    ///////get api for onboarding data//////////
+    const GetProfileData = async () => {
+      var user= await AsyncStorage.getItem('Userid')
+      console.log("userid:",user)
+
+      axios({
+        method: 'GET',
+        url: BASE_URL + "user/get-user?_id=" + user,
+      })
+        .then(function (response) {
+          console.log("response", JSON.stringify(response.data))
+          /////////////setuserprofile data//////////
+          setuserId(response.data._id)
+          setName(response.data.name)
+          setPassword(response.data.password)
+          setEmail(response.data.email)
+          //settotalposts(response.data.userTotalPosts)
+          setProfession(response.data.profession)
+          setPhoneNo(response.data.phoneNumber)
+          setHashtag(response.data.ProfileHashtag[0])
+          setBio(response.data.bio)
+          setProfileStatus(response.data.profileStatus)
+          setImage(response.data.image)
+
+          //setProfilelikes(response.data.LikesUsersId[0].LikedById)
+        })
+        .catch(function (error) {
+          console.log("error", error)
+        })
+    }
   useEffect(() => {
-    //SplashScreen.hide();
+    GetProfileData()
   }, []);
+
+  const renderItem = ({ item }) => (
+    <View   style={styles.iconview}>
+    <Image
+                  source={require('../../assets/socialicons/facebook.png')}
+                  style={{width:80,height:20}}
+                resizeMode='contain'
+            />
+    </View>
+      );
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -327,6 +392,29 @@ const CreateProfile = ({ navigation, route }) => {
     >
       <ImageBackground source={require('../../assets/Authimages/BG_1.png')}
         resizeMode="cover" style={styles.container}>
+                  {CountryPickerView == true ? <CountryPicker
+          withFilter={true}
+          withCallingCode={true}
+          withModal={true}
+          withFlag={true}
+          withFlagButton={true}
+          withCountryNameButton={true}
+
+          onSelect={(e) => {
+            console.log('country here',e)
+            var name = e.name.substring('4')
+            setCountryPickerView(false)
+            //setCountryFlag(JSON.parse(e.flag))
+            setCountryCode(JSON.parse(e.callingCode))
+            setCountryName(e.name.substring(0,3))
+          }}
+          onClose={(e) => {
+            setCountryPickerView(false)
+          }}
+          visible={CountryPickerView}
+        /> :
+          <View></View>
+        }
         <View style={{
           flexDirection: 'row', justifyContent: 'flex-start',
           marginHorizontal: '0%', alignItems: 'center', marginTop: 20
@@ -339,15 +427,23 @@ const CreateProfile = ({ navigation, route }) => {
             />
           </TouchableOpacity>
           <View style={{ marginLeft: '10%' }}>
-            <Text style={Authtextstyles.maintext}>Complete Profile</Text>
+            {route.params.navplace === "MyProfile"?
+            <Text style={Authtextstyles.maintext}>Edit Profile</Text>
+          :
+          <Text style={Authtextstyles.maintext}>Complete Profile</Text>
+          }
+
           </View>
 
         </View>
         <View style={Logostyles.underlogotextview}>
+        {route.params.navplace === "MyProfile"? <View></View>:
           <Text style={Logostyles.underlogotext}>Lorem ipsum dolor sit amet,
             consetetur sadipscing elitr,
             sed diam nonumy eirmod tempor invidunt ut
           </Text>
+    
+        }
         </View>
         <View style={{ alignItems: 'center' }}>
           <TouchableOpacity onPress={() => refRBSheet.current.open()}>
@@ -389,6 +485,7 @@ const CreateProfile = ({ navigation, route }) => {
         <View style={Inputstyles.inputview}>
           <View style={Inputstyles.action}>
             <TextInput
+            value={name}
               placeholder="Add Your Name"
               onChangeText={setName}
               returnKeyType={"next"}
@@ -407,6 +504,7 @@ const CreateProfile = ({ navigation, route }) => {
           </View>
           <View style={Inputstyles.action}>
             <TextInput
+            value={profession}
               ref={ref_input2}
               placeholder="Add your profession"
               onChangeText={setProfession}
@@ -417,132 +515,63 @@ const CreateProfile = ({ navigation, route }) => {
               style={Inputstyles.input}
             />
           </View>
+
           <View style={Inputstyles.numberinputaction}>
+          <TouchableOpacity
+            onPress={() => {
+              setCountryPickerView(true)
+            }}>
           <TextInput
               placeholder="Pak +92"
               onChangeText={setProfession}
         editable={false}
+        value={countryname + ' +' + countryCode}
               placeholderTextColor={'white'}
-              style={[Inputstyles.numberinput]}
+              style={Inputstyles.numberinput}
             />
+                      </TouchableOpacity>
             <TextInput
-              ref={ref_input2}
-              placeholder="00000000000"
+            value={phoneno}
+              ref={ref_input3}
+              placeholder="Add Phone"
               onChangeText={setPhoneNo}
               returnKeyType={"next"}
-              onSubmitEditing={() => { ref_input3.current.focus()}}
+              onSubmitEditing={() => { ref_input4.current.focus()}}
+              keyboardType='numeric'
               placeholderTextColor={Colors.inputtextcolor}
 
               style={[Inputstyles.input,{width:wp(50),  paddingLeft:wp(5)}]}
             />
           </View>
+
           <View style={Inputstyles.action}>
             <TextInput
-              ref={ref_input3}
+            value={bio}
+              ref={ref_input4}
               placeholder="Add Bio"
               onChangeText={setBio}
               returnKeyType={"next"}
-              onSubmitEditing={() => { ref_input4.current.focus()}}
+              onSubmitEditing={() => { ref_input5.current.focus()}}
               placeholderTextColor={Colors.inputtextcolor}
               style={Inputstyles.input}
             />
           </View>
           <View style={Inputstyles.action}>
             <TextInput
-              ref={ref_input4}
+            value={hashtag}
+              ref={ref_input5}
               placeholder="Add Hastag"
               onChangeText={setHashtag}
               placeholderTextColor={Colors.inputtextcolor}
               style={Inputstyles.input}
             />
           </View>
-
-          <TouchableOpacity onPress={() => navigation.navigate('CustomCamera',{navplace:'createprofile'})}>
-            <View style={Uploadstyles.mainview}>
-              {thumbnails != '' ?
-                <View style={{}}>
-                  <Image
-                    source={{ uri: thumbnails }}
-                    style={Uploadstyles.setimages}
-                    resizeMode='cover'
-                  />
-                </View>
-                :
-                <View style={{ alignItems: 'center' }}>
-                  <Image
-                    source={require('../../assets/Icons/upload.png')}
-                    style={Uploadstyles.uploadicon}
-                    resizeMode='contain'
-                  />
-                  <Text style={Uploadstyles.uploadtext}>Upload Video</Text>
-                </View>
-              }
-            </View>
-          </TouchableOpacity>
-   
-                    <TouchableOpacity onPress={() => refuploadRBSheet.current.open()}>
-                    <View style={Uploadstyles.mainview}>
-                    {docimage === ""?
-           <View style={{ alignItems: 'center' }}>  
-                      <Image
-                        source={require('../../assets/Icons/upload.png')}
-                        style={Uploadstyles.uploadicon}
-                        resizeMode='contain'
-                      />
-                      <Text style={Uploadstyles.uploadtext}>Upload Document</Text>
-                      </View>
-                      :
-                      <Image
-                      source={{ uri: docimage }}
-                      style={Uploadstyles.setimages}
-                      resizeMode='cover'
-                    />
-                      }
-                    </View>
-
-                  </TouchableOpacity>
-                
-
         </View>
-        {document != ''?
-                <View style={{flexDirection:'row',marginLeft:wp(5),alignItems:'center'}}>
-                <Checkbox
-              status={checked ? 'checked' : 'unchecked'}
-              color={Colors.Appthemecolor}
-            />
-     
-                <Text style={[Uploadstyles.uploadtext,{marginTop:hp(0)}]}>Upload Document</Text>
-                </View>
-                       :null
-    }
-{
-              docimage != ''?
-              <View style={{flexDirection:'row',marginLeft:wp(5),alignItems:'center'}}>
-              <Checkbox
-            status={docimagechecked ? 'checked' : 'unchecked'}
-            color={Colors.Appthemecolor}
-          />
-              <Text style={[Uploadstyles.uploadtext,{marginTop:hp(0)}]}>Upload image</Text>
-              </View>
-              :null
-}
-{
-  
-  links != ''?
-  <View style={{flexDirection:'row',marginLeft:wp(5),alignItems:'center'}}>
-  <Checkbox
-status={linkschecked ? 'checked' : 'unchecked'}
-color={Colors.Appthemecolor}
-/>
-  <Text style={[Uploadstyles.uploadtext,{marginTop:hp(0)}]}>Upload links</Text>
-  </View>
-:null
-}
 
 
         <View style={styles.buttonview}>
           <CustomButtonhere
-            title={'UPDATE'}
+            title={'Next'}
             widthset={'65%'}
             loading={loading}
             disabled={disable}
