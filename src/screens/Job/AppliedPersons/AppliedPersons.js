@@ -27,50 +27,23 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setthumbnails } from '../../../redux/actions';
 
 
-const Jobs = ({ navigation, route }) => {
+const AppliedPersons = ({ navigation, route }) => {
   console.log('jobs:', route.params)
-  //status states
-  const [appoinments, setappointments] = useState(true)
-  const [requests, setrequests] = useState(false)
-
-  /////////////////posted job state////////////
-  const [posteddata, setposteddata] = useState('')
-
-  ////////////////////POsted Jobs DATA//////////////
-  const Postedjobs = async () => {
-    var user = await AsyncStorage.getItem('Userid')
-    console.log("userid:", user)
-    axios({
-      method: 'GET',
-      url: BASE_URL + 'user/get-user-posted-jobs?userId=' +user,
-    })
-      .then(async function (response) {
-        console.log("response unlike user", JSON.stringify(response.data))
-        setposteddata(response.data)
-
-      })
-      .catch(function (error) {
-        if (error) {
-          console.log('no dataa found')
-        }
-
-        console.log("error", error)
-      })
-  }
 
   /////////////////Applied Jobs state////////////
   const [applieddata, setapplieddata] = useState('')
 
-  ////////////////////Applied Jobs Data//////////////
-  const Appliedjobs = async () => {
+  ////////////////////Job Applied Persons Data//////////////
+  const JobAppliedPersons = async () => {
     var user = await AsyncStorage.getItem('Userid')
     console.log("userid:", user)
     axios({
       method: 'GET',
-      url: BASE_URL + 'user/get-user-applications?userId=' + user,
+      url: BASE_URL + 'user/get-job-applicants?hubId=' + route.params.id,
     })
       .then(async function (response) {
-        console.log("response unlike user", JSON.stringify(response.data))
+        console.log("response applied user", JSON.stringify(response.data))
+     var data =await response.data
          setapplieddata(data)
       })
       .catch(function (error) {
@@ -82,11 +55,11 @@ const Jobs = ({ navigation, route }) => {
   }
 
   useEffect(() => {
-    Appliedjobs()
-    Postedjobs()
+    JobAppliedPersons()
+
   }, []);
   const postedjobrenderItems = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('AppliedPersons', { item: 'Applied',id:item._id })}>
+    <TouchableOpacity onPress={() => navigation.navigate('JobDetail', { item: 'Applied' })}>
       <View style={styles.card}>
         <View style={styles.postcard}>
         <TouchableOpacity
@@ -108,22 +81,25 @@ const Jobs = ({ navigation, route }) => {
           </TouchableOpacity>
 
           <View style={{ marginHorizontal: wp(5), marginBottom: hp(1) }}>
-            <Text style={{ fontSize: hp(2), color: '#1B1B1B', fontWeight: 'bold' }}>{item.Title}</Text>
-            <Text style={styles.recomend}>{item.jobDescription} </Text>
+            <Text style={{ fontSize: hp(2), color: '#1B1B1B', fontWeight: 'bold' }}>Job Title</Text>
+            <Text style={styles.recomend}>Lorem ipsum dolor sit amet,
+              consetetur sadipscing Lorem ipsum dolor sit amet,
+              consetetur sadipscing  </Text>
           </View>
 
 
           <View style={{
-            flexDirection: "row", justifyContent: 'space-around', alignItems: 'center', marginBottom: hp(3),
+            flexDirection: "row", justifyContent: 'space-around', alignItems: 'center', marginBottom: hp(2),
             marginBottom: 10
           }}>
             <View>
               <Text style={{ fontSize: hp(2), color: '#1B1B1B', fontWeight: 'bold' }}>User Applied</Text>
-              <Text style={{ fontSize: hp(1.5), width: wp(45), color: '#1B1B1B' }}>002</Text>
+              <Text style={{ fontSize: hp(1.5), width: wp(45), color: '#1B1B1B' }}>Lorem ipsum dolor sit amet,
+                consetetur sadipscing</Text>
             </View>
-            <View style={{width:wp(30)}}>
-              <Text style={{ fontSize: hp(2), color: '#1B1B1B', fontWeight: 'bold',textAlign:'right' }}>Date Posted</Text>
-              <Text style={{ fontSize: hp(1.5), width: wp(30), color: '#1B1B1B',textAlign:'right' }}>01/06/2022
+            <View style={{width:wp(20)}}>
+              <Text style={{ fontSize: hp(2), color: '#1B1B1B', fontWeight: 'bold' }}>Date Posted</Text>
+              <Text style={{ fontSize: hp(1.5), width: wp(30), color: '#1B1B1B' }}>Lorem ipsum dolor sit amet,
               </Text>
             </View>
           </View>
@@ -133,7 +109,6 @@ const Jobs = ({ navigation, route }) => {
       </View>
     </TouchableOpacity>
   );
-
   const appliedjobrenderItems = ({ item }) => (
     <TouchableOpacity onPress={() => navigation.navigate('JobDetail', { itemnav: 'Applied' })}>
       {applieddata === ''?
@@ -142,7 +117,7 @@ const Jobs = ({ navigation, route }) => {
         <View style={styles.postcard}>
           <TouchableOpacity
             style={videothumbnailstyles.postpiccontainer}
-            onPress={() => { navigation.navigate('VideoPlayer', { playvideo: item.hubId.Video }) }}>
+            onPress={() => { navigation.navigate('VideoPlayer', { playvideo: item.Video }) }}>
             <ImageBackground
               //source={{ uri: applieddata != ''?item.hubId.thumbnail : null }}
               style={videothumbnailstyles.postpic}
@@ -163,8 +138,8 @@ const Jobs = ({ navigation, route }) => {
           }}>
 
             <View style={{ width: wp(35) }}>
-              <Text style={{ fontSize: hp(2), color: '#1B1B1B', fontWeight: 'bold' }}>{applieddata != ''?item.userId:null}</Text>
-              <Text style={styles.recomend}>{applieddata === ''?item.hubId.jobDescription:null}</Text>
+              <Text style={{ fontSize: hp(2), color: '#1B1B1B', fontWeight: 'bold' }}>{item.userId}</Text>
+              <Text style={styles.recomend}>{applieddata === ''?item.jobDescription:null}</Text>
             </View>
             <TouchableOpacity
               onPress={() => { navigation.navigate('VideoPlayer', { playvideo: item.video }) }}>
@@ -201,6 +176,7 @@ const Jobs = ({ navigation, route }) => {
     </TouchableOpacity>
 
   );
+
   return (
 
     <SafeAreaView style={styles.container}>
@@ -217,41 +193,19 @@ const Jobs = ({ navigation, route }) => {
             />
           </TouchableOpacity>
           <View style={{ marginLeft: "12%" }}>
-            <Text style={Authtextstyles.maintext}>My Jobs</Text>
+            <Text style={Authtextstyles.maintext}>Job Title</Text>
           </View>
         </View>
       </View>
 
-      <View style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginHorizontal: 25,
-        //backgroundColor:'red'
-      }}>
-        <TouchableOpacity onPress={() => { setappointments(true), setrequests(false) }}>
-          <TabsBadgeView
-            title={'Posted'}
-            width={'30%'}
-            state={appoinments}
-            type={'User'}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => { setappointments(false), setrequests(true) }}>
-          <TabsBadgeView
-            title={'Applied'}
-            width={'30%'}
-            state={requests}
-            type={'Job name here'}
-          />
-        </TouchableOpacity>
+      <Text style={styles.recomend}>Lorem ipsum dolor sit amet,
+              consetetur sadipscing Lorem ipsum dolor sit amet,
+              consetetur sadipscing  </Text>
 
-      </View>
-      {
-        appoinments === true ?
 
           <View style={styles.inputview}>
             <FlatList
-              data={posteddata}
+              data={applieddata}
               renderItem={postedjobrenderItems}
               keyExtractor={(item, index) => index.toString()}
               scrollEnabled={true}
@@ -261,26 +215,7 @@ const Jobs = ({ navigation, route }) => {
 
           </View>
 
-          :
-          null
-      }
-      {
-        requests === true ?
-          <View style={styles.inputview}>
-            <FlatList
-              data={applieddata}
-              renderItem={appliedjobrenderItems}
-              keyExtractor={(item, index) => index.toString()}
-              scrollEnabled={true}
-              showsHorizontalScrollIndicator={false}
-              showsVerticalScrollIndicator={false}
-            />
 
-          </View>
-
-          :
-          null
-      }
 
       {/* </ScrollView> */}
     </SafeAreaView>
@@ -288,4 +223,4 @@ const Jobs = ({ navigation, route }) => {
   )
 };
 
-export default Jobs;
+export default AppliedPersons;

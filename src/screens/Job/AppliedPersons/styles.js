@@ -113,7 +113,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 25,
     marginTop: hp(2),
-   paddingBottom:hp(2)
   },
   mainusercontainer:
   {

@@ -1,11 +1,8 @@
 import React from 'react';
 import {
   StyleSheet,
-  Dimensions
 } from 'react-native';
 import Colors from '../../../utills/Colors';
-const Width = Dimensions.get("screen").width;
-const Height = Dimensions.get("screen").height;
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
 
@@ -16,23 +13,10 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     backgroundColor:'white'
   },
-topview:
-{flexDirection:'row',
-justifyContent:'flex-start',
-          alignItems:'center',
-          marginTop:wp('10%')
-        //backgroundColor:'red'
-        },
-topicon:
-{
-  width:wp('5%'),
-  height:wp('5%'),
-  marginLeft:wp('3%'),
-  marginRight:wp('5%')
-},
+
   buttonview:
   {
-marginTop:hp('53%'),
+marginTop:hp(10),
 marginBottom:hp('5%')
 
   },
@@ -50,7 +34,21 @@ marginBottom:hp('5%')
       width:wp('7%'),
       height:wp('7%'),
   },
-
+  doticon:
+  {
+      width:wp(3),
+      height:wp(3),
+  },
+  icon:
+  {
+      width:wp(5),
+      height:wp(5),
+  },
+  plusicon:
+  {
+      width:wp(6),
+      height:wp(6),
+  },
   uploadtext:
 {
   color:Colors.Appthemecolor,
@@ -70,16 +68,24 @@ check:
     width:wp('6.5%'),
     height:wp('6.5%'),
 },
-postpiccontainer:
+videotext:
 {
-   alignSelf:"center",
-    alignItems:"center",
+  color:Colors.Appthemecolor,
+  fontWeight: '500',
+  fontSize: hp(1.3),
 
 },
-postpic:
+orangetext:
 {
-    width:wp('80%'),
-    height:wp('60%'),
+  color:Colors.Appthemecolor,
+  fontWeight: '500',
+  fontSize: hp(1.8),
+
 },
+lineview:
+{
+    borderBottomColor:'rgba(112,112,112,0.1)',
+    borderBottomWidth:2,marginTop:hp(2),
+    marginBottom:wp(0)},
 });
 export default styles;

@@ -12,11 +12,10 @@ import AddLinks from '../../../components/AddLinks/AddLinks';
 
 ////////////////app pakages////////////////
 import ImagePicker from 'react-native-image-crop-picker';
-import Moment from 'moment';
 import DocumentPicker from 'react-native-document-picker';
 
 //////////////////app pakages////////////
-import { Snackbar, Checkbox, Divider } from 'react-native-paper';
+import { Checkbox } from 'react-native-paper';
 
 ////////////////////redux////////////
 import { useSelector, useDispatch } from 'react-redux';
@@ -24,10 +23,8 @@ import { setlinksicon, setlinks } from '../../../redux/actions';
 
 ///////////////////app styles//////////////////
 import styles from './styles';
-import Authtextstyles from '../../../utills/GlobalStyles/Authtextstyles';
 import Uploadstyles from '../../../utills/GlobalStyles/Upload';
 import Inputstyles from '../../../utills/GlobalStyles/Inputstyles';
-import Multilineinputstyles from '../../../utills/GlobalStyles/Multilineinputstyle';
 import Colors from '../../../utills/Colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
@@ -211,54 +208,7 @@ const UploadVideo = ({ navigation, route }) => {
         alert("error while uploading")
       })
   }
-  //////////////////////Api Calling/////////////////
-  const UpdateUserProfileVideo = () => {
-    console.log("update obj:", Userid, linkschecked, '..........................', Selectdoc, video,Selectimages)
-    axios({
-      method: 'PUT',
-      url: BASE_URL + 'user/update-user-video',
-      data: {
-        _id: Userid,
-        title: 'Video Profile',
-        pdf: Selectdoc,
-        Img: Selectimages,
-        link: video,
-        thumbnail:thumbnails,
-        hidden: linkschecked,
-        //Downloadable: true,
 
-      },
-    })
-      .then(async function (response) {
-        console.log("response", JSON.stringify(response.data))
-        navigation.navigate('Drawerroute')
-        // if (response.data === "Profile Video Exists either Delete it or Update it") {
-        //   // setloading(0);
-        //   // setdisable(0);
-        //   // setModalVisible1(true)
-        //   console.log("Email Already Exist,Enter other email")
-        // }
-        // else {
-        //   // setloading(0);
-        //   // setdisable(0);
-        //   navigation.navigate('Drawerroute')
-        //   // if (route.params.navtype === 'CreateProfile')
-        //   // {
-  
-        //   // }
-        //   // else{
-        //   //   navigation.navigate('Drawerroute')
-        //   // }
-        // }
-
-      })
-      .catch(function (error) {
-        //setModalVisible(true)
-        // setloading(0);
-        // setdisable(0);
-        console.log("error", error)
-      })
-  }
     //////////////////////Api Calling/////////////////
     const CreateUserProfileVideo = () => {
       console.log("obj:", Userid, linkschecked, '..........................', Selectdoc, video,Selectimages)
@@ -280,7 +230,6 @@ const UploadVideo = ({ navigation, route }) => {
         .then(async function (response) {
           console.log("response", JSON.stringify(response.data))
           if (response.data === "Profile Video Exists either Delete it or Update it") {
-            UpdateUserProfileVideo()
             console.log("Email Already Exist,Enter other email")
           }
           else {
@@ -331,7 +280,6 @@ const UploadVideo = ({ navigation, route }) => {
   }
   useEffect(() => {
     GetLinks()
-    GetProfileData()
   }, []);
   //////////////link dropdown////////////////
   const reflinkddRBSheet = useRef();
@@ -371,31 +319,7 @@ const UploadVideo = ({ navigation, route }) => {
   }
    ///////////////textfields//////////////////
    const [Userid, setuserId] = useState(id);
-  const [ProfileStatus, setProfileStatus] = useState('');
-  const [Document, setDocument] = useState('')
 
-    ///////get api for onboarding data//////////
-    const GetProfileData = async () => {
-      var user= await AsyncStorage.getItem('Userid')
-      console.log("userid:",user)
-
-      axios({
-        method: 'GET',
-        url: BASE_URL + "user/get-user?_id=" + user,
-      })
-        .then(function (response) {
-          console.log("response", JSON.stringify(response.data))
-          /////////////setuserprofile data//////////
-          setuserId(response.data._id)
-          setProfileStatus(response.data.profileStatus)
-          setImage(response.data.image)
-          setDocument(response.data.uploadDocument)
-          //setProfilelikes(response.data.LikesUsersId[0].LikedById)
-        })
-        .catch(function (error) {
-          console.log("error", error)
-        })
-    }
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView

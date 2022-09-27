@@ -67,7 +67,7 @@ const Job = ({ navigation }) => {
       setVisible('true');
     }
     else {
-      dispatch(setthumbnails(""))
+  
       navigation.navigate('PostJob', { companyname, jobTitle, jobdesc, video })
     }
   }

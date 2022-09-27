@@ -83,7 +83,7 @@ const[predata]=useState(route.params)
         joblocation: location,
         jobSalaryRange: salary,
         Startdate: startdate,
-        jobLat: enddate,
+        Enddate: enddate,
         jobLong: 'longitute',
         jobLat:'lat',
         Tag:reach,
@@ -96,7 +96,7 @@ const[predata]=useState(route.params)
         setloading(0);
         setdisable(0);
         dispatch(setthumbnails(""))            
-        navigation.navigate('JobDetail',{id:response.data._id})
+        navigation.navigate('JobDetail',{id:response.data._id,navplace:'postjob'})
 
       })
       .catch(function (error) {

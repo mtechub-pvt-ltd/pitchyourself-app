@@ -1,7 +1,7 @@
 import React, { useEffect, useState,useRef} from 'react';
 import {
-  SafeAreaView, TextInput,ScrollView,
-    Image, View, Text, TouchableOpacity, 
+  SafeAreaView, TextInput,ScrollView,Modal,
+    Image, View, Text, TouchableOpacity, FlatList
 } from 'react-native';
 
 ////////////////////app components///////////////////
@@ -43,6 +43,7 @@ const Project = ({ navigation }) => {
       //Modal States
       const [modalVisible, setModalVisible] = useState(false);
       const [modalVisible1, setModalVisible1] = useState(false);
+      const [usermodalVisible, setUserModalVisible] = useState(false);
 
 /////////TextInput References///////////
 const ref_input2 = useRef();
@@ -129,9 +130,51 @@ const formValidation = async () => {
 }
 
   useEffect(() => {
-
-    //SplashScreen.hide();
+    GetProfileData()
+   // functionA()
   }, []);
+
+ const  functionA =(item)=>{
+  //setProjectMember[0] === '@'?  console.log('AAA'):null
+    console.log('AAA here');
+  }
+////////////////user flatlist state//////////
+const [users,setusers]=useState()
+    ///////get api for onboarding data//////////
+    const GetProfileData = async () => {
+      axios({
+        method: 'GET',
+        url: BASE_URL + "user/get-all-user",
+      })
+        .then(function (response) {
+          console.log("response", JSON.stringify(response.data))
+          /////////////setuserprofile data//////////
+          setusers(response.data)
+        })
+        .catch(function (error) {
+          console.log("error", error)
+        })
+    }
+      /////////////////////user flatlist render item////////////
+      const userrenderItem = ({ item }) => (
+        <TouchableOpacity 
+        style={{
+          flexDirection:'row',
+          alignItems:'center',
+          justifyContent:'space-between'
+          }}
+        onPress={()=> {setProjectMember(item.name),setUserModalVisible(false)}
+          //checkPermission(item)
+        }
+          >
+      <Text style={styles.modaltext}>
+        {item.name}
+      </Text>
+      {/* <Icon name="file-download" color={'black'} size={32} /> */}
+    </TouchableOpacity>
+  
+    )
+
   return (
     <SafeAreaView style={styles.container}>
             <ScrollView
@@ -170,6 +213,7 @@ const formValidation = async () => {
           <View style={Inputstyles.action}>
             <TextInput
                  ref={ref_input2}
+             
               placeholder="Title of a Project"
               onChangeText={setProjectTitle}
               returnKeyType={"next"}
@@ -177,6 +221,7 @@ const formValidation = async () => {
               placeholderTextColor={Colors.inputtextcolor}
               autoCapitalize="none"
               style={Inputstyles.input}
+              
             />
   
           </View>
@@ -197,7 +242,7 @@ const formValidation = async () => {
                    style={Uploadstyles.uploadicon}
                     resizeMode='contain'
                 />
-                <Text style={Uploadstyles.uploadtext}>Upload Video</Text>
+                <Text style={Uploadstyles.uploadtext}>Upload Video{projectmember}</Text>
                 </View>
   }
 
@@ -206,14 +251,26 @@ const formValidation = async () => {
 <View style={Inputstyles.action}>
             <TextInput
              ref={ref_input3}
+            value={projectmember}
               placeholder="Add users who are involved in
               this project"
-              onChangeText={setProjectMember}
+              onChangeText={projectmember =>
+                {
+                  console.log(' THE TEXT =========', projectmember);
+                  if (projectmember.includes('@')) {
+                    setUserModalVisible(true)
+                    console.log('YES INCLUDED======');
+                  }
+                  setProjectMember(projectmember);
+                }
+               // === "@" ? functionA:console.log('nothng')
+              }
               returnKeyType={"next"}
               onSubmitEditing={() => { ref_input4.current.focus() }}
               placeholderTextColor={Colors.inputtextcolor}
               autoCapitalize="none"
               style={Inputstyles.input}
+              //onKeyPress={keyPress => console.log(keyPress.keyPress)}
             />
   
           </View>
@@ -283,6 +340,43 @@ add hashtags to increase visibility and reach.</Text>
          buttontext={'OK'}
  onPress={()=> {setModalVisible1(false)}}
                 /> 
+       
+       <Modal
+          animationType="slide"
+          transparent={true}
+          visible={usermodalVisible}
+          onRequestClose={!usermodalVisible}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+
+      
+            <View style={{marginBottom:15,
+              alignSelf:'center',marginTop:hp(3)}}>
+                       <Text style={styles.maintext}>
+                          Select Users</Text>
+              </View>
+            <FlatList
+            data={users}
+            renderItem={userrenderItem}
+            keyExtractor={(item, index) => index.toString()}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+    
+          />
+
+       
+{/* 
+    <View  style={styles.ApprovedView}>
+        <TouchableOpacity 
+        onPress={props.onPress}>
+        <Text style={styles.Pendingtext}>OK</Text>
+        </TouchableOpacity>
+    </View> */}
+
+            </View>
+          </View>
+        </Modal>
     </SafeAreaView>
 
   )

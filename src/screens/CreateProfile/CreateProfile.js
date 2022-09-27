@@ -12,7 +12,6 @@ import UploadBottomSheet from '../../components/UploadDocument/UploadDocument';
 
 //////////////////app pakages////////////
 import { Snackbar } from 'react-native-paper';
-import DocumentPicker from 'react-native-document-picker';
 
 //////////////app pakages//////////////////
 import ImagePicker from 'react-native-image-crop-picker';
@@ -26,8 +25,6 @@ import styles from './styles';
 import Authtextstyles from '../../utills/GlobalStyles/Authtextstyles';
 import Logostyles from '../../utills/GlobalStyles/LogoStyles';
 import Inputstyles from '../../utills/GlobalStyles/Inputstyles';
-import Uploadstyles from '../../utills/GlobalStyles/Upload';
-import Multilineinputstyles from '../../utills/GlobalStyles/Multilineinputstyle';
 import Colors from '../../utills/Colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
@@ -42,7 +39,7 @@ import { BASE_URL } from '../../utills/ApiRootUrl';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CreateProfile = ({ navigation, route }) => {
-console.log("here data:",route.params)
+console.log("here data user id:",route.params)
   
 ///////////country picker states/////////////
 const [CountryPickerView, setCountryPickerView] = useState(false);
@@ -129,105 +126,7 @@ const [number, setnumber] = useState();
         alert("error while uploading")
       })
   }
-  const documenthandleUpload = (uploadimage) => {
-    console.log("image here url:", uploadimage)
-    const data = new FormData()
-    data.append('file', uploadimage)
-    data.append('upload_preset', 'nrrfyy0m')
-    data.append("cloud_name", "mtechub")
 
-    fetch("https://api.cloudinary.com/v1_1/mtechub/upload", {
-      method: "post",
-      body: data
-    }).then(res => res.json()).
-      then(data => {
-        console.log("data here:", data)
-        setdocument(data.url)
-      }).catch(err => {
-        alert("error while uploading")
-      })
-  }
-  //camera and imagepicker
-  const refuploadRBSheet = useRef();
-
-  ///////////picker state/////////
-  const [document, setdocument] = useState('')
-
-  ////////////////////////document picker////////////////
-  const onSelectFile = async (props) => {
-    //var assignmentid= props
-    //Opening Document Picker for selection of one file
-    try {
-      const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.allFiles],
-      });
-      //Printing the log realted to the file
-      console.log('res : ' + JSON.stringify(res));
-      console.log('URI : ' + res[0].uri);
-      console.log('Type : ' + res[0].type);
-      console.log('File Name : ' + res[0].name);
-      console.log('File Size : ' + res[0].size);
-      let newfile = {
-        uri: res[0].uri,
-        type: res[0].type,
-        name: res[0].name
-
-      }
-      documenthandleUpload(newfile)
-      refuploadRBSheet.current.close()
-      // RNFetchBlob.fetch('POST',
-      //     BASE_URL+`upload-file`, {
-      //     Authorization: "Bearer access-token",
-      //     otherHeader: "foo",
-      //     'Content-Type': 'multipart/form-data',
-      // }, [{
-      //     name: 'file',
-      //     filename: res[0].name,
-      //     type: res[0].type,
-      //     data: RNFetchBlob.wrap(res[0].uri)
-      // },
-      // ]).then((response) => {
-      //   console.log("response:",response.data,assignmentid)
-      //   setSingleFile(response.data.file);
-      //   UploadAssignment(assignmentid)
-      // }).catch((error) => {
-      //     alert(error)
-      // })
-
-    } catch (err) {
-      //Handling any exception (If any)
-      if (DocumentPicker.isCancel(err)) {
-        //If user canceled the document selection
-        alert('Canceled from single doc picker');
-      } else {
-        //For Unknown Error
-        alert('Unknown Error: ' + JSON.stringify(err));
-        throw err;
-      }
-    }
-  };
-  ////////////////////library image//////////////////
-    ///////////picker state/////////
-    const [docimage, setDocImage] = useState('')
-  const choosedocimageFromLibrary = () => {
-    ImagePicker.openPicker({
-      width: 300,
-      height: 300,
-      cropping: true,
-      compressImageQuality: 0.7
-    }).then(image => {
-      refRBSheet.current.close()
-      console.log(image);
-      setDocImage(image.path);
-      let newfile = {
-        uri: image.path,
-        type: image.mime,
-        name: image.path.substring(image.path.lastIndexOf('/') + 1)
-      }
-      imagehandleUpload(newfile)
-      refuploadRBSheet.current.close()
-    });
-  }
   /////////TextInput References///////////
   const ref_input2 = useRef();
   const ref_input3 = useRef();
@@ -237,7 +136,7 @@ const [number, setnumber] = useState();
   ////////////////previous data//////////////
   const [predata] = useState(route.params)
 
-  ///////////////textfields//////////////////
+    ///////////////textfields//////////////////
   const [name, setName] = useState('');
   const [profession, setProfession] = useState('');
   const [phoneno, setPhoneNo] = useState('');
@@ -254,12 +153,12 @@ const [number, setnumber] = useState();
   //////////////////////Api Calling/////////////////
   const CreateUserProfile = () => 
   {
-    console.log("obj:",id,image,'..........................',video,'....................',document)
+    console.log("obj:",id,image,'..........................',video,'................')
     axios({
       method: 'PUT',
       url: BASE_URL + 'user/update-user',
       data: {
-        _id:Userid,
+        _id:id,
         name: name,
         image:image,
         profession: profession,
@@ -328,62 +227,10 @@ dispatch(setID(response.data._id))
     }
   }
 
-    ///////////////textfields//////////////////
-    const [Userid, setuserId] = useState(id);
-    const [Username, setusername] = useState('');
-    const [Password, setPassword] = useState('');
-    const [Email, setEmail] = useState('');
-    // const [image, setImage] = useState('');
-    // const [Totalposts, settotalposts] = useState('');
-    // const [Profession, setProfession] = useState('');
-    // const [Bio, setBio] = useState('');
-    const [ProfileStatus, setProfileStatus] = useState('');
-    const [Document, setDocument] = useState('')
-    const [Profilelike, setProfilelikes] = useState('')
-  
-    ///////get api for onboarding data//////////
-    const GetProfileData = async () => {
-      var user= await AsyncStorage.getItem('Userid')
-      console.log("userid:",user)
-
-      axios({
-        method: 'GET',
-        url: BASE_URL + "user/get-user?_id=" + user,
-      })
-        .then(function (response) {
-          console.log("response", JSON.stringify(response.data))
-          /////////////setuserprofile data//////////
-          setuserId(response.data._id)
-          setName(response.data.name)
-          setPassword(response.data.password)
-          setEmail(response.data.email)
-          //settotalposts(response.data.userTotalPosts)
-          setProfession(response.data.profession)
-          setPhoneNo(response.data.phoneNumber)
-          setHashtag(response.data.ProfileHashtag[0])
-          setBio(response.data.bio)
-          setProfileStatus(response.data.profileStatus)
-          setImage(response.data.image)
-
-          //setProfilelikes(response.data.LikesUsersId[0].LikedById)
-        })
-        .catch(function (error) {
-          console.log("error", error)
-        })
-    }
   useEffect(() => {
-    GetProfileData()
+
   }, []);
 
-  const renderItem = ({ item }) => (
-    <View   style={styles.iconview}>
-    <Image
-                  source={require('../../assets/socialicons/facebook.png')}
-                  style={{width:80,height:20}}
-                resizeMode='contain'
-            />
-    </View>
-      );
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -587,13 +434,7 @@ dispatch(setID(response.data._id))
         takePhotoFromCamera={takePhotoFromCamera}
         choosePhotoFromLibrary={choosePhotoFromLibrary}
       />
-      <UploadBottomSheet
-        refRBSheet={refuploadRBSheet}
-        onClose={() => refuploadRBSheet.current.close()}
-        title={'Add Links'}
-        SelectFile={onSelectFile}
-        choosePhotoFromLibrary={choosedocimageFromLibrary}
-      />
+     
       <Snackbar
         duration={400}
         visible={visible}

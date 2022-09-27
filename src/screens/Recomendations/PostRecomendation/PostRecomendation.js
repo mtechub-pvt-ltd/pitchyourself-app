@@ -10,33 +10,34 @@ import { Divider } from 'react-native-paper';
 
 //////////////app styles/////////////
 import styles from './styles';
-import Authtextstyles from '../../utills/GlobalStyles/Authtextstyles';
-import Inputstyles from '../../utills/GlobalStyles/Inputstyles';
-import Colors from '../../utills/Colors';
+import Authtextstyles from '../../../utills/GlobalStyles/Authtextstyles';
+import Inputstyles from '../../../utills/GlobalStyles/Inputstyles';
+import Colors from '../../../utills/Colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
     from 'react-native-responsive-screen';
 
 ////////////////api////////////////
 import axios from 'axios';
-import { BASE_URL } from '../../utills/ApiRootUrl';
+import { BASE_URL } from '../../../utills/ApiRootUrl';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-const Recomendations = ({ navigation,route }) => {
+const PostRecomendations = ({ navigation,route }) => {
 
-console.log("previous screen",route.params)
+    ///////////////////previous data//////////////
+    const[predata]=useState(route.params)
+    console.log("previous data:",predata)
 
  //faltlist state
  const [DATA, setdata]=useState()
  const [totalrecomendations, setotalrecomendations] = useState()
 
  //get DoctorRequests api calling
-const GetProfileRecomendations= async() => {
- //var user= await AsyncStorage.getItem('Userid')
+const GetPostRecomendations= async() => {
  axios({
    method: 'GET',
-   url:BASE_URL+'user/get-profile-comments?userId='+route.params.id
+   url:BASE_URL+'user/get-hub-comments?hubId='+predata
    //+user,
  })
  .then(function (response) {
@@ -50,7 +51,7 @@ const GetProfileRecomendations= async() => {
  })
  }
     useEffect(() => {
-        GetProfileRecomendations()
+        GetPostRecomendations()
     }, []);
 
 /////////////////add coments states///////////////
@@ -58,65 +59,65 @@ const [comments, setComments] = useState(new Date());
 
     //////////////////////add comments to profile api//////////////
     const AddComments=async() => {
-         var user= await AsyncStorage.getItem('Userid')
-        console.log('here......',comments,user)
+    
+ var user= await AsyncStorage.getItem('Userid')
+        console.log('here......',comments)
         axios({
           method: 'POST',         
-          url: BASE_URL+'user/create-profile-comment',
+          url: BASE_URL+'user/create-pitch-comment',
           data:{
-            userId:route.params.id,
+            hubId:predata,
             CommenterId: user,
             Comment: comments
           },
         })
         .then(async function (response) {
           console.log("response", JSON.stringify(response.data)) 
-          RecomendationNotification(response.data.userId) 
-          GetProfileRecomendations() 
-        console.log('Appointment Accepted')
+          RecomendationNotification(response.data.userId)
+          GetPostRecomendations() 
+          console.log('Appointment Accepted')
 
         })
         .catch(function (error) {
           if(error)
         {    
-            console.log('Issue in Appoinments Acceptence')
+           console.log('Issue in Appoinments Acceptence')
 
           }
       
           console.log("error", error)
         })
       }
-
-                   ////////////////////Recomendation Notifications//////////////
+             ////////////////////Recomendation Notifications//////////////
      const RecomendationNotification = async (item) => {
-      console.log('here in notification:',item)
-     var user = await AsyncStorage.getItem('Userid')
-     var username = await AsyncStorage.getItem('Userdata')
-     var currdate= new Date().getDate() + '-' + new Date().getMonth() + 1 + '-' + new Date().getFullYear();
-     console.log("date:",currdate)
-     axios({
-       method: 'POST',
-       url: BASE_URL + 'user/create-msg',
-       data: {
-         from: user,
-         to: item,
-         msgContent:username+" Recomended on your profile "+comments,
-         dateTime:currdate
-       },
-     })
-       .then(async function (response) {
-         console.log("response", JSON.stringify(response.data))
-         GetProfileRecomendations()
- 
+        console.log('here in notification:',item)
+       var user = await AsyncStorage.getItem('Userid')
+       var username = await AsyncStorage.getItem('Userdata')
+       var currdate= new Date().getDate() + '-' + new Date().getMonth() + 1 + '-' + new Date().getFullYear();
+       console.log("date:",currdate)
+       axios({
+         method: 'POST',
+         url: BASE_URL + 'user/create-msg',
+         data: {
+           from: user,
+           to: item,
+           msgContent:username+" Recomended on your Post "+comments,
+           dateTime:currdate
+         },
        })
-       .catch(function (error) {
-         if (error) {
-           console.log('Issue in Appoinments Acceptence')
-         }
- 
-         console.log("error", error)
-       })
-   }
+         .then(async function (response) {
+           console.log("response", JSON.stringify(response.data))
+           GetPostRecomendations()
+   
+         })
+         .catch(function (error) {
+           if (error) {
+             console.log('Issue in Appoinments Acceptence')
+           }
+   
+           console.log("error", error)
+         })
+     }
     return (
 
         <SafeAreaView style={styles.container}>
@@ -130,7 +131,7 @@ const [comments, setComments] = useState(new Date());
                     <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
                         <TouchableOpacity onPress={() => navigation.goBack()}>
                             <Image
-                                source={require('../../assets/Icons/back.png')}
+                                source={require('../../../assets/Icons/back.png')}
                                 style={Inputstyles.inputicons}
                                 resizeMode='contain'
                             />
@@ -157,8 +158,8 @@ const [comments, setComments] = useState(new Date());
                         alignItems: 'center',marginBottom:20 }}>
                             <View style={{}}>
                                 <Image
-                                    //source={require('../../assets/images/user.png')}
                                     source={{uri: item.CommenterImage}}
+                                    //source={{uri: item.image}}
                                     style={styles.userimage}
                                     resizeMode='contain'
                                 />
@@ -176,9 +177,6 @@ const [comments, setComments] = useState(new Date());
                             </View>
 
                     </View>
-                           
-                     
-
                             </View>
 
                         )}
@@ -190,37 +188,31 @@ const [comments, setComments] = useState(new Date());
                                         />
       
                 </View>
-                {
-                    route.params.navplace === 'Myprofile'?
-                    <View></View>:
-                    <View style={{flexDirection:'row',justifyContent:'space-around',
-                    alignItems:'center',
-               marginHorizontal:wp(5)}}>
-                   <View style={[Inputstyles.action,{width:wp(70)}]}>
-               <TextInput
-                 placeholder="Add Comment"
-                 onChangeText={setComments}
-                 placeholderTextColor={Colors.inputtextcolor}
-                 autoCapitalize="none"
-                 style={[Inputstyles.input,{width:wp(50)}]}
-               />
+                <View style={{flexDirection:'row',justifyContent:'space-around',
+                 alignItems:'center',
+            marginHorizontal:wp(5)}}>
+                <View style={[Inputstyles.action,{width:wp(70)}]}>
+            <TextInput
+              placeholder="Add Comment"
+              onChangeText={setComments}
+              placeholderTextColor={Colors.inputtextcolor}
+              autoCapitalize="none"
+              style={[Inputstyles.input,{width:wp(50)}]}
+            />
+
+          </View>
+          <TouchableOpacity onPress={()=> AddComments()}>
+          <Image
+                    source={require('../../../assets/images/send.png')}
+                    style={styles.sendimage}
+                    resizeMode='contain'
+                />
+          </TouchableOpacity>
    
-             </View>
-             <TouchableOpacity onPress={()=> AddComments()}>
-             <Image
-                       source={require('../../assets/images/send.png')}
-                       style={styles.sendimage}
-                       resizeMode='contain'
-                   />
-             </TouchableOpacity>
-      
-                   </View>
-      
-                }
-        
+                </View>
         </SafeAreaView>
 
     )
 };
 
-export default Recomendations;
+export default PostRecomendations;

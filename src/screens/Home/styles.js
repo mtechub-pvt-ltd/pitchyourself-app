@@ -4,8 +4,6 @@ import {
   Dimensions
 } from 'react-native';
 import Colors from '../../utills/Colors';
-const Width = Dimensions.get("screen").width;
-const Height = Dimensions.get("screen").height;
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
 
@@ -19,12 +17,9 @@ const styles = StyleSheet.create({
   },
   inputview:
   {
-    width: wp('85%'),
     alignSelf: 'center',
     alignContent:"center",
-    marginTop:wp('0%'),
-    marginBottom:wp('5%')
-    // /backgroundColor:'red'
+
   },
 postcard:
   {
@@ -32,8 +27,8 @@ postcard:
       borderWidth:1,
       borderColor:'#70707038',
       alignSelf:"center",
-  borderRadius:20,
-  marginTop:'10%'
+  borderRadius:25,
+  marginBottom:hp(2)
 },
 mainusercontainer:
 {
@@ -62,7 +57,9 @@ usermaintext:
 {
     fontSize:hp('2%'),
     fontWeight:'bold',
-    color:Colors.Appthemecolor
+    width:wp(37),
+    color:Colors.Appthemecolor,
+    // /backgroundColor:'red'
 },
 usertime:
 {
@@ -72,23 +69,20 @@ usertime:
 },
 iconimages:
 {
-    width:wp('15%'),
+    width:wp('10%'),
     height:wp('15%'),
 },
 postdesc:
 {
     fontSize:hp('1.5%'),
     fontWeight:'bold',
-    color:'#444D6E'
+    color:'rgba(68, 77, 110, 1)'
 },
 postpiccontainer:
 {
-    //backgroundColor:"red",
     alignItems:"center",
-    justifyContent:"center",
-    alignSelf:'center',
-   // width:wp(89),
-    height:wp(59),
+    width:wp('90%'),
+    height:wp('65%'),
 },
 postpic:
 {
@@ -100,18 +94,18 @@ icon:
 {
     width:wp('30%'),
     height:wp('10%'),
-    //backgroundColor:'red'
 },
 recomend:
 {
     fontSize:hp('1.3%'),
     fontWeight:'600',
-    color:'#747EA0'
+    color:'#747EA0',
+    width:wp(76)
 },
 iconview:
 {
-  width:40,
-  height:40,
+  width:wp(9.5),
+  height:hp(4.5),
   backgroundColor:'rgba(101, 113, 144, 0.16)',
 borderRadius:20,
 alignItems:'center',

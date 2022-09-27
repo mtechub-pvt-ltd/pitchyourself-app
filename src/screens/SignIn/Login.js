@@ -26,7 +26,15 @@ import axios from 'axios';
 import { BASE_URL } from '../../utills/ApiRootUrl';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+////////////////////redux////////////
+import { useSelector, useDispatch } from 'react-redux';
+import { setID } from '../../redux/actions';
+
 const Login = ({ navigation }) => {
+
+  /////////////redux states///////
+  const { video, links,id,thumbnails } = useSelector(state => state.userReducer);
+  const dispatch = useDispatch();
 
        //Modal States
        const [modalVisible, setModalVisible] = useState(false);
@@ -94,13 +102,14 @@ const LoginUser=async() => {
     if(response.data.profileCompletedStatus === "Completed")
           {
            await AsyncStorage.setItem('Userid',response.data._id);
-            // await AsyncStorage.setItem('Userdata',response.data.username);
+            await AsyncStorage.setItem('Userdata',response.data.name);
             await AsyncStorage.setItem('UserEmail',response.data.email);
             await AsyncStorage.setItem('UserPass',response.data.password)
             navigation.navigate('Drawerroute')
           }
           else
           {
+            dispatch(setID(response.data._id))
             navigation.navigate('CreateProfile',response.data._id)
           }
   })

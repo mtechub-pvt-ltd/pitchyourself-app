@@ -39,6 +39,8 @@ import CameraVideo from './src/screens/CameraVideo/CamerVideo';
 import VideoPlayer from './src/screens/VideoPlayer/VideoPlayer';
 import SearchResults from './src/screens/Search/SearchResults/SearchResult';
 import UploadVideo from './src/screens/Video/UploadVideo/UploadVideo';
+import PostRecomendations from './src/screens/Recomendations/PostRecomendation/PostRecomendation';
+import AppliedPersons from './src/screens/Job/AppliedPersons/AppliedPersons';
 
 
 const Stack = createNativeStackNavigator();
@@ -169,6 +171,14 @@ function App() {
         headerShown: false,
         }} />
        <Stack.Screen name="UploadVideo" component={UploadVideo}
+        options={{
+        headerShown: false,
+        }} />
+        <Stack.Screen name="PostRecomendations" component={PostRecomendations}
+        options={{
+        headerShown: false,
+        }} />
+            <Stack.Screen name="AppliedPersons" component={AppliedPersons}
         options={{
         headerShown: false,
         }} />
