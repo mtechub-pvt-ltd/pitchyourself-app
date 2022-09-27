@@ -13,17 +13,17 @@ const styles = StyleSheet.create({
   container:
   {
     flex: 1,
-    alignContent: 'center',
+    //alignContent: 'center',
     backgroundColor:'white',
-    paddingHorizontal:wp('5%')
+    paddingHorizontal:wp(5)
   },
 
 postcard:
   {
   
-      alignSelf:"center",
-  marginTop:wp('10%'),
-  marginBottom:wp('5%')
+      //alignSelf:"center",
+  marginTop:hp(2),
+  paddingBottom:hp(7)
 
 },
 
@@ -31,6 +31,7 @@ userimage:
 {
     width:wp('13%'),
     height:wp('13%'),
+    borderRadius:wp(8)
 },
 likeimage:
 {
@@ -55,6 +56,7 @@ card:
   flexDirection:'row',
   justifyContent:'space-between',
   marginBottom:wp('2%'),
+  
 //marginHorizontal:wp('2%'),
 //marginBottom:wp('15%')
 },

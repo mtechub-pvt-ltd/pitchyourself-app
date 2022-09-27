@@ -10,17 +10,17 @@ const styles = StyleSheet.create({
   container:
   {
     flex: 1,
-    alignContent: 'center',
+    //alignContent: 'center',
     backgroundColor:'white',
     paddingHorizontal:wp('2%')
   },
 
 postcard:
   {
-    paddingVertical: 15,
+    //paddingVertical: 15,
     //marginVertical: 10,
      // alignSelf:"center",
-  marginTop:wp('3%'),
+  marginTop:hp(1),
   height:hp('78%')
 },
 messageContainer: {
@@ -32,7 +32,7 @@ messageContainer: {
   paddingHorizontal: 10,
   marginHorizontal: 10,
   paddingTop: 10,
-  paddingBottom: 12,
+  paddingBottom: wp(3),
   margin:wp('1.5%'),
   borderTopRightRadius: 0,
 },
@@ -45,7 +45,7 @@ messageContainerleft: {
   paddingHorizontal: 10,
   marginHorizontal: 0,
   padding: 10,
-  paddingBottom: 12,
+  paddingBottom:wp(3),
   margin:wp('1.5%'),
   borderTopLeftRadius: 0,
 },

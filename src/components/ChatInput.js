@@ -29,6 +29,12 @@ const ChatInput = ({ reply, closeReply, isLeft, }) => {
 	const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 	const height = useSharedValue(70);
 
+	const heightAnimatedStyle = useAnimatedStyle(() => {
+		return {
+			height: height.value
+		}
+	})
+
 	// useEffect(() => {
 	// 	if (showEmojiPicker) {
 	// 		height.value = withTiming(400);
@@ -45,11 +51,7 @@ const ChatInput = ({ reply, closeReply, isLeft, }) => {
 	// 	}
 	// }, [reply]);
 
-	const heightAnimatedStyle = useAnimatedStyle(() => {
-		return {
-			height: height.value
-		}
-	})
+
 
 
 	return (

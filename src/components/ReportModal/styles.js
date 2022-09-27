@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
       },
       contenttext:{
         fontSize:hp(2),
-        fontWeight:'bold',
+        fontWeight:'400',
         color:'black',
         fontFamily: "Montserrat Bold",
       },

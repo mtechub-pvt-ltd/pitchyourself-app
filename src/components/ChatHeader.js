@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { heightPercentageToDP } from "react-native-responsive-screen";
 //import Icon from "@expo/vector-icons/FontAwesome";
 
 //import { theme } from "../../theme";
@@ -22,19 +23,19 @@ const ChatHeader = ({ username, bio, picture, onlineStatus, onPress,viewstate })
 					{/* <Image style={styles.image} source={{ uri: picture }} /> */}
 					<View style={styles.usernameAndOnlineStatus}>
 						<Text style={styles.username}>{username}</Text>
-						<Text style={styles.onlineStatus}>{onlineStatus}</Text>
+						{/* <Text style={styles.onlineStatus}>{onlineStatus}</Text> */}
 					</View>
 					<View style={{marginBottom:10}}>
-					<Image
+					{/* <Image
                    	source={require('../assets/Chat/dot.png')}
                     style={styles.icondot}
                     resizeMode='contain'
-                />
+                /> */}
 					</View>
 			
 				</TouchableOpacity>
 		
-				{viewstate === true ?
+				{/* {viewstate === true ?
 					<View style={styles.options}>
 					<TouchableOpacity
 						onPress={() => navigation.navigate("OnCallScreen", {
@@ -71,7 +72,7 @@ const ChatHeader = ({ username, bio, picture, onlineStatus, onPress,viewstate })
 			/>
 				</TouchableOpacity>
 			</View>
-			}
+			} */}
 		
 			</View>
 		</View>
@@ -82,8 +83,8 @@ const styles = StyleSheet.create({
 	container: {
 		flexDirection: "row",
 		backgroundColor: 'white',
-		paddingTop: 20,
-		paddingBottom: 10,
+		paddingTop: heightPercentageToDP(2),
+		//paddingBottom:heightPercentageToDP(1),
 	},
 	backButton: {
 		alignSelf: "center",
@@ -133,6 +134,7 @@ justifyContent:'center',
 		color: 'rgba(21, 22, 36, 1)',
 		fontSize: 18,
 		fontWeight: "bold",
+		alignSelf:'center'
 	},
 	onlineStatus: {
 		color: 'rgba(21, 22, 36, 1)',
