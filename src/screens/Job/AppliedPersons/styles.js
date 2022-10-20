@@ -49,10 +49,11 @@ const styles = StyleSheet.create({
   },
   recomend:
   {
-    fontSize: hp(1.5),
+    fontSize: hp(2),
     fontWeight: '400',
-    color: '#747EA0',
-    width: wp(65),
+    color: '#1A1A1A',
+    width: wp(90),
+    
   },
   card1:
   {
@@ -120,12 +121,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: "space-between",
     marginTop: wp('4%'),
-    marginLeft: wp('2%')
+    marginLeft: wp('2%'),
+    marginHorizontal:wp(5),
+    marginBottom:hp(3)
   },
+  userimageview:
+{
+    width:wp(13),
+    height:wp(13),
+    borderColor:Colors.Appthemecolor,
+    borderRightWidth:5,
+    borderRadius:wp(20),
+    alignItems:'center',
+    justifyContent:'center'
+},
   userimage:
   {
     width: wp(12),
     height: wp(12),
+    
   },
   usermaintext:
   {
@@ -162,7 +176,26 @@ const styles = StyleSheet.create({
 
   },
 
-
-
+  ApprovedView:
+  {
+    height: hp('5.5%'),
+    width: wp(37),
+     borderRadius:15,
+     //marginTop:hp(5),
+     backgroundColor:Colors.Appthemecolor,
+     alignContent:'center',
+     alignItems:'center',
+     justifyContent:'center',
+     marginBottom:wp('12%')
+  },
+  Pendingtext:
+  {
+      textAlign:'center',
+      margin:10,
+      color:'white',
+      fontSize:hp(1.8),
+      fontWeight:'400',
+      paddingBottom:1
+  },
 });
 export default styles;

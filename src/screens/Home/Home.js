@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView, FlatList, RefreshControl, ScrollView,
-  Image, View, Text, TouchableOpacity,
+  Image, View, Text, TouchableOpacity,ImageBackground,
 } from 'react-native';
 
 //////////////////////app components////////////
@@ -13,6 +13,7 @@ import BadgeView from '../../components/BadgeView/BadgeView';
 import styles from './styles';
 import Authtextstyles from '../../utills/GlobalStyles/Authtextstyles';
 import Inputstyles from '../../utills/GlobalStyles/Inputstyles';
+import videothumbnailstyles from '../../utills/GlobalStyles/videothumbnailstyles';
 import Colors from '../../utills/Colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
@@ -311,26 +312,42 @@ navigation.navigate('QuestionDetail',{id:item._id})
         <View style={{ marginLeft: 15, marginBottom: 10 }}>
           <Text style={styles.postdesc}>{item.Title}</Text>
         </View>
+        <TouchableOpacity
+              style={[videothumbnailstyles.postpiccontainer, { width: wp(80) }]}
+              onPress={() => { navigation.navigate('VideoPlayer', { playvideo: item.thumbnail }) }}>
+              <ImageBackground
+                source={{ uri: item.thumbnail }}
+                style={[videothumbnailstyles.postpic, { width: wp(80) }]}
+                imageStyle={videothumbnailstyles.imagestyle}
+                resizeMode='cover'
+              >
+                <Image
+                  source={require('../../assets/Video/playvideo.png')}
+                  style={{ width: wp(13), height: hp(6) }}
+                  resizeMode='cover'
+                />
+              </ImageBackground>
 
-        <View style={styles.postpiccontainer}>
+            </TouchableOpacity>
+        {/* <View style={styles.postpiccontainer}>
 
           <Image
             source={{ uri: item.thumbnail }}
             style={styles.postpic}
             resizeMode='contain'
           />
-        </View>
+        </View> */}
         <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
           <View style={{
             flexDirection: "row", justifyContent: "space-around",
-            paddingHorizontal: 0, width: 100, marginBottom: 10,
+            paddingHorizontal: 0, width:wp(30), marginBottom: 10,
             //backgroundColor:'yellow'
           }}>
                         {data[0] != '' ?
 
 item.LikedBy.find(item => item === saveuserid) === saveuserid ?
   <TouchableOpacity onPress={() => UnlikePost(item._id)}>
-            <View style={[styles.iconview, { marginLeft: 30 }]}>
+            <View style={[styles.iconview, { marginLeft: wp(10) }]}>
               <Image
                 source={require('../../assets/socialicons/thumbsup.png')}
                 style={{ width: 50, height: 20 }}
@@ -340,7 +357,7 @@ item.LikedBy.find(item => item === saveuserid) === saveuserid ?
             </TouchableOpacity>
             :
             <TouchableOpacity onPress={() => likePost(item._id)}>
-            <View style={[styles.iconview, { marginLeft: 30 }]}>
+            <View style={[styles.iconview, { marginLeft: wp(10) }]}>
               <Image
                 source={require('../../assets/socialicons/thumbsup.png')}
                 style={{ width: 50, height: 20 }}
@@ -351,7 +368,7 @@ item.LikedBy.find(item => item === saveuserid) === saveuserid ?
             :
             null}
             <TouchableOpacity onPress={()=>navigation.navigate('PostRecomendations',item._id)}>
-            <View style={[styles.iconview, { marginLeft: 25 }]}>
+            <View style={[styles.iconview, { marginLeft: wp(12) }]}>
               <Image
                 source={require('../../assets/socialicons/chated.png')}
                 style={{ width: 80, height: 20 }}
@@ -360,7 +377,7 @@ item.LikedBy.find(item => item === saveuserid) === saveuserid ?
             </View>   
             </TouchableOpacity>
             <TouchableOpacity onPress={()=> {setReportModalVisible(true),setreportPost(item._id)}}>
-            <View style={[styles.iconview, { marginLeft: 25 }]}>
+            <View style={[styles.iconview, { marginLeft: wp(12) }]}>
               <Image
                 source={require('../../assets/socialicons/report.png')}
                 style={{ width: 80, height: 20 }}
@@ -372,7 +389,7 @@ item.LikedBy.find(item => item === saveuserid) === saveuserid ?
           </View>
           <View style={{
             flexDirection: "row", justifyContent: 'space-between',
-            marginRight: 20
+            marginRight: 20,width:wp(48),
             //backgroundColor:'yellow'
           }}>
             <FlatList

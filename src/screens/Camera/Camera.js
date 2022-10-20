@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, StyleSheet, Image,TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image,TouchableOpacity,Text } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
 //////////////////camera vision pakage//////////////
@@ -16,6 +16,7 @@ import { setVideoUrl,setpickvideo,setthumbnails} from '../../redux/actions';
 //////////////////////app styles////////////
 import styles from './styles';
 import Colors from '../../utills/Colors';
+import { widthPercentageToDP as wp,heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
 
@@ -44,13 +45,14 @@ const CustomCamera = ({ navigation,route }) => {
   React.useEffect(() => {
     requestCameraPermision()
   }, [])
-
+  const[videoduration,setvideoduration]=useState(false)
   //Handles Taking photo
   const handleCapture = async () => {
     const data = camera.current.startRecording({
       flash: 'on',
       onRecordingFinished: async (video) => {
-        console.log("camera video:",video)
+        console.log("camera video duration:",video.duration)
+        setvideoduration(video.duration)
         let newfile = { 
           uri:video.path,
           type:"video/"+video.path.substring(video.path.lastIndexOf('.') + 1),
@@ -65,12 +67,34 @@ const CustomCamera = ({ navigation,route }) => {
       },
       onRecordingError: (error) => console.error(error),
     })
+    setCapturevideostatus(true)
     setTimeout(async () => {
       await camera.current.stopRecording()
       // navigation.goBack('here') // Stack Name
-    }, 3000);
+    }, 6000);
     dispatch(setVideoUrl(data));
     console.log("video path", data);
+  }
+  const[videostatus,setvideostatus]=useState(false)
+  const[capturevideostatus,setCapturevideostatus]=useState(false)
+  const StopRecording = async () => {
+    console.log('here in stop')
+    //setvideostatus('stop')
+      await camera.current.stopRecording()
+      setCapturevideostatus(false)
+  }
+  const PauseRecording = async () => {
+  
+      var pause=await camera.current.pauseRecording()
+      console.log('here in pause',pause)
+      setvideostatus(true)
+      //await timeout(500)
+  }
+  const ResmeRecording = async () => {
+
+      var resume=await camera.current.resumeRecording()
+      console.log('here in resume',resume)
+      setvideostatus(false)
   }
 
   ////////////////////library image//////////////////
@@ -192,7 +216,7 @@ const CustomCamera = ({ navigation,route }) => {
               />
               <IconButton
                 icon={require('../../assets/Camera/pluscircle.png')}
-                color={'white'}
+                color={'orange'}
                 size={30}
               />
 
@@ -216,13 +240,28 @@ const CustomCamera = ({ navigation,route }) => {
                   chooseVideoFromLibrary()
                 }
               />
-              <TouchableOpacity onPress={() => handleCapture()}>
-                <Image
-                  source={require('../../assets/Camera/capture.png')}
-                  style={{ height: '50%', height: "90%" }}
-                  resizeMode='contain'
-                />
-              </TouchableOpacity>
+              {capturevideostatus === false?
+                  <TouchableOpacity onPress={() => handleCapture()}>
+                  <Image
+                    source={require('../../assets/Camera/capture.png')}
+                    style={{ height: hp(8), width:wp(20) }}
+                    resizeMode='contain'
+                  />
+                </TouchableOpacity>
+          :
+                      <TouchableOpacity onPress={() => StopRecording()}>
+                        <View>
+                        <Image
+                        source={require('../../assets/Camera/stop.png')}
+                        style={{ height: hp(8), width:wp(20) }}
+                        resizeMode='contain'
+                      />
+                       {/* <Text style={{color:'black'}}>{videoduration}</Text> */}
+                        </View>
+              
+                    </TouchableOpacity>
+           } 
+       
               {/* <IconButton
              icon={require('../../assets/Camera/capture.png')}
     //color={Colors.Appthemecolor}
@@ -236,13 +275,30 @@ const CustomCamera = ({ navigation,route }) => {
     //navigation.navigate('Search Result')
     }
   /> */}
+                {videostatus === false?
               <IconButton
-                icon={require('../../assets/Camera/delete.png')}
-                color={'white'}
+                icon={require('../../assets/Camera/pause.png')}
+                color={'orange'}
                 size={30}
-
+onPress={
+  ()=> 
+ // {
+    camera.current.pauseRecording()
+ // setvideostatus(true)
+//}
+}
               />
-
+:
+<IconButton
+icon={require('../../assets/Camera/play.png')}
+color={'orange'}
+size={30}
+onPress={()=> 
+{camera.current.resumeRecording(),
+  setvideostatus(false)}
+}
+/>
+    }
 
             </View>
 

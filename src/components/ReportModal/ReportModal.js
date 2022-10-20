@@ -11,6 +11,7 @@ import CustomModal from '../Modal/CustomModal';
 import styles from './styles';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} 
 from 'react-native-responsive-screen';
+import Colors from '../../utills/Colors';
 
 //////////////////////////app api/////////////////////////
 import axios from 'axios';
@@ -28,7 +29,7 @@ console.log("props here in modal:",props)
     const [reason, setReason] = React.useState(false);
 
   ////////////////////Report User//////////////
-  const ReportUser = async () => {
+  const Report = async () => {
     var user = await AsyncStorage.getItem('Userid')
     console.log("userid:", user,reason)
     console.log('here......')
@@ -56,34 +57,6 @@ console.log("props here in modal:",props)
       })
   }
 
-    ////////////////////Report User//////////////
-    const ReportPost = async () => {
-        var user = await AsyncStorage.getItem('Userid')
-        console.log("userid:", user)
-        console.log('here......')
-        axios({
-          method: 'POST',
-          url: BASE_URL + 'user/create-report',
-          data: {
-            userProfileId:'',
-            userPostId: props.reportedpost,
-            reportReason: reason,
-            reportedById: user
-          },
-        })
-          .then(async function (response) {
-            console.log("response", JSON.stringify(response.data))
-            props.CloseModal
-            setModalVisible(true)
-          })
-          .catch(function (error) {
-            if (error) {
-              console.log('Issue in Appoinments Acceptence')
-            }
-    
-            console.log("error", error)
-          })
-      }
 
     return(
 
@@ -99,27 +72,43 @@ console.log("props here in modal:",props)
       
             <View style={{marginBottom:15,
               alignSelf:'center',marginTop:hp(3)}}>
-                       <Text style={styles.maintext}>
-                            {props.text}</Text>
+                    <Image
+                  source={require('../../assets/socialicons/report.png')}
+                     style={styles.sucessimage}
+                     resizeMode='contain'
+                 />
+                       {/* <Text style={styles.maintext}>
+                            {props.text}</Text> */}
               </View>
-              <View style={{marginBottom:15,
+              {/* <Image
+                  source={require('../../assets/socialicons/report.png')}
+                     style={styles.sucessimage}
+                     resizeMode='contain'
+                 /> */}
+              <View style={{marginBottom:0,
               alignSelf:'center',marginTop:hp(3)}}>
-                  <TouchableOpacity onPress={()=> setReason('Inappropriate Content')}>
+                  <TouchableOpacity onPress={()=> setReason('Inappropriate Content')}
+                  style={styles.ContentView}
+                  >
                        <Text style={styles.contenttext}>
                        Inappropriate Content</Text>
                        </TouchableOpacity>
-                       <TouchableOpacity onPress={()=> setReason('Anonymous User')}>
+                       <TouchableOpacity onPress={()=> setReason('Anonymous User')}
+                                         style={styles.ContentView}
+                       >
                        <Text style={styles.contenttext}>
                        Anonymous User</Text>
                        </TouchableOpacity>
-                       <TouchableOpacity onPress={()=> setReason('Inappropriate Content')}>
+                       <TouchableOpacity onPress={()=> setReason('Inappropriate Content')}
+                                         style={styles.ContentView}
+                       >
                        <Text style={styles.contenttext}>
                        Inappropriate Content</Text>
                        </TouchableOpacity>
               </View>
     <View  style={styles.ApprovedView}>
         <TouchableOpacity 
-        onPress={()=> ReportUser()}>
+        onPress={()=> Report()}>
         <Text style={styles.Pendingtext}>{props.buttontext}</Text>
         </TouchableOpacity>
     </View>

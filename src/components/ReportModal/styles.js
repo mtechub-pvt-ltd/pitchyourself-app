@@ -91,9 +91,22 @@ const styles = StyleSheet.create({
       },
       contenttext:{
         fontSize:hp(2),
-        fontWeight:'400',
+        fontWeight:'700',
         color:'black',
         fontFamily: "Montserrat Bold",
+      },
+      ContentView:
+      {
+        height: hp('5.5%'),
+        width: wp(55),
+         borderRadius:10,
+         //backgroundColor:'rgba(255, 1, 39, 0.8)',
+         alignContent:'center',
+         alignItems:'center',
+         justifyContent:'center',
+         borderBottomColor:Colors.inputbordercolor,
+         borderBottomWidth:1
+         //marginBottom:hp(2)
       },
   });
   export default styles;

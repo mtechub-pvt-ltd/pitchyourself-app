@@ -5,9 +5,7 @@ import {
 } from 'react-native';
 
 //////////////////app components/////////////
-import TabsBadgeView from '../../../components/TabsBadgeView/TabsBadgeView';
-import BadgeView from '../../../components/BadgeView/BadgeView';
-
+import CustomModal from '../../../components/Modal/CustomModal';
 ///////////////app styles///////////////
 import styles from './styles';
 import videothumbnailstyles from '../../../utills/GlobalStyles/videothumbnailstyles';
@@ -29,6 +27,9 @@ import { setthumbnails } from '../../../redux/actions';
 
 const AppliedPersons = ({ navigation, route }) => {
   console.log('jobs:', route.params)
+
+        //Modal States
+        const [modalVisible, setModalVisible] = useState(false);
 
   /////////////////Applied Jobs state////////////
   const [applieddata, setapplieddata] = useState('')
@@ -58,6 +59,33 @@ const AppliedPersons = ({ navigation, route }) => {
     JobAppliedPersons()
 
   }, []);
+
+  ////////////////////ChangeStatu User//////////////
+  const ChangeStatus = async (item) => {
+    var user = await AsyncStorage.getItem('Userid')
+    console.log("userid:", user,item)
+    console.log('here......')
+    axios({
+      method: 'PUT',
+      url: BASE_URL + 'user/change-status-job',
+      data: {
+_id:user,
+Status:item
+      },
+    })
+      .then(async function (response) {
+        console.log("response", JSON.stringify(response.data))
+        setModalVisible(true)
+      })
+      .catch(function (error) {
+        if (error) {
+          console.log('Issue in Appoinments Acceptence')
+        }
+
+        console.log("error", error)
+      })
+  }
+
   const postedjobrenderItems = ({ item }) => (
     <TouchableOpacity onPress={() => navigation.navigate('JobDetail', { item: 'Applied' })}>
       <View style={styles.card}>
@@ -79,16 +107,46 @@ const AppliedPersons = ({ navigation, route }) => {
             </ImageBackground>
 
           </TouchableOpacity>
+          <View style={styles.mainusercontainer}>
+          <View style={{ flexDirection: "row", justifyContent: 'space-around', alignItems: 'center' }}>
+            <View style={styles.userimageview}>
+              <TouchableOpacity 
+              // onPress={() => 
+              //   item.userProfileVideoId[0].hidden == false?
+              //   navigation.navigate('Profile', { item: 'home', id: item.userId._id })
+              // :
+              // null 
+              // }
+              >
+                <Image
+                  source={{ uri: item.userId.image }}
+                  style={styles.userimage}
+                  resizeMode='contain'
+                />
+              </TouchableOpacity>
 
-          <View style={{ marginHorizontal: wp(5), marginBottom: hp(1) }}>
+            </View>
+            <View style={{ marginLeft: wp(3) }}>
+              <Text style={styles.usermaintext}>{item.userId.name}</Text>
+
+            </View>
+
+          </View>
+          <View style={{width:wp(25)}}>
+              <Text style={{ fontSize: hp(2), color: '#1B1B1B', fontWeight: 'bold' }}>Date Applied</Text>
+              <Text style={{ fontSize: hp(1.5), width: wp(30), color: '#1B1B1B' }}>00/00/0000
+              </Text>
+            </View>
+          </View>
+          {/* <View style={{ marginHorizontal: wp(5), marginBottom: hp(1) }}>
             <Text style={{ fontSize: hp(2), color: '#1B1B1B', fontWeight: 'bold' }}>Job Title</Text>
             <Text style={styles.recomend}>Lorem ipsum dolor sit amet,
               consetetur sadipscing Lorem ipsum dolor sit amet,
               consetetur sadipscing  </Text>
-          </View>
+          </View> */}
 
 
-          <View style={{
+          {/* <View style={{
             flexDirection: "row", justifyContent: 'space-around', alignItems: 'center', marginBottom: hp(2),
             marginBottom: 10
           }}>
@@ -97,85 +155,31 @@ const AppliedPersons = ({ navigation, route }) => {
               <Text style={{ fontSize: hp(1.5), width: wp(45), color: '#1B1B1B' }}>Lorem ipsum dolor sit amet,
                 consetetur sadipscing</Text>
             </View>
-            <View style={{width:wp(20)}}>
-              <Text style={{ fontSize: hp(2), color: '#1B1B1B', fontWeight: 'bold' }}>Date Posted</Text>
-              <Text style={{ fontSize: hp(1.5), width: wp(30), color: '#1B1B1B' }}>Lorem ipsum dolor sit amet,
-              </Text>
-            </View>
+   
+          </View> */}
+          <View style={{flexDirection:'row',justifyContent:'space-between',marginHorizontal:wp(5)}}>
+          <View  style={styles.ApprovedView}>
+        <TouchableOpacity 
+        onPress={()=> ChangeStatus('Approved')}>
+        <Text style={styles.Pendingtext}>Approved</Text>
+        </TouchableOpacity>
+    </View>
+    <View  style={styles.ApprovedView}>
+        <TouchableOpacity 
+        onPress={()=> ChangeStatus('DisApproved')}>
+        <Text style={styles.Pendingtext}>Disapproved</Text>
+        </TouchableOpacity>
+    </View>
           </View>
+
+
         </View>
 
 
       </View>
     </TouchableOpacity>
   );
-  const appliedjobrenderItems = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('JobDetail', { itemnav: 'Applied' })}>
-      {applieddata === ''?
-      <Text style={{color:'black'}}>Nodata found</Text>:
-      <View style={styles.card}>
-        <View style={styles.postcard}>
-          <TouchableOpacity
-            style={videothumbnailstyles.postpiccontainer}
-            onPress={() => { navigation.navigate('VideoPlayer', { playvideo: item.Video }) }}>
-            <ImageBackground
-              //source={{ uri: applieddata != ''?item.hubId.thumbnail : null }}
-              style={videothumbnailstyles.postpic}
-              imageStyle={videothumbnailstyles.imagestyle}
-              resizeMode='cover'
-            >
-              <Image
-                source={require('../../../assets/Video/playvideo.png')}
-                style={{ width: wp(13), height: hp(6) }}
-                resizeMode='cover'
-              />
-            </ImageBackground>
 
-          </TouchableOpacity>
-          <View style={{
-            flexDirection: "row", justifyContent: 'space-around', alignItems: 'center',
-            marginBottom: hp(1)
-          }}>
-
-            <View style={{ width: wp(35) }}>
-              <Text style={{ fontSize: hp(2), color: '#1B1B1B', fontWeight: 'bold' }}>{item.userId}</Text>
-              <Text style={styles.recomend}>{applieddata === ''?item.jobDescription:null}</Text>
-            </View>
-            <TouchableOpacity
-              onPress={() => { navigation.navigate('VideoPlayer', { playvideo: item.video }) }}>
-              <TabsBadgeView
-                title={'My Pitch'}
-                width={'30%'}
-                state={true}
-                type={'User'}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <View style={{
-            flexDirection: "row", justifyContent: 'space-around', alignItems: 'center',
-            marginBottom: 10
-          }}>
-            <View style={{width:wp(40)}}>
-              <Text style={{ fontSize: hp(2), color: '#1B1B1B', fontWeight: 'bold' }}>Location</Text>
-              <Text style={{ fontSize: hp(1.5), width: wp(35), color: '#1B1B1B' }}>
-                {applieddata === ''?item.hubId.joblocation:null}</Text>
-            </View>
-            <View style={{width:wp(30)}}>
-              <Text style={{ fontSize: hp(2), color: '#1B1B1B', fontWeight: 'bold',textAlign:'right' }}>Date Applied</Text>
-              <Text style={{ fontSize: hp(1.5), width: wp(30), color: '#1B1B1B',textAlign:'right'  }}>Lorem ipsum dolor sit amet,
-              </Text>
-            </View>
-          </View>
-        </View>
-
-
-      </View>
-    }
-
-    </TouchableOpacity>
-
-  );
 
   return (
 
@@ -197,10 +201,13 @@ const AppliedPersons = ({ navigation, route }) => {
           </View>
         </View>
       </View>
-
-      <Text style={styles.recomend}>Lorem ipsum dolor sit amet,
+<View style={{alignItems:'center',marginTop:hp(2),marginLeft:wp(8)}}>
+<Text style={styles.recomend}>Lorem ipsum dolor sit amet,
               consetetur sadipscing Lorem ipsum dolor sit amet,
               consetetur sadipscing  </Text>
+
+</View>
+
 
 
           <View style={styles.inputview}>
@@ -216,8 +223,18 @@ const AppliedPersons = ({ navigation, route }) => {
           </View>
 
 
-
-      {/* </ScrollView> */}
+          <CustomModal 
+                modalVisible={modalVisible}
+                CloseModal={() => setModalVisible(false)}
+                Icon={       <Image
+                  source={require('../../../assets/Icons/sucess.png')}
+                     style={styles.sucessimage}
+                     resizeMode='contain'
+                 />}
+              text={'Successful'}
+          buttontext={'OK'}
+ onPress={()=> {setModalVisible(false)}}
+                /> 
     </SafeAreaView>
 
   )

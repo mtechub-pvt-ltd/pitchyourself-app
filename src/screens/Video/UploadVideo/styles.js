@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   container:
   {
     flex: 1,
-    alignContent: 'center',
+    //alignContent: 'center',
     backgroundColor:'white'
   },
 
@@ -87,5 +87,39 @@ lineview:
     borderBottomColor:'rgba(112,112,112,0.1)',
     borderBottomWidth:2,marginTop:hp(2),
     marginBottom:wp(0)},
+    card:
+    {
+      borderColor:'rgba(0, 0, 0, 0.2)',
+      borderBottomWidth: 1,
+     width: wp(82),
+     marginHorizontal:wp(8),
+     flexDirection:'row',
+     alignItems:'center'
+      
+    },
+    cardtext:
+    {
+      color:'black', 
+      marginBottom:hp(2),
+      marginTop:hp(2),
+       fontFamily:'Poppins',
+       fontSize:hp(2),
+       marginLeft:wp(5),
+        color:"grey",
+    },
+    bottomsheettext:
+    {
+    paddingHorizontal:wp(8),
+    fontWeight:'600',
+    fontSize:hp(2.5),
+    color:'black'
+    },
+    socialicons:
+{
+  width:wp(10),
+  height:wp(10),
+borderRadius:wp(5)
+}
+
 });
 export default styles;

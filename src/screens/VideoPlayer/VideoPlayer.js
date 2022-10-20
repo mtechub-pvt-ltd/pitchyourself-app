@@ -11,6 +11,7 @@ import { useIsFocused } from '@react-navigation/native';
 
 // Import RNFetchBlob for the file download
 import RNFetchBlob from 'rn-fetch-blob';
+import style from '../../components/VideoComponent/styles';
 
 const VideoPlayer = ({ navigation,route }) => {
 console.log('previous screen video url:',route.params)
@@ -136,8 +137,8 @@ const getFileExtention = fileUrl => {
 
   }, []);
   return (
-    <ImageBackground source={require('../../assets/Authimages/BG_1.png')}
-    resizeMode="cover" style={{alignItems:'center',justifyContent:"center",flex:1}}>
+   < SafeAreaView style={{backgroundColor:'white',alignItems:'center',justifyContent:"center",flex:1}}>
+  
 <View style={{alignItems:'center',justifyContent:"center",flex:1}}>
 <Customvideo
        viewhide={()=>toggleview()}
@@ -146,7 +147,10 @@ const getFileExtention = fileUrl => {
         //samplevideo={require('../../components/VideoComponent/sample.mp4')}
       />
 </View>
-</ImageBackground>
+ {/* <ImageBackground source={require('../../assets/Authimages/BG_1.png')}
+     resizeMode="cover" style={{alignItems:'center',justifyContent:"center",flex:1}}>
+ </ImageBackground> */}
+</SafeAreaView>
   )
 };
 

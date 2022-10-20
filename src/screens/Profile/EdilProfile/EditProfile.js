@@ -281,8 +281,15 @@ const [number, setnumber] = useState();
             console.log('country here',e)
             var name = e.name.substring('4')
             setCountryPickerView(false)
+            if( e.name==='Antarctica')
+            {
+              setCountryCode('672')
+            }
+            else{
+              setCountryCode(JSON.parse(e.callingCode))
+            }
             //setCountryFlag(JSON.parse(e.flag))
-            setCountryCode(JSON.parse(e.callingCode))
+            //setCountryCode(JSON.parse(e.callingCode))
             setCountryName(e.name.substring(0,3))
           }}
           onClose={(e) => {

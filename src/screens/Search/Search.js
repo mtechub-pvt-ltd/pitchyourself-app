@@ -19,6 +19,10 @@ import Colors from '../../utills/Colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
   
+////////////////////redux////////////
+import { useSelector, useDispatch } from 'react-redux';
+import { setsearchresults } from '../../redux/actions';
+
 //////////////////////////app api/////////////////////////
 import axios from 'axios';
 import { BASE_URL } from '../../utills/ApiRootUrl';
@@ -26,6 +30,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Search = ({ navigation }) => {
 
+  /////////////redux states///////
+  const { video, links,id,thumbnails } = useSelector(state => state.userReducer);
+  const dispatch = useDispatch();
         //Modal States
         const [modalVisible, setModalVisible] = useState(false);
 
@@ -33,17 +40,25 @@ const Search = ({ navigation }) => {
 const[search,setSearch]=useState('')
 
 /////////////////get person posts state////////////
-const[searchresult,setSearchResult]=useState()
+const[searchresult,setSearchResult]=useState([])
     ////////////////////Search Person POST//////////////
     const SearchByPerson=async() => {
-
+console.log('here data:',search)
       axios({
         method: 'GET',
-        url: BASE_URL+'user/search-hashtag?ProfileHashtag='+search,
+        url: BASE_URL+'user/search-person?name='+search,
       })
       .then(async function (response) {
-        console.log("response unlike user", JSON.stringify(response.data))  
-        setSearchResult(response.data.results)
+        console.log("response unlike user", JSON.stringify(response.data[0].userPosts))  
+        if(response.data === "Wrong Data ") 
+        {
+          setModalVisible(true)
+        }
+        else{
+          setSearchResult(response.data[0].userPosts)
+          dispatch(setsearchresults(response.data[0].userPosts))
+        }
+
 
       })
       .catch(function (error) {
@@ -72,7 +87,8 @@ const SearchByHashtag=async() => {
       setModalVisible(true)
     }
     else{
-      setSearchResult(response.data.results)
+      setSearchResult(response.data)
+      dispatch(setsearchresults(response.data))
     }
   })
   .catch(function (error) {
@@ -167,7 +183,7 @@ paddingHorizontal:'25%'
                   color={'red'}
                   size={60}
               />}
-              text={'Enter valid Hashtag'}
+              text={'Enter valid data'}
          buttontext={'OK'}
  onPress={()=> {setModalVisible(false)}}
                 /> 

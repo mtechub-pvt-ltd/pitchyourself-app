@@ -8,14 +8,21 @@ import {
 import CustomButtonhere from '../../../components/Button/CustomButton';
 import CamerBottomSheet from '../../../components/CameraBottomSheet/CameraBottomSheet';
 import CustomHeader from '../../../components/CustomHeader/CustomHeader';
+import CustomModal from '../../../components/Modal/CustomModal';
 import AddLinks from '../../../components/AddLinks/AddLinks';
 
 ////////////////app pakages////////////////
 import ImagePicker from 'react-native-image-crop-picker';
 import DocumentPicker from 'react-native-document-picker';
 
+/////////////////app icons////////////////////
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
 //////////////////app pakages////////////
 import { Checkbox } from 'react-native-paper';
+
+///////////////////app pakages///////////////
+import RBSheet from "react-native-raw-bottom-sheet";
 
 ////////////////////redux////////////
 import { useSelector, useDispatch } from 'react-redux';
@@ -35,7 +42,10 @@ import { BASE_URL } from '../../../utills/ApiRootUrl';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UploadVideo = ({ navigation, route }) => {
-  console.log(' user id here:', route.params)
+  console.log('user id here:', route.params)
+
+         //Modal States
+         const [modalVisible, setModalVisible] = useState(false);
 
   /////////////////////add links states/////////////////
   const [link, setLinks] = useState();
@@ -151,6 +161,7 @@ const UploadVideo = ({ navigation, route }) => {
   }
   ///////////picker state/////////
   const [document, setdocument] = useState('')
+  const [documentcounter, setdocumentcounter] = useState(1)
 
   ////////////////////////document picker////////////////
   const onSelectFile = async (props) => {
@@ -166,13 +177,24 @@ const UploadVideo = ({ navigation, route }) => {
       console.log('Type : ' + res[0].type);
       console.log('File Name : ' + res[0].name);
       console.log('File Size : ' + res[0].size);
+      setdocumentcounter(documentcounter+1)
       let newfile = {
         uri: res[0].uri,
         type: res[0].type,
         name: res[0].name
 
       }
-      documenthandleUpload(newfile)
+
+      console.log("counter of documents here:",documentcounter)
+      if(documentcounter <=3)
+      {
+        documenthandleUpload(newfile)
+      }
+      else
+      {
+setModalVisible(true)
+      }
+
 
     } catch (err) {
       //Handling any exception (If any)
@@ -229,29 +251,20 @@ const UploadVideo = ({ navigation, route }) => {
       })
         .then(async function (response) {
           console.log("response", JSON.stringify(response.data))
-          if (response.data === "Profile Video Exists either Delete it or Update it") {
-            console.log("Email Already Exist,Enter other email")
-          }
-          else {
             //setloading(0);
             //setdisable(0);
-           // await AsyncStorage.setItem('Userid', response.data._id);
+           await AsyncStorage.setItem('Userid', response.data.userId);
           // await AsyncStorage.setItem('Userdata', response.data.name);
           // await AsyncStorage.setItem('UserEmail', response.data.email);
           // await AsyncStorage.setItem('UserPass', response.data.password);
           // await AsyncStorage.setItem('UserProfileStatus',response.data.profileStatus)
-          if (route.params.navtype === 'CreateProfile')
-          {
+        
             navigation.navigate('Drawerroute')
-          }
-          else{
-            navigation.navigate('Drawerroute')
-          }
             //navigation.navigate('UploadVideo',{userid:response.data._id,navtype:'CreateProfile'})
             console.log("submitted that")
           }
   
-        })
+        )
         .catch(function (error) {
           //setModalVisible(true)
           // setloading(0);
@@ -259,8 +272,13 @@ const UploadVideo = ({ navigation, route }) => {
           console.log("error", error)
         })
     }
+   //////////////link dropdown////////////////
+   const refsociallinkddRBSheet = useRef();
+
   //////////dropdownlink data/////////////
+  const [linksarray, setlinksarray] = useState()
   const [dddata, setdddata] = useState()
+  const [ddpickvalue, setddpickvalue] = useState([])
 
   ///////////////link function///////////////
   const GetLinks = async () => {
@@ -270,9 +288,9 @@ const UploadVideo = ({ navigation, route }) => {
       url: BASE_URL + 'admin/get-all-links-admin',
     })
       .then(function (response) {
-        console.log("response", JSON.stringify(response.data))
+        console.log("response  in links socilas", JSON.stringify(response.data))
         setdddata(response.data)
-        console.log('flatlist data:', dddata)
+        console.log('flatlist data in links socilas:', dddata)
       })
       .catch(function (error) {
         console.log("error", error)
@@ -281,11 +299,9 @@ const UploadVideo = ({ navigation, route }) => {
   useEffect(() => {
     GetLinks()
   }, []);
-  //////////////link dropdown////////////////
-  const reflinkddRBSheet = useRef();
 
   //////////////////////add Links//////////////////
-  const AddSocailLinks = async () => {
+  const AddSocailLinks = async (item) => {
 
     console.log('here......', id)
     axios({
@@ -293,15 +309,15 @@ const UploadVideo = ({ navigation, route }) => {
       url: BASE_URL + 'user/create-social-link',
       data: {
         userId: id,
-        icon: linksicon,
+        icon: item,
         link: link
       },
     })
       .then(async function (response) {
-        console.log("response", JSON.stringify(response.data))
-        linkclear.current.clear()
+        console.log("response social links here:", JSON.stringify(response.data))
+       // linkclear.current.clear()
         setlinkadded(true)
-        dispatch(setlinksicon(''))
+      //  dispatch(setlinksicon(''))
         dispatch(setlinks(response.data._id))
         //setModalVisible(true)
 
@@ -317,9 +333,85 @@ const UploadVideo = ({ navigation, route }) => {
         console.log("error", error)
       })
   }
-   ///////////////textfields//////////////////
-   const [Userid, setuserId] = useState(id);
+  //////////////////////delete Links//////////////////
+  const DeleteSocailLinks = async (item) => {
 
+    console.log('here...... deelete', id,"social links",item)
+    axios({
+      method: 'DELETE',
+      url: BASE_URL + 'user/delete-social-link-user',
+      data: {
+        userId:id,
+      icon: item,
+      },
+    })
+      .then(async function (response) {
+        console.log("response dleete social links here:", JSON.stringify(response.data))
+        setlinkadded(false)
+        linkclear.current.clear()
+      //  dispatch(setlinksicon(''))
+        dispatch(setlinks(response.data._id))
+
+      })
+      .catch(function (error) {
+        if (error) {
+          //setModalVisible1(true)
+          console.log('Issue in Appoinments Acceptence')
+
+        }
+
+        console.log("error", error)
+      })
+  }
+
+
+   ///////////////textfields//////////////////
+   const [Userid] = useState(id);
+   const sociallinkrenderItem = ({ item }) => {
+   console.log('here in social link return item:',item)
+   return(
+    <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "space-around" }}>
+    <Image
+                        source={{uri:BASE_URL+item.icon}}
+                        style={styles.socialicons}
+                        resizeMode='contain'
+                      />
+
+                
+                                 <View style={[Inputstyles.action, { width: wp(80) }]}>       
+  <TextInput
+    ref={linkclear}
+    placeholder="Add Link here"
+    onChangeText={setLinks}
+    placeholderTextColor="#666666"
+    autoCapitalize="none"
+    style={[Inputstyles.input, { width: wp(62) }]}
+  />
+  {linkadded ?
+    <TouchableOpacity onPress={() => DeleteSocailLinks(item.Name)}>
+      <Image
+        source={require('../../../assets/Upload/minusicon.png')}
+        style={styles.icon}
+        resizeMode='contain'
+      />
+    </TouchableOpacity>
+    :          <TouchableOpacity onPress={() => AddSocailLinks(item.Name)}>
+    <Image
+      source={require('../../../assets/Upload/checkicon.png')}
+      style={[styles.icon]}
+      resizeMode='contain'
+    />
+  </TouchableOpacity>}
+
+  
+  
+  </View>
+  
+     
+              </View>
+
+   )
+};
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -397,7 +489,7 @@ const UploadVideo = ({ navigation, route }) => {
             </View>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
               <TouchableOpacity onPress={() => onSelectFile()}>
-                <Text style={styles.uploadtext}>UPLOAD PDF</Text>
+                <Text style={styles.uploadtext}>UPLOAD DOC</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => refRBSheet.current.open()}>
                 <Text style={styles.uploadtext}>UPLOAD IMAGE</Text>
@@ -468,7 +560,7 @@ const UploadVideo = ({ navigation, route }) => {
           />
           <View style={styles.lineview}></View>
 
-          <TouchableOpacity onPress={() => { setlinksview(true), reflinkddRBSheet.current.open() }}>
+          <TouchableOpacity onPress={() => { refsociallinkddRBSheet.current.open() }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: wp(3), marginTop: hp(3) }}>
               <Text style={styles.orangetext}>Add Links</Text>
               <Image
@@ -479,47 +571,63 @@ const UploadVideo = ({ navigation, route }) => {
             </View>
           </TouchableOpacity>
 
+          <View style={[Inputstyles.inputview, { marginTop: hp(0),width:wp(95) }]}>
+          <FlatList
+            data={ddpickvalue}
+            renderItem={sociallinkrenderItem
+            }
+            keyExtractor={(item, index) => index.toString()}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+          />
+          </View>
 
-          {linksview === true ?
+
+          {/* {linksview === true ?
             <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "space-around" }}>
-              <Image
-                source={{ uri: BASE_URL + linksicon }}
-                style={[styles.plusicon, { borderRadius: wp(5) }]}
-                resizeMode='contain'
-              />
-              <View style={Inputstyles.action}>
-
-
-                <TextInput
-                  ref={linkclear}
-                  placeholder="Add Link here"
-                  onChangeText={setLinks}
-                  placeholderTextColor="#666666"
-                  autoCapitalize="none"
-                  style={[Inputstyles.input, { width: wp(59.5) }]}
-                />
-                {!linkadded ?
-                  <TouchableOpacity onPress={() => clearlink()}>
-                    <Image
-                      source={require('../../../assets/Upload/minusicon.png')}
-                      style={styles.icon}
+  <Image
+                      source={{uri:BASE_URL+ddpickvalue}}
+                      style={styles.socialicons}
                       resizeMode='contain'
                     />
-                  </TouchableOpacity>
-                  : null}
-                <TouchableOpacity onPress={() => AddSocailLinks()}>
-                  <Image
-                    source={require('../../../assets/Upload/checkicon.png')}
-                    style={[styles.icon, { marginLeft: wp(2) }]}
-                    resizeMode='contain'
-                  />
-                </TouchableOpacity>
+                               <View style={Inputstyles.action}>
 
-              </View>
+
+
+         
+<TextInput
+  ref={linkclear}
+  placeholder="Add Link here"
+  onChangeText={setLinks}
+  placeholderTextColor="#666666"
+  autoCapitalize="none"
+  style={[Inputstyles.input, { width: wp(59.5) }]}
+/>
+{!linkadded ?
+  <TouchableOpacity onPress={() => clearlink()}>
+    <Image
+      source={require('../../../assets/Upload/minusicon.png')}
+      style={styles.icon}
+      resizeMode='contain'
+    />
+  </TouchableOpacity>
+  : null}
+<TouchableOpacity onPress={() => AddSocailLinks()}>
+  <Image
+    source={require('../../../assets/Upload/checkicon.png')}
+    style={[styles.icon, { marginLeft: wp(2) }]}
+    resizeMode='contain'
+  />
+</TouchableOpacity>
+
+
+</View>
+
+   
             </View>
             :
             null
-          }
+          } */}
         </View>
         <View style={styles.buttonview}>
           <CustomButtonhere
@@ -536,12 +644,86 @@ const UploadVideo = ({ navigation, route }) => {
           takePhotoFromCamera={takePhotoFromCamera}
           choosePhotoFromLibrary={choosePhotoFromLibrary}
         />
-        <AddLinks
-          refRBSheet={reflinkddRBSheet}
-          onClose={() => { reflinkddRBSheet.current.close(), props.refRBSheet.current.close() }}
-          onCloseReviewBTM={() => props.refRBSheet.current.close()}
-          title={'Review Added'}
+        <RBSheet
+        //sstyle={{flex:1}}
+        ref={refsociallinkddRBSheet}
+        closeOnDragDown={true}
+        closeOnPressMask={false}
+        openDuration={50}
+        closeDuration={50}
+        animationType="fade"
+        
+        //height={500}
+        customStyles={{
+          wrapper: {
+            backgroundColor: 'rgba(52, 52, 52, 0.5)',
+          },
+          draggableIcon: {
+            backgroundColor: "white"
+          },
+          container: {
+            borderTopLeftRadius:wp(10),
+            borderTopRightRadius:wp(10),
+              height:hp(35)
+          }
+        }}
+        
+        >
+        
+        <View style={{
+          flexDirection: 'row', justifyContent: "space-between",
+          marginRight:wp(5),marginBottom:hp(2)
+        }}>
+        
+          <Text style={styles.bottomsheettext}>Add Link</Text>
+          <TouchableOpacity    onPress={() => refsociallinkddRBSheet.current.close()}>
+     <Image
+                 source={require('../../../assets/Icons/close.png')}
+                    style={Inputstyles.inputicons}
+                    resizeMode='contain'
+                />
+     </TouchableOpacity>
+        </View>
+        <FlatList
+          data={dddata}
+          renderItem={({ item, index, separators }) => (
+            <TouchableOpacity
+            onPress={() =>
+              {setddpickvalue([...ddpickvalue,item])
+                setlinksview(true)
+                //props.refRBSheet.current.close(),
+                refsociallinkddRBSheet.current.close()
+              }}
+             >
+            <View style={styles.card}>
+            <Image
+                 source={{uri:BASE_URL+item.icon}}
+                    style={styles.socialicons}
+                    resizeMode='contain'
+                />
+                <Text style={styles.cardtext}>
+                  {item.Name}
+                </Text>
+            </View>
+            </TouchableOpacity>
+          )}
+          keyExtractor={item => item._id}
+        
         />
+
+        </RBSheet>
+        <CustomModal 
+                modalVisible={modalVisible}
+                CloseModal={() => setModalVisible(false)}
+                Icon={  <AntDesign
+                  name="closecircle"
+                  color={'red'}
+                  size={60}
+              />}
+              text={'You can not upload more than 3 documents.'}
+         buttontext={'OK'}
+ onPress={()=> {setModalVisible(false)}}
+                /> 
       </ScrollView>
     </SafeAreaView>
 

@@ -56,6 +56,10 @@ const CameraVideo = ({ navigation, route }) => {
       console.log("here:")
       navigation.navigate('Job')
     }
+    else if (predata.place.navplace === 'applyjob') {
+      console.log("here:")
+      navigation.navigate('JobDetail',{navplace:'jobdetail'})
+    }
     else if (predata.place.navplace === "uploadprofilevideo") {
       console.log("here:")
       navigation.navigate('UploadVideo')
@@ -143,7 +147,7 @@ const CameraVideo = ({ navigation, route }) => {
               }
             />
             <IconButton
-              icon={require('../../assets/Camera/pluscircle.png')}
+              icon={require('../../assets/Camera/checkicon.png')}
               color={Colors.Appthemecolor}
               size={30}
               onPress={() =>

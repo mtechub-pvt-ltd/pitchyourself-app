@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
       },
       modalView: {
         width: wp('75%'),
-        paddingTop:wp(5),
+        paddingTop:wp(10),
         backgroundColor: "white",
         borderRadius: wp(8),
         alignItems: "center",
@@ -52,7 +52,8 @@ const styles = StyleSheet.create({
          alignContent:'center',
          alignItems:'center',
          justifyContent:'center',
-         marginBottom:wp('12%')
+         marginTop:hp(3),
+         marginBottom:wp(12)
       },
       Pendingtext:
       {

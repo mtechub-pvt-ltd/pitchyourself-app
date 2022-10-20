@@ -50,10 +50,21 @@ mainusercontainer:
     marginTop:wp('4%'),
     marginLeft:wp('2%')
 },
+userimageview:
+{
+    width:wp(13),
+    height:wp(13),
+    borderColor:Colors.Appthemecolor,
+    borderRightWidth:5,
+    borderRadius:wp(20),
+    alignItems:'center',
+    justifyContent:'center'
+},
 userimage:
 {
-    width:wp('15%'),
-    height:wp('12%'),
+    width:wp(12),
+    height:wp(12),
+    borderRadius:wp(20)
 },
 usermaintext:
 {

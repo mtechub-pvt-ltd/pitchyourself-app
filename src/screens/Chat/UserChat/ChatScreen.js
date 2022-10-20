@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState,useRef} from 'react';
+import React, { useEffect, useState,useRef,useCallback} from 'react';
 import {
     SafeAreaView, ScrollView, FlatList,TextInput,
     Image, View, Text, TouchableOpacity, Keyboard,
@@ -25,6 +25,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp }
     } from "react-native-reanimated";
 
     import { BackHandler } from "react-native";
+    import { Picker } from 'emoji-mart-native'
 
 ////////////////app sockets///////////////
 import { io } from "socket.io-client";
@@ -53,6 +54,7 @@ const[predata]=useState(route.params.item)
 
 ///////////////chatinput states/////////////
 const [messages, setMessages] = useState();
+const [arrivalMessage, setArrivalMessage] = useState();
 const [message, setMessage] = useState("");
 const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 const height = useSharedValue(70);
@@ -63,53 +65,6 @@ const heightAnimatedStyle = useAnimatedStyle(() => {
     }
 })
 
-    const [DATA, setData] = useState([
-		{
-            id:1,
-			user: 1,
-			time: "12:05",
-			content: "we have to assign new member",
-   
-			//pic: require('../assets/Notification/person.png'),
-		},
-		{
-            id:2,
-			user: 1,
-			time: "12:07",
-			content: "Lorem ipsum dolor sit amet elit.",
-
-			//pic: require('../assets/Notification/person.png'),
-		},
-		{
-            id:3,
-			user: 0,
-			time: "12:09",
-			content: "Donec leo eros, aliquam eget tincidunt vel, imperdiet sit amet ex.",
- 
-		},
-		{
-            id:4,
-			user: 0,
-			time: "12:00",
-			content: "Cras sed rutrum lectus.",
-
-		},
-		{
-            id:5,
-			user: 1,
-			time: "12:05",
-			content: "Morbi dignissim nec nunc et",
-      
-		},
-
-		{
-            id:6,
-			user: 1,
-			time: "12:09",
-			content: "Nam imperdiet metus ac",
-
-		},
-	])
 //headerview state
 const [showview, setShowView] = useState(false);
 const [upward, setupward] = useState(false);
@@ -125,7 +80,7 @@ const [upward, setupward] = useState(false);
 		setReply("");
 	};
     const onChangeValue = (itemSelected, index) => {
-        const newData = DATA.map(item => {
+        const newData = messages.map(item => {
           if (item.id == itemSelected) {
             return {
               ...item,
@@ -137,11 +92,11 @@ const [upward, setupward] = useState(false);
             selected: item.selected,
           };
         });
-        setData(newData);
-        console.log("dataa:",DATA)
+        setMessage(newData);
+    
       };
       ////////////////////Messages functions//////////////
-      const GetMessgae = async () => {
+      const GetMessgae = useCallback(async() =>{
         var user = await AsyncStorage.getItem('Userid')
         console.log("here in get messages:")
         axios({
@@ -163,7 +118,7 @@ const [upward, setupward] = useState(false);
     
             console.log("error", error)
           })
-      }
+      }, [messages])
       const AddMessgae = async () => {
         var user = await AsyncStorage.getItem('Userid')
         axios({
@@ -177,7 +132,7 @@ const [upward, setupward] = useState(false);
         })
           .then(async function (response) {
             console.log(" saved response", JSON.stringify(response.data))
-    
+            GetMessgae()
           })
           .catch(function (error) {
             if (error) {
@@ -205,9 +160,9 @@ const [upward, setupward] = useState(false);
         //   message: message,
         // });
     
-        // const msgs = [...messages];
-        // msgs.push({ fromSelf: true, message:message });
-        // setMessages(msgs.reverse());
+        const msgs = [...messages.reverse()];
+        msgs.push({ fromSelf: true, message:message });
+        setMessages(msgs.reverse());
       };
 
           //////////sockets states/////////
@@ -220,18 +175,10 @@ const [upward, setupward] = useState(false);
     }
     
     const onKeyboardDidShow = (e) => {
-        console.log('here in keyboard',e)
         setupward(true)
-        // if (flatListRef.current) {
-        //   flatListRef.current.scrollToEnd({ animated: true });
-        // }
       };
       const onKeyboardDidHide = (e) => {
-        console.log('here in keyboard hide',e)
         setupward(false)
-        // if (flatListRef.current) {
-        //   flatListRef.current.scrollToEnd({ animated: true });
-        // }
       };
       useEffect(() => {
         Keyboard.addListener("keyboardDidShow", onKeyboardDidShow);
@@ -245,7 +192,28 @@ const [upward, setupward] = useState(false);
             socket.current = io(BASE_URL);
             socket.current.emit("add-user", currentUser);
         }
-    }, [currentUser]);
+        if (socket.current) {
+          socket.current.on("msg-recieve", (msg) => {
+            console.log("recieve masgs:",msg)
+            setArrivalMessage({ fromSelf: false, message: msg });
+          });
+        }
+    }, [currentUser,arrivalMessage]);
+
+    useEffect(() => {
+      if (socket.current) {
+        socket.current.on("msg-recieve", (msg) => {
+          console.log("recieve masgs:",msg)
+          setArrivalMessage({ fromSelf: false, message: msg });
+        });
+      }
+    }, [messages,arrivalMessage]);
+    useEffect(() => {
+      arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
+    }, [arrivalMessage]);
+    // useEffect(() => {
+    //   flatListRef.current?.scrollIntoView({ behavior: "smooth" });
+    // }, [messages]);
     return (
 
         <SafeAreaView style={styles.container}>
@@ -257,6 +225,7 @@ const [upward, setupward] = useState(false);
 				//onlineStatus={'12m ago'}
                 viewstate={showview}
 			/>
+ 
                 <View style={[styles.postcard,{height:upward === true ? hp(40):hp(80)}]}>
                     <FlatList
                        ref={flatListRef}
@@ -329,6 +298,7 @@ const [upward, setupward] = useState(false);
                                         />
       
                 </View>
+ 
                 {/* <ChatInput reply={reply} isLeft={isLeft} closeReply={closeReply} username={'Ali'} /> */}
                 <Animated.View style={[ChatInputstyles.container, heightAnimatedStyle]}>
 	
@@ -359,6 +329,7 @@ const [upward, setupward] = useState(false);
                 />
 
 					</TouchableOpacity>
+          
 					<TouchableOpacity
 						style={ChatInputstyles.emoticonButton}
 						onPress={() => setShowEmojiPicker((value) => !value)}
@@ -370,6 +341,8 @@ const [upward, setupward] = useState(false);
                 />
 
 					</TouchableOpacity>
+     
+
 					<TextInput
 						multiline
                         ref={ref_input1}

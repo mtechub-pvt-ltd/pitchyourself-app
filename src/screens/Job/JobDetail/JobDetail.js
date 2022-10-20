@@ -79,7 +79,7 @@ const JobDetail = ({ navigation, route }) => {
         console.log("saved user", savedposts)
         /////////////setuserprofile data//////////
         sethubid(response.data._id)
-        setuserid(response.data.userId._id)
+        //setuserid(response.data.userId._id)
         setusername(response.data.userName)
         setUserImage(response.data.userImage)
         setSavedPost(response.data.SavedBy.find(item => item === saveuserid) === saveuserid)
@@ -174,7 +174,7 @@ const JobDetail = ({ navigation, route }) => {
   const Applyjob = async () => {
     var user = await AsyncStorage.getItem('Userid')
     console.log("userid:", user,hubid)
-
+    var currdate= new Date().getDate() + '-' + new Date().getMonth() + 1 + '-' + new Date().getFullYear();
     axios({
       method: 'POST',
       url: BASE_URL + 'user/apply-for-job',
@@ -183,12 +183,13 @@ const JobDetail = ({ navigation, route }) => {
         hubId: hubid,
         video: video,
         thumbnail: thumbnails,
-        AppliedDate: '22-09-22'
+        AppliedDate: currdate
       },
     })
       .then(async function (response) {
         console.log("response", JSON.stringify(response.data))
-        setModalVisible(true)
+        ApplyNotification(response.data.HubUserId)
+        //setModalVisible(true)
       })
       .catch(function (error) {
         if (error) {
@@ -198,6 +199,39 @@ const JobDetail = ({ navigation, route }) => {
         console.log("error", error)
       })
   }
+
+    ////////////////////Apply Notification//////////////
+    const ApplyNotification = async (item) => {
+
+
+     var user = await AsyncStorage.getItem('Userid')
+     console.log('here in notification:',item,"uerid",user)
+     var username = await AsyncStorage.getItem('Userdata')
+     var currdate= new Date().getDate() + '-' + new Date().getMonth() + 1 + '-' + new Date().getFullYear();
+     console.log("date:",currdate)
+     axios({
+       method: 'POST',
+       url: BASE_URL + 'user/create-msg',
+       data: {
+         from: user,
+         to: item,
+         msgContent:"Applied on Your Job",
+         dateTime:currdate
+       },
+     })
+       .then(async function (response) {
+         console.log("response", JSON.stringify(response.data))
+         //HomePosts()
+ 
+       })
+       .catch(function (error) {
+         if (error) {
+           console.log('Issue in Appoinments Acceptence')
+         }
+ 
+         console.log("error", error)
+       })
+   }
   return (
 
     <SafeAreaView style={styles.container}>
@@ -227,7 +261,7 @@ const JobDetail = ({ navigation, route }) => {
           <View style={styles.postcard}>
             <View style={styles.mainusercontainer}>
               <View style={{ flexDirection: "row", justifyContent: 'space-around', alignItems: 'center' }}>
-                <View style={{}}>
+                <View style={styles.userimageview}>
                   <Image
                     source={{ uri: userimage }}
                     style={styles.userimage}
@@ -335,7 +369,7 @@ const JobDetail = ({ navigation, route }) => {
             </View>
             {route.params.navplace === 'jobdetail' ?
               <View>
-                <Text style={{ color: 'black' }}>{video}</Text>
+                <Text style={{ color: 'black',fontSize:hp(1.6),marginLeft:wp(5),marginBottom:hp(3),fontWeight:'600' }}>{video}</Text>
 
               </View> :
               null

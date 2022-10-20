@@ -24,12 +24,13 @@ const SavedItems = ({ navigation }) => {
 
 
 /////////////////homepost state////////////
-const[data,setdata]=useState()
+const[data,setdata]=useState([])
     ////////////////////UNSAVE POST//////////////
     const HomePosts=async() => {
+      var user = await AsyncStorage.getItem('Userid')
       axios({
         method: 'GET',
-        url: BASE_URL+'user/get-all-user-saved-hubs?userId=630dff230b16dccc7d1f970a',
+        url: BASE_URL+'user/get-all-user-saved-hubs?userId='+user,
       })
       .then(async function (response) {
         console.log("response savedposts user", JSON.stringify(response.data))  
@@ -77,9 +78,10 @@ navigation.navigate('QuestionDetail',{id:item.hubId._id})
       postedtime={item.hubId.TimePosted}
       posttype={item.hubId.PostType}
       postdesc={item.hubId.Title}
+      postthumbnail={item.hubId.thumbnail}
       //reason={reason}
-      //hashtags={hashtags}
-      //savedBy={item.SavedBy[0]}
+      hashtags={"#"+item.hubId.HashtagHub}
+      savedBy={item.SavedBy}
       hubpostid={item._id}
       getfunction={()=>HomePosts()}
     />

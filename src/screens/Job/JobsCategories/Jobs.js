@@ -91,7 +91,7 @@ const Jobs = ({ navigation, route }) => {
         <View style={styles.postcard}>
         <TouchableOpacity
             style={videothumbnailstyles.postpiccontainer}
-            onPress={() => { navigation.navigate('VideoPlayer', { playvideo: item.hubId.Video }) }}>
+            onPress={() => { navigation.navigate('VideoPlayer', { playvideo: item.link }) }}>
             <ImageBackground
               source={{ uri: item.thumbnail }}
               style={videothumbnailstyles.postpic}

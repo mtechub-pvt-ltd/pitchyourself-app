@@ -28,8 +28,10 @@ postcard:
 
 userimage:
 {
-    width:wp('15%'),
-    height:wp('9%'),
+    width:wp(10),
+    height:wp(10),
+    borderRadius:wp(5),
+    marginRight:wp(2)
 },
 likeimage:
 {
