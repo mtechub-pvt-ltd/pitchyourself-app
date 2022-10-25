@@ -16,11 +16,17 @@ import { createThumbnail } from "react-native-create-thumbnail";
 
 ////////////////////redux////////////
 import { useSelector, useDispatch } from 'react-redux';
-import { setVideoUrl, setlinks, setthumbnails } from '../../redux/actions';
+import { setthumbnails,setVideoUrl } from '../../redux/actions';
 
 //////////////////////app styles////////////
 import styles from './styles';
 import Colors from '../../utills/Colors';
+
+//////////////////////////app api/////////////////////////
+import axios from 'axios';
+import { BASE_URL } from '../../utills/ApiRootUrl';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNFetchBlob from 'rn-fetch-blob'
 
 
 const CameraVideo = ({ navigation, route }) => {
@@ -28,15 +34,15 @@ const CameraVideo = ({ navigation, route }) => {
   //Modal States
   const [modalVisible, setModalVisible] = useState(false);
 
-  console.log("video url here in player::", route.params)
-
   const [predata] = useState(route.params)
-  /////////////redux states///////
-  const dispatch = useDispatch();
+    /////////////redux states///////
+    const {thumbnails, } = useSelector(state => state.userReducer);
+    const dispatch = useDispatch();
+    console.log('video hereeee', '...............', thumbnails)
 
   const Videoset = () => {
     generateThumbnail(predata.newfile.uri)
-    videohandleUpload(predata.newfile)
+    UploadVideo(predata.newfile)
     if (predata.place.navplace === 'createprofile') {
       navigation.navigate('CreateProfile')
     }
@@ -79,51 +85,63 @@ const CameraVideo = ({ navigation, route }) => {
           type: response.mime,
           name: response.path.substring(response.path.lastIndexOf('/') + 1)
         }
-        handleUpload(newfile)
+        Uploadpic(newfile)
       }
       )
       .catch(err => console.log({ err }));
 
   };
-  const handleUpload = (uploadimage) => {
-    console.log("image here url:", uploadimage)
-    const data = new FormData()
-    data.append('file', uploadimage)
-    data.append('upload_preset', 'nrrfyy0m')
-    data.append("cloud_name", "mtechub")
 
-    fetch("https://api.cloudinary.com/v1_1/mtechub/upload", {
-      method: "post",
-      body: data
-    }).then(res => res.json()).
-      then(data => {
-        console.log("data here:", data)
-        dispatch(setthumbnails(data.url))
+    /////////////////image api calling///////////////
+    const Uploadpic =(props)=>{
 
-      }).catch(err => {
-        alert("error while uploading in thumbnail pic")
-      })
-  }
-  const videohandleUpload = (uploadimage) => {
-    console.log("camer video here url:", uploadimage)
-    const data = new FormData()
-    data.append('file', uploadimage)
-    data.append('upload_preset', 'nrrfyy0m')
-    data.append("cloud_name", "mtechub")
+      RNFetchBlob.fetch('POST',
+      BASE_URL + 'upload-image',
+      {
+        Authorization: "Bearer access-token",
+        otherHeader: "foo",
+        'Content-Type': 'multipart/form-data',
+      }, [
+      // part file from storage
+      {
+        name: 'image', filename: 'avatar-foo.jpg', type: 'image/png',
+        data: RNFetchBlob.wrap(props.uri)
+      }
+    ]).then((resp) => {
+      console.log('here video thumbnail path:',resp.data)
+      dispatch(setthumbnails(resp.data))
+      console.log('here video thumbnail path after redux:',thumbnails)
+    }).catch((err) => {
+      console.log('here error:',err)
+    })
 
-    fetch("https://api.cloudinary.com/v1_1/mtechub/upload", {
-      method: "post",
-      body: data
-    }).then(res => res.json()).
-      then(data => {
-        console.log("video data here:", data.url)
-        dispatch(setVideoUrl(data.url))
+    }
+    /////////////////image api calling///////////////
+    const UploadVideo =(props)=>{
 
-      }).catch(err => {
-        setModalVisible(true)
-        console.log("error while uploading in video")
-      })
-  }
+      RNFetchBlob.fetch('POST',
+      BASE_URL + 'upload-video',
+      {
+        Authorization: "Bearer access-token",
+        otherHeader: "foo",
+        'Content-Type': 'multipart/form-data',
+      }, [
+      // part file from storage
+      {
+        name:'video', filename: 'avatar-foo.mp4', type: "video/mp4",
+        data: RNFetchBlob.wrap(props.uri)
+      }
+      // elements without property `filename` will be sent as plain text
+    ]).then((resp) => {
+      //dispatch(setthumbnails(resp.data))
+      console.log('here video path:',resp.data)
+      dispatch(setVideoUrl(resp.data))
+    }).catch((err) => {
+      console.log('here error:',err)
+    })
+
+    }
+
   function renderCamera() {
 
     return (

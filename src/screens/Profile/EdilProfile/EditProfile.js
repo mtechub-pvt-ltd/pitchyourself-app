@@ -337,7 +337,7 @@ const [number, setnumber] = useState();
               {image != '' ?
                 <View style={styles.imageview}>
                   <Image
-                    source={{ uri: image }}
+                    source={{ uri: BASE_URL+image }}
                     style={styles.image}
                     resizeMode='contain'
                   />

@@ -27,7 +27,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp }
 
 ////////////////////redux////////////
 import { useSelector, useDispatch } from 'react-redux';
-import { setthumbnails } from '../../../redux/actions';
+import { setthumbnails,setVideoUrl } from '../../../redux/actions';
 
   //////////////////////////app api/////////////////////////
   import axios from 'axios';
@@ -40,7 +40,7 @@ const Question = ({ navigation }) => {
     /////////////redux states///////
     const {video, links,id,thumbnails, } = useSelector(state => state.userReducer);
     const dispatch = useDispatch();
-    console.log('video hereeee', '...............', links)
+    console.log('video hereeee', '...............', links,thumbnails,video)
 
 
       //Modal States
@@ -93,6 +93,7 @@ const CreateQuestion = async() => {
      setloading(0);
      setdisable(0);
      dispatch(setthumbnails(''))
+
 //setModalVisible1(true)
 navigation.navigate('QuestionDetail',{id:response.data._id})
 
@@ -168,7 +169,7 @@ const formValidation = async () => {
 {thumbnails != '' ?
                 <View style={{}}>
                   <Image
-                    source={{ uri: thumbnails }}
+                    source={{ uri:BASE_URL+JSON.parse(thumbnails)}}
                     style={Uploadstyles.setimages}
                     resizeMode='cover'
                   />

@@ -18,8 +18,6 @@ import styles from './styles';
 import Colors from '../../utills/Colors';
 import { widthPercentageToDP as wp,heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-
-
 const CustomCamera = ({ navigation,route }) => {
   console.log("navigation place:",route.params)
 
@@ -116,65 +114,6 @@ const CustomCamera = ({ navigation,route }) => {
     });
   }
 
-  //    const recordVideo = async () => {
-  //     if (cameraRef) {
-  //         try {
-  //             const options = { maxDuration: 60, quality: Camera.Constants.VideoQuality['480'] }
-  //             const videoRecordPromise = cameraRef.recordAsync(options)
-  //             if (videoRecordPromise) {
-  //                 const data = await videoRecordPromise;
-  //                 const source = data.uri
-  //                 let sourceThumb = await generateThumbnail(source)
-  //                 //navigation.navigate('savePost', { source, sourceThumb })
-  //             }
-  //         } catch (error) {
-  //             console.warn(error)
-  //         }
-  //     }
-  // }
-
-  // const stopVideo = async () => {
-  //     if (cameraRef) {
-  //         cameraRef.stopRecording()
-  //     }
-  // }
-
-  const generateThumbnail = async (source) => {
-    console.log("here thumbnail ", source)
-    createThumbnail({
-      url: source,
-      timeStamp: 10000,
-    })
-      .then(response => {
-        let newfile = {
-          uri: response.path,
-          type: response.mime,
-          name: response.path.substring(response.path.lastIndexOf('/') + 1)
-        }
-        handleUpload(newfile)
-      }
-      )
-      .catch(err => console.log({ err }));
-
-  };
-  const handleUpload = (uploadimage) => {
-    console.log("image here url:", uploadimage)
-    const data = new FormData()
-    data.append('file', uploadimage)
-    data.append('upload_preset', 'nrrfyy0m')
-    data.append("cloud_name", "mtechub")
-
-    fetch("https://api.cloudinary.com/v1_1/mtechub/upload", {
-      method: "post",
-      body: data
-    }).then(res => res.json()).
-      then(data => {
-        console.log("data here:", data)
-       // dispatch(setthumbnails(data.url))
-      }).catch(err => {
-        alert("error while uploading")
-      })
-  }
   function renderCamera() {
 
     if (device == null) {
@@ -261,20 +200,7 @@ const CustomCamera = ({ navigation,route }) => {
               
                     </TouchableOpacity>
            } 
-       
-              {/* <IconButton
-             icon={require('../../assets/Camera/capture.png')}
-    //color={Colors.Appthemecolor}
-    //size={50}
-    onPress={()=> 
-//recordVideo()
-        handleCapture()
-        //imagesearch()
-        //takePicture()
-       //callGoogleVisionAsync()
-    //navigation.navigate('Search Result')
-    }
-  /> */}
+      
                 {videostatus === false?
               <IconButton
                 icon={require('../../assets/Camera/pause.png')}
@@ -299,7 +225,6 @@ onPress={()=>
 }
 />
     }
-
             </View>
 
           </View>

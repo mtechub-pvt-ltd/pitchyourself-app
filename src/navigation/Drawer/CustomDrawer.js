@@ -85,7 +85,7 @@ const isfocussed = useIsFocused()
                        
                         <Avatar.Image 
                                //source={require('../../assets/Homeimages/user.png')}
-                               source={{uri: image}}
+                               source={{uri:  BASE_URL+image}}
                                style={{backgroundColor:'grey'}}
                                 size={100}
                             />

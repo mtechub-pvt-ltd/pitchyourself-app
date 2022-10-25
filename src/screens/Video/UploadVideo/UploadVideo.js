@@ -40,6 +40,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp }
 import axios from 'axios';
 import { BASE_URL } from '../../../utills/ApiRootUrl';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNFetchBlob from 'rn-fetch-blob'
 
 const UploadVideo = ({ navigation, route }) => {
   console.log('user id here:', route.params)
@@ -109,10 +110,65 @@ const UploadVideo = ({ navigation, route }) => {
         type: image.mime,
         name: image.path.substring(image.path.lastIndexOf('/') + 1)
       }
-      imagehandleUpload(newfile)
+      Uploadpic(newfile)
     });
   }
   const [Selectimages, setSelectimages] = useState([]);
+
+       /////////////////image api calling///////////////
+       const Uploadpic =(props)=>{
+
+        RNFetchBlob.fetch('POST',
+        BASE_URL + 'upload-image',
+        {
+          Authorization: "Bearer access-token",
+          otherHeader: "foo",
+          'Content-Type': 'multipart/form-data',
+        }, [
+        // part file from storage
+        {
+          name: 'image', filename: 'avatar-foo.jpg', type: 'image/png',
+          data: RNFetchBlob.wrap(props.uri)
+        }
+      ]).then((resp) => {
+        console.log('here Profile image:',resp.data)
+        setSelectimages([
+          ...Selectimages,
+          resp.data])
+        //setselectedimage(JSON.parse(resp.data))
+       // CreateUserProfile(resp.data)
+      }).catch((err) => {
+        console.log('here error:',err)
+      })
+  
+      }
+             /////////////////image api calling///////////////
+             const UploadDoc =(props)=>{
+              console.log('here docs props:',props)
+              RNFetchBlob.fetch('POST',
+              BASE_URL + 'upload-file',
+              {
+                Authorization: "Bearer access-token",
+                otherHeader: "foo",
+                'Content-Type': 'multipart/form-data',
+              }, [
+              // part file from storage
+              {
+                name: 'file', filename: 'avatar-foo.jpg', type: 'application/pdf',
+                data: RNFetchBlob.wrap(props.uri)
+              }
+            ]).then((resp) => {
+              console.log('here docs:',resp.data)
+              setSelectimages([
+                ...Selectimages,
+                resp.data])
+              //setselectedimage(JSON.parse(resp.data))
+             // CreateUserProfile(resp.data)
+            }).catch((err) => {
+              console.log('here error:',err)
+            })
+        
+            }
   ///////////upload to cloudinary files/////////////
   const imagehandleUpload = (uploadimage) => {
     console.log("image here url:", uploadimage)
@@ -169,11 +225,15 @@ const UploadVideo = ({ navigation, route }) => {
     //Opening Document Picker for selection of one file
     try {
       const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.docx],
+        //presentationStyle: 'fullScreen',
+  type: [DocumentPicker.types.pdf],
+  //allowMultiSelection: true,
+        //type: [DocumentPicker.types.allFiles],
+        //type: [DocumentPicker.types.docx],
       });
       //Printing the log realted to the file
       console.log('res : ' + JSON.stringify(res));
-      console.log('URI : ' + res[0].uri);
+      console.log('URI : ' + res[0].uri+'.pdf');
       console.log('Type : ' + res[0].type);
       console.log('File Name : ' + res[0].name);
       console.log('File Size : ' + res[0].size);
@@ -188,7 +248,8 @@ const UploadVideo = ({ navigation, route }) => {
       console.log("counter of documents here:",documentcounter)
       if(documentcounter <=3)
       {
-        documenthandleUpload(newfile)
+        console.log("porps of documents here:",newfile)
+        UploadDoc(newfile)
       }
       else
       {
@@ -357,9 +418,7 @@ setModalVisible(true)
         if (error) {
           //setModalVisible1(true)
           console.log('Issue in Appoinments Acceptence')
-
         }
-
         console.log("error", error)
       })
   }
@@ -402,12 +461,7 @@ setModalVisible(true)
       resizeMode='contain'
     />
   </TouchableOpacity>}
-
-  
-  
   </View>
-  
-     
               </View>
 
    )
@@ -435,7 +489,7 @@ setModalVisible(true)
               {thumbnails != '' ?
                 <View style={{}}>
                   <Image
-                    source={{ uri: thumbnails }}
+                    source={{ uri: BASE_URL+JSON.parse(thumbnails) }}
                     style={Uploadstyles.setimages}
                     resizeMode='cover'
                   />
@@ -509,7 +563,7 @@ setModalVisible(true)
                     style={styles.doticon}
                     resizeMode='contain'
                   />
-                  <Text style={[styles.orangetext, { marginLeft: wp(3) }]}>{item.split('/')[7]}</Text>
+                  <Text style={[styles.orangetext, { marginLeft: wp(3) }]}>{item.substring(item.lastIndexOf('\\') + 1)}</Text>
 
                 </View>
                 <TouchableOpacity onPress={() =>{}
@@ -540,7 +594,7 @@ setModalVisible(true)
                     style={styles.doticon}
                     resizeMode='contain'
                   />
-                  <Text style={[styles.orangetext, { marginLeft: wp(3) }]}>{item.split('/')[7]}</Text>
+                  <Text style={[styles.orangetext, { marginLeft: wp(3) }]}>{item.substring(item.lastIndexOf('\\') + 1)}</Text>
 
                 </View>
                 <TouchableOpacity onPress={() => deleteImage(item)}>

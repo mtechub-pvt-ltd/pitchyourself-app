@@ -48,7 +48,7 @@ const[predata]=useState(route.params.item)
 
   ///////////////chat input clear///////////////
   const ChatClear=()=>{
-    console.log(" prod clearrrrrrrrrrrrrrr")
+    console.log("prod clearrrrrrrrrrrrrrr")
     ref_input1.current.clear()
   }
 

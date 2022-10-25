@@ -404,7 +404,7 @@ const Profile = ({ navigation, route }) => {
             height: hp(14), width: wp(29), alignItems: 'center', justifyContent: "center"
           }}>
             <Image
-              source={{ uri: image }}
+              source={{ uri:  BASE_URL+image }}
               style={styles.userimage}
               resizeMode='contain'
             />

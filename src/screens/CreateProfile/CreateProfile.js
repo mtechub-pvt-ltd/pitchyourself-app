@@ -37,6 +37,8 @@ import { setID } from '../../redux/actions';
 import axios from 'axios';
 import { BASE_URL } from '../../utills/ApiRootUrl';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNFetchBlob from 'rn-fetch-blob'
+
 
 const CreateProfile = ({ navigation, route }) => {
 console.log("here data user id:",route.params)
@@ -83,7 +85,7 @@ const [number, setnumber] = useState();
         type: image.mime,
         name: image.path.substring(image.path.lastIndexOf('/') + 1)
       }
-      imagehandleUpload(newfile)
+      Uploadpic(newfile)
 
     });
   }
@@ -103,7 +105,7 @@ const [number, setnumber] = useState();
         type: image.mime,
         name: image.path.substring(image.path.lastIndexOf('/') + 1)
       }
-      imagehandleUpload(newfile)
+      Uploadpic(newfile)
     });
   }
 
@@ -150,17 +152,44 @@ const [number, setnumber] = useState();
   const [snackbarValue, setsnackbarValue] = useState({ value: '', color: '' });
   const onDismissSnackBar = () => setVisible(false);
 
+
+  const [selectedimage, setselectedimage] = useState(false);
+      /////////////////image api calling///////////////
+      const Uploadpic =(props)=>{
+
+        RNFetchBlob.fetch('POST',
+        BASE_URL + 'upload-image',
+        {
+          Authorization: "Bearer access-token",
+          otherHeader: "foo",
+          'Content-Type': 'multipart/form-data',
+        }, [
+        // part file from storage
+        {
+          name: 'image', filename: 'avatar-foo.jpg', type: 'image/png',
+          data: RNFetchBlob.wrap(props.uri)
+        }
+      ]).then((resp) => {
+        console.log('here Profile image:',resp.data)
+        setselectedimage(JSON.parse(resp.data))
+       // CreateUserProfile(resp.data)
+      }).catch((err) => {
+        console.log('here error:',err)
+      })
+  
+      }
+
   //////////////////////Api Calling/////////////////
-  const CreateUserProfile = () => 
+  const CreateUserProfile = (props) => 
   {
-    console.log("obj:",id,image,'..........................',video,'................')
+    console.log("obj:",id,selectedimage,'..........................',video,'................')
     axios({
       method: 'PUT',
       url: BASE_URL + 'user/update-user',
       data: {
         _id:id,
         name: name,
-        image:image,
+        image:selectedimage,
         profession: profession,
         bio: bio,
         //uploadDocument:document,

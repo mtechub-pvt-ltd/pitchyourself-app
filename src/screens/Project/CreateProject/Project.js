@@ -32,7 +32,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp }
 
 ////////////////////redux////////////
 import { useSelector, useDispatch } from 'react-redux';
-import {setthumbnails } from '../../../redux/actions';
+import {setthumbnails,setVideoUrl } from '../../../redux/actions';
 
 const Project = ({ navigation }) => {
 
@@ -230,7 +230,7 @@ const [users,setusers]=useState()
 {thumbnails != '' ?
                 <View style={{}}>
                   <Image
-                    source={{ uri: thumbnails }}
+                    source={{ uri: BASE_URL+JSON.parse(thumbnails) }}
                     style={Uploadstyles.setimages}
                     resizeMode='cover'
                   />

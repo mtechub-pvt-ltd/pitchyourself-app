@@ -139,7 +139,7 @@ const Job = ({ navigation }) => {
               {thumbnails != '' ?
                 <View style={{}}>
                   <Image
-                    source={{ uri: thumbnails }}
+                    source={{ uri: BASE_URL+JSON.parse(thumbnails) }}
                     style={Uploadstyles.setimages}
                     resizeMode='cover'
                   />
