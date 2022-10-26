@@ -201,30 +201,7 @@ const CustomCamera = ({ navigation,route }) => {
                     </TouchableOpacity>
            } 
       
-                {videostatus === false?
-              <IconButton
-                icon={require('../../assets/Camera/pause.png')}
-                color={'orange'}
-                size={30}
-onPress={
-  ()=> 
- // {
-    camera.current.pauseRecording()
- // setvideostatus(true)
-//}
-}
-              />
-:
-<IconButton
-icon={require('../../assets/Camera/play.png')}
-color={'orange'}
-size={30}
-onPress={()=> 
-{camera.current.resumeRecording(),
-  setvideostatus(false)}
-}
-/>
-    }
+
             </View>
 
           </View>

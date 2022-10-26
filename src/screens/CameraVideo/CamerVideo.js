@@ -182,8 +182,7 @@ const CameraVideo = ({ navigation, route }) => {
               icon={require('../../assets/Camera/delete.png')}
               color={Colors.Appthemecolor}
               size={30}
-              onPress={() =>
-                navigation.goBack()
+              onPress={() => navigation.navigate('CustomCamera')
               }
             />
           </View>

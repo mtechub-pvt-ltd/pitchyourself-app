@@ -91,9 +91,9 @@ const Jobs = ({ navigation, route }) => {
         <View style={styles.postcard}>
         <TouchableOpacity
             style={videothumbnailstyles.postpiccontainer}
-            onPress={() => { navigation.navigate('VideoPlayer', { playvideo: item.link }) }}>
+            onPress={() => { navigation.navigate('VideoPlayer', { playvideo: BASE_URL+item.link }) }}>
             <ImageBackground
-              source={{ uri: item.thumbnail }}
+              source={{ uri: BASE_URL+item.thumbnail }}
               style={videothumbnailstyles.postpic}
               imageStyle={videothumbnailstyles.imagestyle}
               resizeMode='cover'
@@ -142,7 +142,7 @@ const Jobs = ({ navigation, route }) => {
         <View style={styles.postcard}>
           <TouchableOpacity
             style={videothumbnailstyles.postpiccontainer}
-            onPress={() => { navigation.navigate('VideoPlayer', { playvideo: item.hubId.Video }) }}>
+            onPress={() => { navigation.navigate('VideoPlayer', { playvideo: BASE_URL+item.hubId.Video }) }}>
             <ImageBackground
               //source={{ uri: applieddata != ''?item.hubId.thumbnail : null }}
               style={videothumbnailstyles.postpic}

@@ -74,11 +74,11 @@ navigation.navigate('QuestionDetail',{id:item.hubId._id})
       <CustomPostCard
       cardtype={'Save'}
       username={item.hubId.userName}
-      userimage={item.hubId.userImage}
+      userimage={BASE_URL+item.hubId.userImage}
       postedtime={item.hubId.TimePosted}
       posttype={item.hubId.PostType}
       postdesc={item.hubId.Title}
-      postthumbnail={item.hubId.thumbnail}
+      postthumbnail={BASE_URL+item.hubId.thumbnail}
       //reason={reason}
       hashtags={"#"+item.hubId.HashtagHub}
       savedBy={item.SavedBy}

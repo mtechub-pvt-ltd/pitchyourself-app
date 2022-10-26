@@ -310,7 +310,7 @@ const JobDetail = ({ navigation, route }) => {
               style={[videothumbnailstyles.postpiccontainer, { width: wp(80) }]}
               onPress={() => { navigation.navigate('VideoPlayer', { playvideo: Video }) }}>
               <ImageBackground
-                source={{ uri: videothumbnailimage }}
+                source={{ uri: BASE_URL+videothumbnailimage }}
                 style={[videothumbnailstyles.postpic, { width: wp(80) }]}
                 imageStyle={videothumbnailstyles.imagestyle}
                 resizeMode='cover'

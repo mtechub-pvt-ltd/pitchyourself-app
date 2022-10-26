@@ -143,8 +143,21 @@ const UploadVideo = ({ navigation, route }) => {
   
       }
              /////////////////image api calling///////////////
-             const UploadDoc =(props)=>{
+        const UploadDoc =(props)=>{
               console.log('here docs props:',props)
+              var data = new FormData();
+data.append('file', props.uri);
+
+// var config = {
+//   method: 'post',
+//   url:   BASE_URL + 'upload-file',
+//   data : data
+// };
+
+// axios(config)
+// .then(function (response) {
+//   console.log(JSON.stringify(response.data));
+// })
               RNFetchBlob.fetch('POST',
               BASE_URL + 'upload-file',
               {
@@ -162,9 +175,10 @@ const UploadVideo = ({ navigation, route }) => {
               setSelectimages([
                 ...Selectimages,
                 resp.data])
-              //setselectedimage(JSON.parse(resp.data))
-             // CreateUserProfile(resp.data)
-            }).catch((err) => {
+             // setselectedimage(JSON.parse(resp.data))
+             //CreateUserProfile(resp.data)
+           })
+            .catch((err) => {
               console.log('here error:',err)
             })
         
@@ -226,20 +240,22 @@ const UploadVideo = ({ navigation, route }) => {
     try {
       const res = await DocumentPicker.pick({
         //presentationStyle: 'fullScreen',
-  type: [DocumentPicker.types.pdf],
+  //type: [DocumentPicker.types.pdf],
   //allowMultiSelection: true,
-        //type: [DocumentPicker.types.allFiles],
+        type: [DocumentPicker.types.allFiles],
         //type: [DocumentPicker.types.docx],
       });
-      //Printing the log realted to the file
+      //Printing the log realted to the fileipconfig
+
       console.log('res : ' + JSON.stringify(res));
-      console.log('URI : ' + res[0].uri+'.pdf');
+      console.log('URI : ' + res[0].uri);
       console.log('Type : ' + res[0].type);
       console.log('File Name : ' + res[0].name);
       console.log('File Size : ' + res[0].size);
       setdocumentcounter(documentcounter+1)
       let newfile = {
-        uri: res[0].uri,
+        uritype:res[0].type.substring(res[0].type.lastIndexOf('/') + 1),
+        uri: res[0].uri+'.'+res[0].type.substring(res[0].type.lastIndexOf('/') + 1),
         type: res[0].type,
         name: res[0].name
 

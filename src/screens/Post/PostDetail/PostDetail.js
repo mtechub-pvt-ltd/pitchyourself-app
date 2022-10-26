@@ -80,13 +80,13 @@ const isfocussed = useIsFocused()
         cardtype={'Post'}
         usertype={'activeuser'}
         username={username}
-        userimage={userimage}
+        userimage={BASE_URL+userimage}
         postedtime={postedtime}
         posttype={posttype}
         postdesc={postdesc}
         postvideo={Video}
-        onvideoclick={()=>{navigation.navigate('VideoPlayer',{playvideo:Video})}}
-        postthumbnail={videothumbnailimage}
+        onvideoclick={()=>{navigation.navigate('VideoPlayer',{playvideo:BASE_URL+Video})}}
+        postthumbnail={BASE_URL+videothumbnailimage}
         aboutpost={aboutpost}
         hashtags={hashtags}
       />

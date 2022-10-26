@@ -71,16 +71,16 @@ const ProjectDetail = ({ navigation,route }) => {
           cardtype={'Project'}
           usertype={'activeuser'}
           username={username}
-          userimage={userimage}
+          userimage={BASE_URL+userimage}
           postedtime={postedtime}
           posttype={posttype}
           postdesc={postdesc}
          projectTitle={projectTitle}
          projectMembers={projectMembers}
          hashtags={hashtags}
-         postvideo={Video}
-         onvideoclick={()=>{navigation.navigate('VideoPlayer',{playvideo:Video})}}
-         postthumbnail={videothumbnailimage}
+         postvideo={BASE_URL+Video}
+         onvideoclick={()=>{navigation.navigate('VideoPlayer',{playvideo:BASE_URL+Video})}}
+         postthumbnail={BASE_URL+videothumbnailimage}
           />
 
     </SafeAreaView>

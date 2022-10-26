@@ -70,7 +70,7 @@ const QuestionDetail = ({ navigation, route }) => {
         cardtype={'Question'}
         usertype={'activeuser'}
         username={username}
-        userimage={userimage}
+        userimage={BASE_URL+userimage}
         postedtime={postedtime}
         posttype={posttype}
         postdesc={postdesc}
@@ -78,9 +78,9 @@ const QuestionDetail = ({ navigation, route }) => {
         hashtags={hashtags}
         savedBy={savedBy[0]}
         hubpostid={hubpostid}
-        postvideo={Video}
-        onvideoclick={()=>{navigation.navigate('VideoPlayer',{playvideo:Video})}}
-        postthumbnail={videothumbnailimage}
+        postvideo={BASE_URL+Video}
+        onvideoclick={()=>{navigation.navigate('VideoPlayer',{playvideo:BASE_URL+Video})}}
+        postthumbnail={BASE_URL+videothumbnailimage}
       />
 
     </SafeAreaView>
