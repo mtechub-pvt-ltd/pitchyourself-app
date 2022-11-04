@@ -186,7 +186,7 @@ useEffect(() => {
    <View style={Logostyles.underlogotextview}>
             <Text style={Logostyles.underlogotext}>Lorem ipsum dolor sit amet, 
             consetetur sadipscing elitr,
-             sed diam nonumy eirmod tempor invidunt ut
+             sed diam nonumy eirmod 
             </Text>
           </View>
            
@@ -249,15 +249,17 @@ useEffect(() => {
                 </TouchableOpacity>
           </View>
 
-          <TouchableOpacity
+
+            <View style={styles.forgettextview}>
+            <TouchableOpacity
             onPress={() => navigation.navigate('ResetPassword')}
           >
-            <View style={styles.forgettextview}>
               <Text style={styles.forgettext}>
-                Forget Password?
+                Forgot Password?
               </Text>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
+
         </View>
 <View style={styles.buttonview}>
 <CustomButtonhere

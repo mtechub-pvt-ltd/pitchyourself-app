@@ -284,6 +284,10 @@ dispatch(setID(response.data._id))
             {
               setCountryCode('672')
             }
+            if( e.name==='Bouvet Island')
+            {
+              setCountryCode('55')
+            }
             else{
               setCountryCode(JSON.parse(e.callingCode))
             }

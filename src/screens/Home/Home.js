@@ -261,7 +261,7 @@ navigation.navigate('QuestionDetail',{id:item._id})
               null 
               }>
                 <Image
-                  source={{ uri: item.userImage }}
+                  source={{ uri: BASE_URL+item.userImage }}
                   style={styles.userimage}
                   resizeMode='contain'
                 />
@@ -316,7 +316,7 @@ navigation.navigate('QuestionDetail',{id:item._id})
               style={[videothumbnailstyles.postpiccontainer, { width: wp(80) }]}
               onPress={() => { navigation.navigate('VideoPlayer', { playvideo: item.thumbnail }) }}>
               <ImageBackground
-                source={{ uri: item.thumbnail }}
+                source={{ uri: BASE_URL+item.thumbnail }}
                 style={[videothumbnailstyles.postpic, { width: wp(80) }]}
                 imageStyle={videothumbnailstyles.imagestyle}
                 resizeMode='cover'
@@ -359,7 +359,7 @@ item.LikedBy.find(item => item === saveuserid) === saveuserid ?
             <TouchableOpacity onPress={() => likePost(item._id)}>
             <View style={[styles.iconview, { marginLeft: wp(10) }]}>
               <Image
-                source={require('../../assets/socialicons/thumbsup.png')}
+                source={require('../../assets/socialicons/unfilledthumbsup.png')}
                 style={{ width: 50, height: 20 }}
                 resizeMode='contain'
               />
@@ -367,24 +367,28 @@ item.LikedBy.find(item => item === saveuserid) === saveuserid ?
             </TouchableOpacity>
             :
             null}
-            <TouchableOpacity onPress={()=>navigation.navigate('PostRecomendations',item._id)}>
+        
             <View style={[styles.iconview, { marginLeft: wp(12) }]}>
+            <TouchableOpacity onPress={()=>navigation.navigate('PostRecomendations',item._id)}>
               <Image
                 source={require('../../assets/socialicons/chated.png')}
                 style={{ width: 80, height: 20 }}
                 resizeMode='contain'
               />
+                         </TouchableOpacity>
             </View>   
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=> {setReportModalVisible(true),setreportPost(item._id)}}>
+ 
+
             <View style={[styles.iconview, { marginLeft: wp(12) }]}>
+            <TouchableOpacity onPress={()=> {setReportModalVisible(true),setreportPost(item._id)}}>
               <Image
                 source={require('../../assets/socialicons/report.png')}
                 style={{ width: 80, height: 20 }}
                 resizeMode='contain'
               />
+                         </TouchableOpacity>
             </View>   
-            </TouchableOpacity>
+ 
 
           </View>
           <View style={{
@@ -431,14 +435,14 @@ item.LikedBy.find(item => item === saveuserid) === saveuserid ?
             </View>
           </View>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('Recomendations')}>
+        {/* <TouchableOpacity onPress={() => navigation.navigate('Recomendations')}> */}
           <View style={{ marginLeft: 20, marginBottom: 10 }}>
             <Text style={styles.recomend}>{item.TotalRecommendations} Recommendations</Text>
           </View>
           <View style={{ marginLeft: 20, marginBottom: wp(5) }}>
             <Text style={styles.recomend}>{item.TotalLikes} Likes</Text>
           </View>
-        </TouchableOpacity>
+        {/* </TouchableOpacity> */}
 
 
 

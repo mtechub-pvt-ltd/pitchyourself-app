@@ -158,7 +158,7 @@ const [comments, setComments] = useState(new Date());
                         alignItems: 'center',marginBottom:20 }}>
                             <View style={{}}>
                                 <Image
-                                    source={{uri: item.CommenterImage}}
+                                    source={{uri: BASE_URL+item.CommenterImage}}
                                     //source={{uri: item.image}}
                                     style={styles.userimage}
                                     resizeMode='contain'

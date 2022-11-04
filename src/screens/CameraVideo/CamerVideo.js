@@ -71,7 +71,36 @@ const CameraVideo = ({ navigation, route }) => {
       navigation.navigate('UploadVideo')
     }
   }
+  const Delete= () => {
 
+    if (predata.place.navplace === 'createprofile') {
+      navigation.navigate('CreateProfile')
+    }
+   else if (predata.place.navplace === 'question') {
+      console.log("here:")
+      navigation.navigate('Question')
+    }
+    else if (predata.place.navplace === 'post') {
+      console.log("here:")
+      navigation.navigate('CreatePost')
+    }
+    else if (predata.place.navplace === 'project') {
+      console.log("here:")
+      navigation.navigate('Project')
+    }
+    else if (predata.place.navplace === 'job') {
+      console.log("here:")
+      navigation.navigate('Job')
+    }
+    else if (predata.place.navplace === 'applyjob') {
+      console.log("here:")
+      navigation.navigate('JobDetail',{navplace:'jobdetail'})
+    }
+    else if (predata.place.navplace === "uploadprofilevideo") {
+      console.log("here:")
+      navigation.navigate('UploadVideo')
+    }
+  }
   ///////////picker state/////////
   const generateThumbnail = async (source) => {
     console.log("here thumbnail ", source)
@@ -108,8 +137,8 @@ const CameraVideo = ({ navigation, route }) => {
         data: RNFetchBlob.wrap(props.uri)
       }
     ]).then((resp) => {
-      console.log('here video thumbnail path:',resp.data)
-      dispatch(setthumbnails(resp.data))
+      console.log('here video thumbnail path:', JSON.parse(resp.data))
+      dispatch(setthumbnails(JSON.parse(resp.data)))
       console.log('here video thumbnail path after redux:',thumbnails)
     }).catch((err) => {
       console.log('here error:',err)
@@ -182,7 +211,9 @@ const CameraVideo = ({ navigation, route }) => {
               icon={require('../../assets/Camera/delete.png')}
               color={Colors.Appthemecolor}
               size={30}
-              onPress={() => navigation.navigate('CustomCamera')
+              onPress={() =>
+                Delete()
+                // navigation.navigate('CustomCamera')
               }
             />
           </View>

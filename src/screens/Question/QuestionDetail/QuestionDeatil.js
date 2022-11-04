@@ -12,7 +12,7 @@ import cardcontainerstyles from '../../../utills/GlobalStyles/cardcontainerstyle
 
 //////////////////////////app api/////////////////////////
 import axios from 'axios';
-import { BASE_URL } from '../../../utills/ApiRootUrl';
+import { BASE_URL,PIC_URL } from '../../../utills/ApiRootUrl';
 
 const QuestionDetail = ({ navigation, route }) => {
 
@@ -36,7 +36,7 @@ const QuestionDetail = ({ navigation, route }) => {
       url: BASE_URL + "user/get-hub?_id=" + route.params.id,
     })
       .then(function (response) {
-        // console.log("response", JSON.stringify(response.data))
+         console.log("response inquestion", JSON.stringify(response.data))
         /////////////setuserprofile data//////////
         setusername(response.data.userName)
         setUserImage(response.data.userImage)

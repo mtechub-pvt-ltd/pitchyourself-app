@@ -19,6 +19,8 @@ import { TouchableOpacity } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} 
 from 'react-native-responsive-screen';
 
+import { fontFamily } from '../../constant/fonts';
+
   //////////////////////////app api/////////////////////////
   import axios from 'axios';
   import { BASE_URL } from '../../utills/ApiRootUrl';
@@ -67,14 +69,84 @@ const isfocussed = useIsFocused()
       console.log("error", error)
     })
     }
+    const[currtime,setcurrtime]=useState() 
       useEffect(() => {
-     
+        var hours = new Date().getHours(); //Current Hours
+        var min = new Date().getMinutes(); //Current Minutes
+        var sec = new Date().getSeconds();
+        //setcurrtime(hours+':'+min)
+        GetTime()
         if (isfocussed) {
           GetProfileData()
         }
   
     },[isfocussed]);
 
+    const GetTime=() =>{
+     
+        // Creating variables to hold time.
+        var date, TimeType, hour, minutes, seconds, fullTime;
+     
+        // Creating Date() function object.
+        date = new Date();
+     
+        // Getting current hour from Date object.
+        hour = date.getHours(); 
+     
+        // Checking if the Hour is less than equals to 11 then Set the Time format as AM.
+        if(hour <= 11)
+        {
+     
+          TimeType = 'am';
+     
+        }
+        else{
+     
+          // If the Hour is Not less than equals to 11 then Set the Time format as PM.
+          TimeType = 'pm';
+     
+        }
+     
+     
+        // IF current hour is grater than 12 then minus 12 from current hour to make it in 12 Hours Format.
+        if( hour > 12 )
+        {
+          hour = hour - 12;
+        }
+     
+        // If hour value is 0 then by default set its value to 12, because 24 means 0 in 24 hours time format. 
+        if( hour == 0 )
+        {
+            hour = 12;
+        } 
+     
+     
+        // Getting the current minutes from date object.
+        minutes = date.getMinutes();
+     
+        // Checking if the minutes value is less then 10 then add 0 before minutes.
+        if(minutes < 10)
+        {
+          minutes = '0' + minutes.toString();
+        }
+     
+     
+        //Getting current seconds from date object.
+        seconds = date.getSeconds();
+     
+        // If seconds value is less than 10 then add 0 before seconds.
+        if(seconds < 10)
+        {
+          seconds = '0' + seconds.toString();
+        }
+     
+     
+        // Adding all the variables in fullTime variable.
+        fullTime = hour.toString() + ':' + minutes.toString()  + ' ' + TimeType.toString();
+     
+        setcurrtime(fullTime)
+  
+      }
     return(
         <View style={{flex:1}}>
             <DrawerContentScrollView {...props}>
@@ -94,6 +166,7 @@ const isfocussed = useIsFocused()
                         </View>
                         <View style={{alignSelf:'center' }}>
                                 <Title style={styles.title}>{Username}</Title>
+                                <Title style={styles.caption}>{currtime}</Title>
                             </View>
                     </View>
 
@@ -102,70 +175,77 @@ const isfocussed = useIsFocused()
                             icon={({color, size}) => (
                                 <Image
                                 source={require('../../assets/Drawerimages/Home.png')}
-                                style={{ width:30, height:40 ,resizeMode:'contain'}}
+                                style={{ width:wp(6), height:hp(3),resizeMode:'contain'}}
                               />
                             )}
                             label="Home"
+                            labelStyle={styles.subtitle}
                             onPress={() => {props.navigation.navigate('Home')}}
                         />
                                    <DrawerItem 
                             icon={({color, size}) => (
                                 <Image
                                 source={require('../../assets/Drawerimages/paper.png')}
-                                style={{ width:25, height:30 ,resizeMode:'contain'}}
+                                style={{ width:wp(5), height:hp(3),resizeMode:'contain'}}
                               />
                             )}
                             label="Jobs"
+                            labelStyle={styles.subtitle}
                             onPress={() => {props.navigation.navigate('Jobs',{item:'Jobs'})}}
                         />
                         <DrawerItem 
                             icon={({color, size}) => (
                                 <Image
                                 source={require('../../assets/Drawerimages/profile.png')}
-                                style={{ width:20, height:40 ,resizeMode:'contain'}}
+                                style={{ width:wp(5), height:hp(3) ,resizeMode:'contain'}}
                               />
                             )}
                             label="Profile"
+                            labelStyle={styles.subtitle}
                             onPress={() => {props.navigation.navigate('Profile',{item:'profile',id:userid})}}
                         />
                         <DrawerItem 
                             icon={({color, size}) => (
                                 <Image
                                 source={require('../../assets/Drawerimages/Hub.png')}
-                                style={{ width:20, height:40 ,resizeMode:'contain'}}
+                                style={{ width:wp(5), height:hp(3) ,resizeMode:'contain'}}
                               />
                             )}
                             label="Hubs"
+                            labelStyle={styles.subtitle}
                             onPress={() => {props.navigation.navigate('Hubs')}}
                         />
                        <DrawerItem 
                             icon={({color, size}) => (
                                 <Image
                                 source={require('../../assets/Drawerimages/Chat.png')}
-                                style={{ width:20, height:40 ,resizeMode:'contain'}}
+                                style={{width:wp(6), height:hp(3) ,resizeMode:'contain'}}
                               />
                             )}
                             label="Chat"
+                            labelStyle={styles.subtitle}
                           onPress={() => {props.navigation.navigate('ChatList')}}
                         />
                          <DrawerItem 
                           icon={({color, size}) => (
                             <Image
                             source={require('../../assets/Drawerimages/Save.png')}
-                            style={{ width:20, height:40 ,resizeMode:'contain'}}
+                            style={{width:wp(4.5), height:hp(3),resizeMode:'contain'}}
                           />
                         )}
                             label="Saved"
+                            labelStyle={styles.subtitle}
                             onPress={() => {props.navigation.navigate('SavedItems')}}
                         />
                         <DrawerItem 
                                 icon={({color, size}) => (
                                   <Image
                                   source={require('../../assets/Drawerimages/Notification.png')}
-                                  style={{ width:20, height:40 ,resizeMode:'contain'}}
+                                  style={{ width:wp(4.5), height:hp(3),resizeMode:'contain'}}
                                 />
                               )}
                             label="Notification"
+                            labelStyle={styles.subtitle}
                             onPress={() => {props.navigation.navigate('Notification')}}
                         />
                     
@@ -173,10 +253,11 @@ const isfocussed = useIsFocused()
                                 icon={({color, size}) => (
                                   <Image
                                   source={require('../../assets/Drawerimages/settings.png')}
-                                  style={{ width:20, height:40 ,resizeMode:'contain'}}
+                                  style={{ width:wp(5), height:hp(3) ,resizeMode:'contain'}}
                                 />
                               )}
                             label="Setting"
+                            labelStyle={styles.subtitle}
                             onPress={() => {props.navigation.navigate('Settings')}}
                         />
 {/*                   
@@ -210,14 +291,17 @@ const styles = StyleSheet.create({
       
     },
     title: {
-      fontSize: 15,
+      fontSize: hp(2.5),
       marginTop: 5,
       fontWeight: 'bold',
-      color:Colors.Appthemecolor
+      color:Colors.Appthemecolor,
+      fontFamily:fontFamily.Quicksand_Bold
     },
     caption: {
-      fontSize: 14,
-      lineHeight: 14,
+      fontSize: hp(1.8),
+      lineHeight: 15,
+      fontFamily:fontFamily.Quicksand_Regular,
+      color:'#BABDC9'
     },
     row: {
       marginTop: 50,
@@ -270,5 +354,11 @@ height:wp('20%'),
 width:wp('55%'),
 justifyContent:"center",
 alignSelf:'center',
+},
+subtitle: {
+  fontSize:hp(1.5),
+  fontWeight: '700',
+  color:'#8E8E8E',
+fontFamily:fontFamily.Quicksand_Bold
 },
   });

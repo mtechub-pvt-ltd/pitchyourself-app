@@ -23,7 +23,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp }
 
 //////////////////////////app api/////////////////////////
 import axios from 'axios';
-import { BASE_URL } from '../../../utills/ApiRootUrl';
+import { BASE_URL,PIC_URL } from '../../../utills/ApiRootUrl';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 ////////////////////redux////////////
@@ -263,7 +263,7 @@ const JobDetail = ({ navigation, route }) => {
               <View style={{ flexDirection: "row", justifyContent: 'space-around', alignItems: 'center' }}>
                 <View style={styles.userimageview}>
                   <Image
-                    source={{ uri: userimage }}
+                    source={{ uri:PIC_URL+userimage}}
                     style={styles.userimage}
                     resizeMode='contain'
                   />
@@ -308,9 +308,9 @@ const JobDetail = ({ navigation, route }) => {
 
             <TouchableOpacity
               style={[videothumbnailstyles.postpiccontainer, { width: wp(80) }]}
-              onPress={() => { navigation.navigate('VideoPlayer', { playvideo: Video }) }}>
+              onPress={() => { navigation.navigate('VideoPlayer', { playvideo: PIC_URL+Video}) }}>
               <ImageBackground
-                source={{ uri: BASE_URL+videothumbnailimage }}
+                source={{ uri: BASE_URL+videothumbnailimage}}
                 style={[videothumbnailstyles.postpic, { width: wp(80) }]}
                 imageStyle={videothumbnailstyles.imagestyle}
                 resizeMode='cover'

@@ -135,7 +135,7 @@ const ChatList = ({ navigation }) => {
     <View style={{}}>
 
         <Image
-            source={{uri:item.image}}
+            source={{uri:BASE_URL+item.image}}
             style={styles.userimage}
             resizeMode='contain'
         />

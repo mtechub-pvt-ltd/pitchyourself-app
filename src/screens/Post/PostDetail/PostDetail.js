@@ -12,7 +12,7 @@ import cardcontainerstyles from '../../../utills/GlobalStyles/cardcontainerstyle
 
 //////////////////////////app api/////////////////////////
 import axios from 'axios';
-import { BASE_URL } from '../../../utills/ApiRootUrl';
+import { BASE_URL,PIC_URL } from '../../../utills/ApiRootUrl';
 
 import Orientation from 'react-native-orientation-locker';
 import { useIsFocused } from '@react-navigation/native';

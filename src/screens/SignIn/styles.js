@@ -9,6 +9,8 @@ const Height = Dimensions.get("screen").height;
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
 
+  import { fontFamily } from '../../constant/fonts';
+
 const styles = StyleSheet.create({
   container:
   {
@@ -29,9 +31,10 @@ const styles = StyleSheet.create({
   forgettext:
   {
     color: Colors.Appthemecolor,
-    fontWeight: '400',
-    fontSize: hp('1.8%'),
-    marginBottom: wp('8%'),
+    fontSize: hp(1.6),
+    marginBottom: hp(3),
+    marginTop: hp(1),
+    fontFamily:fontFamily.Quicksand_Regular
   },
   buttonview:
   {
@@ -50,15 +53,17 @@ marginTop:wp('20%')
   },
   lasttext:
   {
-    color: 'black',
-    fontWeight: '300',
-    fontSize: hp('1.8%'),
+    color: '#1A1A1A',
+    fontSize: hp(1.5),
+    fontFamily:fontFamily.Quicksand_Regular
   },
   lasttext1:
   {
     color: Colors.Appthemecolor,
-    fontWeight: '400',
-    fontSize: hp('1.8%'),
+    fontSize: hp(1.5),
+    fontFamily:fontFamily.Quicksand_Regular,
+    borderBottomWidth:1,
+    borderBottomColor:Colors.Appthemecolor
   },
 });
 export default styles;

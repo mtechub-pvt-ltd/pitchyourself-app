@@ -71,7 +71,8 @@ const onDismissSnackBar = () => setVisible(false);
 //////////////////////Api Calling/////////////////
 const CreateQuestion = async() => {
   var user= await AsyncStorage.getItem('Userid')
-  console.log("userid:",user,postabout,video)
+    thumbnail: thumbnails,
+    console.log("userid:",user,postabout,video,thumbnails)
  axios({
    method: 'POST',
    url: BASE_URL + 'user/create-hub',
@@ -169,7 +170,7 @@ const formValidation = async () => {
 {thumbnails != '' ?
                 <View style={{}}>
                   <Image
-                    source={{ uri:BASE_URL+JSON.parse(thumbnails)}}
+                    source={{ uri:BASE_URL+thumbnails}}
                     style={Uploadstyles.setimages}
                     resizeMode='cover'
                   />

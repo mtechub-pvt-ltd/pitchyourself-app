@@ -6,6 +6,8 @@ import Colors from '../../utills/Colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
 
+  import { fontFamily } from '../../constant/fonts';
+
 const Inputstyles = StyleSheet.create({
 
     inputview:
@@ -21,8 +23,9 @@ const Inputstyles = StyleSheet.create({
        width: wp(65), 
        alignSelf: 'center', 
        color: 'rgba(26, 26, 26, 0.56)',
-       fontWeight:'500',
-      borderRadius: 40,   
+       fontSize:hp(1.6),
+       borderRadius: 40,   
+       fontFamily:fontFamily.Quicksand_Regular
     },
     numberinput:
     {

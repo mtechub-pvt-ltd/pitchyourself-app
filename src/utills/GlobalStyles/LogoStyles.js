@@ -6,6 +6,8 @@ import Colors from '../../utills/Colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
 
+import { fontFamily } from '../../constant/fonts';
+
 const Logostyles = StyleSheet.create({
 
   logoview:
@@ -28,11 +30,12 @@ underlogotextview:
 underlogotext:
 {
   color: 'grey',
-  fontWeight: '400',
-  fontSize: hp('2%'),
-  width: wp("72%"),
+  //fontWeight: '400',
+  fontSize: hp(1.8),
+  width: wp(75),
   textAlign:'center',
-  marginBottom:wp('5%')
+  marginBottom:wp('5%'),
+  fontFamily:fontFamily.Quicksand_Regular
 },
 
 

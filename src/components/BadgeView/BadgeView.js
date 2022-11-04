@@ -5,17 +5,21 @@ import styles from './styles';
 import Colors from '../../utills/Colors';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} 
 from 'react-native-responsive-screen';
+
+import { fontFamily } from '../../constant/fonts';
+
 const BadgeView = (props) => {
   console.log('props',props)
     return(
 <View style={styles.container}>
 <View style={{backgroundColor:'white',
-                        alignItems:'center',height:wp('8%'),justifyContent:'center'
+                        alignItems:'center',height:hp(3),justifyContent:'center'
 ,                        borderRadius:60,borderColor:Colors.Appthemecolor,borderWidth:1,
-width:wp('18%')
+
+width:wp(15)
 }}>
-                        <Text style={{color:Colors.Appthemecolor,
-                        fontWeight:"400",fontSize:wp('3%')}}>
+                        <Text style={{color:Colors.Appthemecolor,fontFamily:fontFamily.Quicksand_Bold,
+                        fontWeight:"400",fontSize:hp(1.1)}}>
                             {props.title}</Text>
                         </View>
   </View>

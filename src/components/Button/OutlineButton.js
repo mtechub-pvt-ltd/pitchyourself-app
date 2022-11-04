@@ -20,6 +20,7 @@ const OutlineButton = ({
  buttonColor={Colors.Appthemecolor}
   icon={icon} 
   mode={"outlined"}
+  color={'white'}
   contentStyle={[styles.buttoncontent1,{width:wp(widthset)}]}
   style={[styles.button1,{width:wp(widthset)}]}
   labelStyle={[styles.label1]}

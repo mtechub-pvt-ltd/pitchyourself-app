@@ -27,7 +27,7 @@ width:wp('20%')
 },
   buttonview:
   {
-marginTop:wp('30%')
+    marginTop:hp(31)
     //marginTop: hp('0.5%'),
   },
 

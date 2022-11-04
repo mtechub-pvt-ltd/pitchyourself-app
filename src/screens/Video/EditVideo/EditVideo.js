@@ -19,7 +19,7 @@ import { Checkbox } from 'react-native-paper';
 
 ////////////////////redux////////////
 import { useSelector, useDispatch } from 'react-redux';
-import { setlinksicon, setlinks } from '../../../redux/actions';
+import { setlinksicon, setlinks ,setthumbnails} from '../../../redux/actions';
 
 ///////////////////app styles//////////////////
 import styles from './styles';
@@ -228,6 +228,7 @@ const EditVideo = ({ navigation, route }) => {
     })
       .then(async function (response) {
         console.log("response", JSON.stringify(response.data))
+        dispatch(setthumbnails(""))
         navigation.navigate('Drawerroute')
         // if (response.data === "Profile Video Exists either Delete it or Update it") {
         //   // setloading(0);

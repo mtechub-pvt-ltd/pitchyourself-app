@@ -9,6 +9,8 @@ const Height = Dimensions.get("screen").height;
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
 
+import { fontFamily } from '../../constant/fonts';
+
 const styles = StyleSheet.create({
   container:
   {
@@ -53,16 +55,17 @@ marginRight:wp('5%')
 },
   buttonview:
   {
-marginTop:hp('10%')
+marginTop:hp(5)
   },
 
   lasttext:
   {
-    color: 'rgba(26, 26, 26, 0.56)',
-    fontWeight: '400',
-    fontSize: hp('1.8%'),
+    //color: 'rgba(26, 26, 26, 0.56)',
+    fontSize: hp(1.7),
   textAlign:'center',
-    width:wp('90%')
+    width:wp('90%'),
+    color:'#1D2226',
+    fontFamily:fontFamily.Quicksand_Regular
   },
   helpext:
   {

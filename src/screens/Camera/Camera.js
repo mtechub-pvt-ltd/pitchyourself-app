@@ -78,7 +78,7 @@ const CustomCamera = ({ navigation,route }) => {
   const StopRecording = async () => {
     console.log('here in stop')
     //setvideostatus('stop')
-      await camera.current.stopRecording()
+      var video=await camera.current.stopRecording()
       setCapturevideostatus(false)
   }
   const PauseRecording = async () => {
@@ -200,7 +200,12 @@ const CustomCamera = ({ navigation,route }) => {
               
                     </TouchableOpacity>
            } 
+             <IconButton
+                icon={require('../../assets/Camera/image.png')}
+                color={'white'}
+                size={30}
       
+              />
 
             </View>
 

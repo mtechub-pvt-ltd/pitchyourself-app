@@ -20,6 +20,8 @@ import Colors from '../../../utills/Colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
 
+import { BASE_URL,PIC_URL } from '../../../utills/ApiRootUrl';
+
 ////////////////////redux////////////
 import { useSelector, useDispatch } from 'react-redux';
 import { setthumbnails } from '../../../redux/actions';
@@ -139,7 +141,7 @@ const Job = ({ navigation }) => {
               {thumbnails != '' ?
                 <View style={{}}>
                   <Image
-                    source={{ uri: BASE_URL+JSON.parse(thumbnails) }}
+                    source={{ uri: BASE_URL+thumbnails }}
                     style={Uploadstyles.setimages}
                     resizeMode='cover'
                   />

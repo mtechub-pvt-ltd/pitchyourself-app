@@ -76,7 +76,7 @@ Cellview:{
   },
   buttonview:
   {
-marginTop:wp('60%')
+marginTop:hp(40)
     //marginTop: hp('0.5%'),
   },
 

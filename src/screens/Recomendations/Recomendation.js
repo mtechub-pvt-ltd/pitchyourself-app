@@ -158,7 +158,7 @@ const [comments, setComments] = useState(new Date());
                             <View style={{}}>
                                 <Image
                                     //source={require('../../assets/images/user.png')}
-                                    source={{uri: item.CommenterImage}}
+                                    source={{uri: BASE_URL+item.CommenterImage}}
                                     style={styles.userimage}
                                     resizeMode='contain'
                                 />

@@ -140,15 +140,15 @@ const SearchByHashtag=async() => {
             />
     <Image
                    source={require('../../assets/Homeimages/search.png')}
-                   style={{width:wp(5.5),height:hp(6)}}
+                   style={{width:wp(5),height:hp(5)}}
                     resizeMode='contain'
                 />
           </View>
-<View style={{marginBottom:10}}>
+<View style={{marginBottom:hp(1),alignItems:'center'}}>
           <Text style={styles.lasttext}>I am Looking for</Text>
-  
-<View style={{flexDirection:'row',justifyContent:'space-around',marginTop:10,
-paddingHorizontal:'25%'
+          </View>
+<View style={{flexDirection:'row',justifyContent:'space-around',marginTop:hp(2),
+paddingHorizontal:wp(25)
      }}>
 
        <TouchableOpacity onPress={()=> SearchByPerson()}>
@@ -162,7 +162,7 @@ paddingHorizontal:'25%'
                />
                  </TouchableOpacity>
 </View>
-</View>
+
 
      
         </View>

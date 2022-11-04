@@ -31,7 +31,7 @@ style={styles.searchicon}
 resizeMode='contain'
 />
 : 
-<View></View>
+<View style={{width:wp(50)}}></View>
 }
 
       </View>

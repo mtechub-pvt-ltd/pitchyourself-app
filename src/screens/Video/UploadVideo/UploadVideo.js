@@ -26,7 +26,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 
 ////////////////////redux////////////
 import { useSelector, useDispatch } from 'react-redux';
-import { setlinksicon, setlinks } from '../../../redux/actions';
+import { setlinksicon, setlinks,setthumbnails } from '../../../redux/actions';
 
 ///////////////////app styles//////////////////
 import styles from './styles';
@@ -328,9 +328,11 @@ setModalVisible(true)
       })
         .then(async function (response) {
           console.log("response", JSON.stringify(response.data))
+          dispatch(setthumbnails(" "))
             //setloading(0);
             //setdisable(0);
            await AsyncStorage.setItem('Userid', response.data.userId);
+           
           // await AsyncStorage.setItem('Userdata', response.data.name);
           // await AsyncStorage.setItem('UserEmail', response.data.email);
           // await AsyncStorage.setItem('UserPass', response.data.password);
@@ -505,7 +507,7 @@ setModalVisible(true)
               {thumbnails != '' ?
                 <View style={{}}>
                   <Image
-                    source={{ uri: BASE_URL+JSON.parse(thumbnails) }}
+                    source={{ uri: BASE_URL+thumbnails }}
                     style={Uploadstyles.setimages}
                     resizeMode='cover'
                   />

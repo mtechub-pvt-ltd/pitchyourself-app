@@ -88,7 +88,7 @@ const[predata]=useState(route.params)
         jobLat:'lat',
         Tag:reach,
         HashtagHub: hashtag,
-        thumbnail: thumbnails
+        thumbnail: thumbnails,
       },
     })
       .then(async function (response) {

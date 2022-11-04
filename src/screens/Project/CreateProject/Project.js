@@ -230,7 +230,7 @@ const [users,setusers]=useState()
 {thumbnails != '' ?
                 <View style={{}}>
                   <Image
-                    source={{ uri: BASE_URL+JSON.parse(thumbnails) }}
+                    source={{ uri: BASE_URL+thumbnails }}
                     style={Uploadstyles.setimages}
                     resizeMode='cover'
                   />

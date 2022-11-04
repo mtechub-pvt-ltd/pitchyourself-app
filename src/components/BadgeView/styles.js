@@ -10,7 +10,8 @@ from 'react-native-responsive-screen';
 const styles = StyleSheet.create({
     container:
     {
-//alignSelf:'center',
+alignSelf:'center',
+
     },
 buttoncontent:
 {

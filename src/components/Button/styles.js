@@ -7,6 +7,9 @@ const Width = Dimensions.get("screen").width;
 const Height = Dimensions.get("screen").height;
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} 
 from 'react-native-responsive-screen';
+
+import { fontFamily } from '../../constant/fonts';
+
 const styles = StyleSheet.create({
     container:
     {
@@ -31,9 +34,10 @@ label:
 {
     color:'white',
     width:hp('100%'),
-    fontSize: hp('1.5%') ,
-    fontWeight:'bold',
+    fontSize: hp(1.8) ,
+    fontWeight:'700',
     backgroundColor:Colors.Appthemecolor,
+    fontFamily:fontFamily.Quicksand_Bold
 },
 buttoncontent1:
 {

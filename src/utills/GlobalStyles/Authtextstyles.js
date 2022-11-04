@@ -7,6 +7,8 @@ import Colors from '../../utills/Colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
 
+  import { fontFamily } from '../../constant/fonts';
+
 const Authtextstyles = StyleSheet.create({
 
     maintextview:
@@ -26,9 +28,10 @@ const Authtextstyles = StyleSheet.create({
     maintext:
   {
     color: 'rgba(29, 34, 38, 1)',
-    fontWeight: 'bold',
+    fontWeight: '700',
     fontSize: hp('3%'),
-    marginTop: wp('0%')
+    marginTop: wp('0%'),
+    fontFamily:fontFamily.Quicksand_Bold
   },
     subtextview:
     {
@@ -37,11 +40,13 @@ const Authtextstyles = StyleSheet.create({
     },
     subtext:
     {
-      color: 'rgba(29, 34, 38, 0.6)',
-      fontWeight: '400',
-      fontSize: hp('2%'),
-      width: wp("72%"),
-      marginBottom:wp('5%')
+      color: 'rgba(29, 34, 38, 0.60)',
+      fontSize: hp(1.8),
+      width: wp(75),
+      marginBottom:hp(3),
+      marginTop:hp(1),
+      fontFamily:fontFamily.Quicksand_Regular
+
     },
 
 
