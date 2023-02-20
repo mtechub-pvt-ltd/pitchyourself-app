@@ -1,0 +1,1 @@
+export const HalaguestApi = "AIzaSyBI8rEv2hwtOGBcvmHyBKYgw3EsV1obr0Q";
